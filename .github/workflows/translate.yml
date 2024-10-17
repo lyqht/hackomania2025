@@ -1,0 +1,16 @@
+name: Translate files using DeepL Translate GitHub Action
+on:
+  workflow_dispatch:
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Translate locales json
+        uses: lyqht/deepl-translate-github-action@v2.2.0
+        with:
+          target_languages: all
+          excluded_languages: en-US,en-GB
+          input_file_path: public/locales/en.json
+          output_file_name_pattern: public/locales/{language}.json
+          deepl_api_key: ${{ secrets.DEEPL_API_KEY }}
