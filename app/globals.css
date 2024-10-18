@@ -29,6 +29,10 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --hackomania-red: #AD2831;
+    --hackomania-yellow: #FED05C;
+    --hackomania-blue: #6C92EB;
+    --hackomania-green: #79AF8E;
   }
 
   .dark {
@@ -56,6 +60,10 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --hackomania-red: #8A2027;
+    --hackomania-yellow: #CBa64A;
+    --hackomania-blue: #5675BC;
+    --hackomania-green: #618C72;
   }
 }
 
