@@ -1,19 +1,16 @@
-import NextLogo from "./next-logo";
-import SupabaseLogo from "./supabase-logo";
-
-export default function Header() {
+export default function Hero() {
   return (
-    <div className="flex flex-col gap-16 items-center">
-      <div className="flex gap-8 justify-center items-center">
+    <div className="flex flex-col items-center gap-16">
+      <div className="flex items-center justify-center gap-8">
         <a href="https://geekshacking.com">
           <img width={180} src="/geekshacking.webp" alt="GeeksHacking Singapore" />
         </a>
       </div>
       <h1 className="sr-only">Supabase and Next.js Starter Template</h1>
-      <p className="text-3xl lg:text-4xl !leading-tight mx-auto max-w-xl text-center">
+      <p className="mx-auto max-w-xl text-center text-3xl !leading-tight lg:text-4xl">
         Get <b>Healthy</b>, Get <b>Connected</b>
       </p>
-      <div className="w-full p-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent my-8" />
+      <div className="my-8 w-full bg-gradient-to-r from-transparent via-foreground/10 to-transparent p-[1px]" />
     </div>
   );
 }
