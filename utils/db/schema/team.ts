@@ -14,6 +14,6 @@ export const teamMembers = pgTable("team_members", {
     teamId: uuid().references(() => team.id).notNull(),
     userId: uuid().references(() => user.id).notNull(),
 }, (table) => ({
-    // Ensure each user can only be associated with a team once
+    // Ensures that each user can only be in one team at any time.
     uniqueConstraint: unique("uniqueTeamMember").on(table.teamId, table.userId),
 }));
