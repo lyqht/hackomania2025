@@ -19,6 +19,15 @@ const config = {
     },
     extend: {
       colors: {
+        // hackomania-specific
+        hackomania: {
+          red: "var(--hackomania-red)",
+          yellow: "var(--hackomania-yellow)",
+          blue: "var(--hackomania-blue)",
+          green: "var(--hackomania-green)",
+        },
+
+        // default
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
