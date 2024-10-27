@@ -10,6 +10,7 @@ export default function Section({
   sectionBackgroundColor,
   sectionDividerBackgroundColor,
   dividerClassName,
+  dividerType,
 }: {
   children: React.ReactNode;
   className?: string;
@@ -19,6 +20,7 @@ export default function Section({
   sectionBackgroundColor?: string;
   sectionDividerBackgroundColor?: string;
   dividerClassName?: string;
+  dividerType?: "stairs" | "wave";
 }) {
   return (
     <>
@@ -27,6 +29,7 @@ export default function Section({
           <SectionDividerBackground
             fillColor={sectionDividerBackgroundColor}
             className={dividerClassName}
+            type={dividerType}
           />
         </div>
       )}
