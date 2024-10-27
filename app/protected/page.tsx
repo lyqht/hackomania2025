@@ -4,13 +4,14 @@ import UserCard from "@/components/custom/UserCard";
 import { InfoIcon } from "lucide-react";
 import { getUser } from "@/utils/supabase/user";
 import FutureTeammateCard from "@/components/custom/FutureTeammateCard";
+import { User } from "@supabase/supabase-js";
 
 export default async function ProtectedPage() {
-  const user = await getUser();
-  const username = user?.user_metadata.user_name || user?.user_metadata.name;
-  const email = user?.email;
-  const avatarUrl = user?.user_metadata.avatar_url;
-  const fullName = user?.user_metadata.full_name;
+  const user = (await getUser()) as User;
+  const {
+    user_metadata: { avatar_url, full_name, user_name },
+  } = user;
+  const email = user.email as string;
 
   return (
     <div className="flex w-full flex-1 flex-col gap-12">
@@ -28,7 +29,12 @@ export default async function ProtectedPage() {
           dividerType="wave"
         >
           <div className="flex flex-wrap gap-4">
-            <UserCard username={username} email={email} avatarUrl={avatarUrl} fullName={fullName} />
+            <UserCard
+              username={user_name}
+              email={email}
+              avatarUrl={avatar_url}
+              fullName={full_name}
+            />
             <FutureTeammateCard />
           </div>
         </Section>
