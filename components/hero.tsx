@@ -1,7 +1,7 @@
 import Image from "next/image";
 export default function Hero() {
   return (
-    <div className="flex flex-col items-center gap-16">
+    <div className="flex flex-col items-center gap-16 pt-20">
       <div className="flex items-center justify-center gap-8">
         <a href="https://geekshacking.com">
           <Image
