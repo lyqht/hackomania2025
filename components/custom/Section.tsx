@@ -24,26 +24,26 @@ export default function Section({
     <>
       {sectionDividerBackgroundColor && (
         <div style={{ backgroundColor: sectionBackgroundColor }}>
-            <SectionDividerBackground
-              fillColor={sectionDividerBackgroundColor}
-              className={dividerClassName}
-            />
+          <SectionDividerBackground
+            fillColor={sectionDividerBackgroundColor}
+            className={dividerClassName}
+          />
         </div>
       )}
       <section
         aria-labelledby={`heading-${title}`}
-        className={cn("w-full ps-0 md:ps-4 lg:ps-8", className)}
+        className={cn("flex w-full items-center justify-center", className)}
         style={{ backgroundColor: sectionBackgroundColor }}
       >
         <div
           className={cn(
-            "px-4 py-8 md:p-12 lg:p-20 flex w-full max-w-6xl flex-col items-start text-start",
+            "flex w-full max-w-5xl grow flex-col items-start px-5 py-8 text-start md:py-12 lg:py-20",
             contentClassName,
           )}
         >
           <h2
             id={`heading-${title}`}
-            className={cn("font-heading z-10 text-4xl pb-8", headingClassName)}
+            className={cn("font-heading z-10 pb-8 text-4xl", headingClassName)}
           >
             {title}
           </h2>

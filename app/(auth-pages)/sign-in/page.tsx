@@ -4,7 +4,7 @@ import { GithubIcon } from "lucide-react";
 
 export default function Login() {
   return (
-    <div className="mx-auto flex min-w-64 max-w-64 flex-col">
+    <div className="mx-auto flex min-w-64 max-w-64 flex-col py-20">
       <h1 className="text-2xl font-medium">Sign in</h1>
       <p className="text-sm text-foreground">
         Don&apos;t have an account?{" "}
