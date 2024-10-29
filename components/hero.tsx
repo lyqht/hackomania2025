@@ -1,4 +1,6 @@
 import Image from "next/image";
+import EventbriteButton from "@/components/custom/EventbriteRegisterButton";
+
 export default function Hero() {
   return (
     <div className="flex flex-col items-center gap-16 pt-20">
@@ -18,6 +20,7 @@ export default function Hero() {
         Get <b>Healthy</b>, Get <b>Connected</b>
       </p>
       <div className="mt-8 w-full bg-gradient-to-r from-transparent via-foreground/10 to-transparent p-[1px]" />
+      <EventbriteButton />
     </div>
   );
 }
