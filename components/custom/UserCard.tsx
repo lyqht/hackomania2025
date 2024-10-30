@@ -9,7 +9,7 @@ interface UserCardProps {
 
 export default function UserCard({ username, email, avatarUrl, fullName }: UserCardProps) {
   return (
-    <div className="flex items-center gap-6 rounded-lg bg-white p-4 shadow-md">
+    <div className="flex items-center gap-6 rounded-lg bg-zinc-100 p-4 shadow-md">
       {avatarUrl && (
         <Image
           src={avatarUrl}
@@ -20,8 +20,14 @@ export default function UserCard({ username, email, avatarUrl, fullName }: UserC
         />
       )}
       <div className="flex flex-col">
-        <h2 className="text-2xl font-bold">{fullName || username}</h2>
-        <p className="text-gray-600">{email}</p>
+        <span>
+          <span className="sr-only">Name:</span>
+          <span className="text-2xl font-bold text-gray-800">{fullName || username}</span>
+        </span>
+        <span>
+          <span className="sr-only">Email:</span>
+          <span className="text-gray-600">{email}</span>
+        </span>
       </div>
     </div>
   );
