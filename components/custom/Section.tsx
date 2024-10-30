@@ -46,7 +46,7 @@ export default function Section({
         >
           <h2
             id={`heading-${title}`}
-            className={cn("font-heading z-10 pb-8 text-4xl", headingClassName)}
+            className={cn("font-heading z-10 pb-8 text-4xl font-bold", headingClassName)}
           >
             {title}
           </h2>
