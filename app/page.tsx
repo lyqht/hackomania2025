@@ -1,5 +1,5 @@
 import Section from "@/components/custom/Section";
-import Hero from "@/components/hero";
+import Hero from "@/components/custom/Hero";
 import getColor from "@/tailwind-config";
 
 export default async function Index() {

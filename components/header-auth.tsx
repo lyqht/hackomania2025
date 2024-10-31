@@ -43,7 +43,7 @@ export default async function AuthButton() {
 
   const user = await getUser({ toRedirectToSignIn: false });
   return user ? (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-4 bg-white dark:bg-black">
       <div className="flex items-center gap-2 rounded px-2 py-0.5">
         <Image
           className="rounded-full"
