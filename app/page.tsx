@@ -1,47 +1,40 @@
-import Section from "@/components/custom/Section";
-import Hero from "@/components/custom/Hero";
 import getColor from "@/tailwind-config";
+import Image from "next/image";
 
 export default async function Index() {
   return (
     <>
-      <Hero />
-      <main className="flex flex-1 flex-col">
-        <Section
-          title="What is HackOMania?"
-          sectionBackgroundColor={getColor("hackomania-yellow")}
-        >
-          <div className="flex flex-col gap-4">
-            <p className="text-lg">
-              HackOMania is a local hackathon organised by GeeksHacking Singapore to promote healthy
-              living and connection using technology.
+      <main className="flex flex-1 flex-col p-5 md:p-10">
+        <head>
+          {/* HackOMania 2025 Logo goes here */}
+        </head>
 
-            </p>
+        <section className="py-10" id="about">
+          <div className="mb-3 text-hackomania-red text-3xl md:text-6xl font-bold flex flex-row gap-3 items-center" id="about-title">
+            <Image src="/hackomania-star.svg" alt="Star" width={40} height={40} />
+            <h1>HACKOMANIA 2024</h1>
           </div>
-        </Section>
-        <Section
-          title="Theme"
-          sectionBackgroundColor={getColor("hackomania-green")}
-          sectionDividerBackgroundColor={getColor("hackomania-yellow")}
-        >
-          <div className="flex flex-col gap-4">
-            <p className="text-lg">
-              HEALTHY LIVING FOR A CONNECTED WORLD
-            </p>
+
+          <div className="flex flex-col md:flex-row gap-5">
+            <div>
+              <p><span className="font-bold italic">HackOMania 2024</span> marked our return after covid lockdowns and lifting of restrictions.</p>
+              <p className="mt-3"><span className="font-bold italic">Rakuten</span> hosted us as we Innovated for tomorrow, building a resilient future! We thought it would be a slow start but we were blown away by the enthusiasm of the participants and sponsors. </p>
+            </div>
+
+            <button className="bg-hackomania-red text-xl font-bold w-full py-3 rounded-md text-white">
+              SEE MORE
+            </button>
           </div>
-        </Section>
-        <Section
-          title="Sponsors"
-          sectionBackgroundColor={getColor("hackomania-red")}
-          sectionDividerBackgroundColor={getColor("hackomania-green")}
-          dividerClassName="scale-x-[-1]" // flip the divider
-        >
-          <div className="flex flex-col gap-4">
-            <p className="text-lg">
-              We are still looking for sponsors! If you are interested in sponsoring HackOMania 2025, please contact us at <a href="mailto:contact@geekshacking.com">contact@geekshacking.com</a>.
-            </p>
+        </section>
+
+        <section className="py-10" id="about">
+          <div className="mb-3 text-hackomania-blue text-3xl md:text-6xl font-bold flex flex-row gap-3 items-center" id="about-title">
+            <Image src="/challenges.svg" alt="Flower" width={40} height={40} />
+            <h1>CHALLENGES</h1>
           </div>
-        </Section>
+
+          
+        </section>
       </main>
     </>
   );
