@@ -33,8 +33,15 @@
     --hackomania-yellow: #FED05C;
     --hackomania-blue: #6C92EB;
     --hackomania-green: #4C956C;
+
+    /* Hide Scrollbar */
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
   }
 
+  :root::-webkit-scrollbar {
+    display: none;
+  }
   /* .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -73,5 +80,13 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  @font-face {
+    font-family: 'Nexa Rust';
+    src: url('/fonts/NexaRustSlab-Black.woff') format('woff'),
+          url('/fonts/NexaRustSlab-Black.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
   }
 }
