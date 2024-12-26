@@ -1,9 +1,6 @@
-import { EnvVarWarning } from "@/components/env-var-warning";
-import HeaderAuth from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { ThemeProvider } from "next-themes";
 import NavigtionBar from "@/components/custom/NavigationBar";
-import Link from "next/link";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
