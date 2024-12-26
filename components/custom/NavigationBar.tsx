@@ -4,18 +4,17 @@ import styles from "./NavigationBar.module.css";
 import { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaXmark } from "react-icons/fa6";
-import { motion, AnimatePresence } from 'framer-motion';
 
 const navigationLinks = [
-    { title: "REGISTRATION", href: "" },
-    { title: "ABOUT", href: "" },
-    { title: "CHALLENGES", href: "" },
-    { title: "PRIZES", href: "" },
-    { title: "TIMELINE", href: "" },
-    { title: "VENUE", href: "" },
-    { title: "SPONSORS", href: "" },
-    { title: "TEAM", href: "" },
-    { title: "CONTACT", href: "" },
+    { title: "REGISTRATION", href: "#registration" },
+    { title: "ABOUT", href: "#about" },
+    { title: "CHALLENGES", href: "#challenges" },
+    { title: "PRIZES", href: "#prizes" },
+    { title: "TIMELINE", href: "#timeline" },
+    { title: "VENUE", href: "#venue" },
+    { title: "SPONSORS", href: "#sponsors" },
+    { title: "TEAM", href: "#team" },
+    { title: "CONTACT", href: "#contact" },
 ]
 
 export default function NavigtionBar() {

@@ -1,6 +1,6 @@
 import GoldenRule from "@/components/custom/GoldenRule";
 import Prize from "@/components/custom/Prize";
-import { goldenRules, IRules } from "@/public/data/goldenrules";
+import { goldenRules } from "@/public/data/goldenrules";
 import Image from "next/image";
 
 export default async function Index() {
@@ -35,7 +35,7 @@ export default async function Index() {
         {/* <section className="py-10" id="challenges">
           <div className="mb-7 md:mb-14 text-hackomania-blue text-3xl md:text-6xl font-bold flex flex-row gap-3 items-center" id="about-title">
             <Image src="/BlueIcon.svg" alt="" width={60} height={60} className="fill-hackomania-blue" />
-            <h1>CHALLENGES</h1>
+            <h2>CHALLENGES</h2>
           </div>
 
           
@@ -44,7 +44,7 @@ export default async function Index() {
         <section className="py-10" id="prizes">
           <div className="mb-7 md:mb-14 text-hackomania-green fill-hackomania-green text-3xl md:text-6xl font-bold flex flex-row gap-3 items-center" id="prizes-title">
             <Image src="/GreenStar.svg" alt="star" width={60} height={60} />
-            <h1>PRIZES</h1>
+            <h2>PRIZES</h2>
           </div>
 
           <div>
@@ -61,7 +61,7 @@ export default async function Index() {
         <section className="py-10" id="prizes">
           <div className="mb-5 md:mb-10 text-hackomania-blue text-3xl md:text-6xl font-bold flex flex-row gap-3 items-center" id="rules-title">
             <Image src="/BlueIcon.svg" alt="" width={60} height={60} className="fill-hackomania-blue" />
-            <h1>9 GOLDEN RULES</h1>
+            <h2>9 GOLDEN RULES</h2>
           </div>
           <div className="mt-5 grid grid-cols-1 md:grid-cols-3 md:grid-rows-3 gap-5" id="golden-rules-grid">
             {goldenRules.map((rule, index) => (
@@ -70,13 +70,13 @@ export default async function Index() {
           </div>
         </section>
 
-        <section className="py-10" id="prizes">
+        <section className="py-10" id="venue">
           <div className="mb-5 md:mb-10 text-hackomania-green text-3xl md:text-6xl font-bold flex flex-row gap-3 items-center" id="roles-title">
             <Image src="/GreenStar.svg" alt="" width={60} height={60} />
-            <h1>VENUE</h1>
+            <h2>VENUE</h2>
           </div>
           
-          <div id="pre-event">
+          <section id="pre-event">
             <h2 className="text-hackomania-green text-2xl md:text-5xl font-bold mb-4">PRE EVENT</h2>
 
             <div className="flex flex-row gap-5">
@@ -99,9 +99,9 @@ export default async function Index() {
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <div id="main-event" className="my-8">
+          <section id="main-event" className="my-8">
             <h2 className="text-hackomania-green text-2xl md:text-5xl font-bold mb-4">MAIN EVENT</h2>
 
             <div className="flex flex-row gap-5">
@@ -124,13 +124,13 @@ export default async function Index() {
                 </div>
               </div>
             </div>
-          </div>
+          </section>
         </section>
 
-        <section className="py-10" id="prizes">
+        <section className="py-10" id="team">
           <div className="mb-7 md:mb-14 text-hackomania-red text-3xl md:text-6xl font-bold flex flex-row gap-3 items-center" id="team-title">
             <Image src="/MeetTheTeam.svg" alt="Icon" width={60} height={60} className="fill-hackomania-red" />
-            <h1>MEET THE TEAM</h1>
+            <h2>MEET THE TEAM</h2>
           </div>
 
         </section>
