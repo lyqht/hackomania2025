@@ -79,8 +79,8 @@ export default async function Index() {
           <section id="pre-event">
             <h2 className="text-hackomania-green text-2xl md:text-5xl font-bold mb-4">PRE EVENT</h2>
 
-            <div className="flex flex-row gap-5">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4212.125700952453!2d103.8476065607605!3d1.2978671117348162!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da19ec2599519d%3A0x809fd655663da6d0!2sLazada%20One!5e1!3m2!1sen!2ssg!4v1735041072542!5m2!1sen!2ssg" width="600" height="450" className="border-0 h-500px" loading="lazy"></iframe>
+            <div className="flex flex-col md:flex-row gap-5">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4212.125700952453!2d103.8476065607605!3d1.2978671117348162!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da19ec2599519d%3A0x809fd655663da6d0!2sLazada%20One!5e1!3m2!1sen!2ssg!4v1735041072542!5m2!1sen!2ssg" className="border-0 h-auto w-full md:w-1/2" loading="lazy"></iframe>
 
               <div>
                 <h3 className="text-hackomania-green text-xl md:text-4xl font-bold mb-4">GETTING HERE</h3>
@@ -104,8 +104,8 @@ export default async function Index() {
           <section id="main-event" className="my-8">
             <h2 className="text-hackomania-green text-2xl md:text-5xl font-bold mb-4">MAIN EVENT</h2>
 
-            <div className="flex flex-row gap-5">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4212.125700952453!2d103.8476065607605!3d1.2978671117348162!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da19ec2599519d%3A0x809fd655663da6d0!2sLazada%20One!5e1!3m2!1sen!2ssg!4v1735041072542!5m2!1sen!2ssg" width="600" height="450" className="border-0 h-500px" loading="lazy"></iframe>
+            <div className="flex flex-col md:flex-row gap-5">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4212.125700952453!2d103.8476065607605!3d1.2978671117348162!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da19ec2599519d%3A0x809fd655663da6d0!2sLazada%20One!5e1!3m2!1sen!2ssg!4v1735041072542!5m2!1sen!2ssg" className="border-0 h-auto w-full md:w-1/2" loading="lazy"></iframe>
 
               <div>
                 <h3 className="text-hackomania-green text-xl md:text-4xl font-bold mb-4">GETTING HERE</h3>
