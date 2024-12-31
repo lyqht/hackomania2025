@@ -85,6 +85,7 @@ export default function Sponsors() {
           width: 281,
           height: 60,
           url: "https://www.google.com/",
+          class: "md:mt-4 lg:mt-8",
         },
         {
           name: "Open AI",
