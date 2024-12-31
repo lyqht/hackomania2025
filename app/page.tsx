@@ -21,23 +21,50 @@ export default async function Index() {
           </div>
 
           <div className="flex flex-col gap-5 md:flex-row">
-            <Image src="https://placehold.co/600x400" alt="placeholder" width={600} height={400} />
-            <div>
-              <div>
+            <Image
+              src="https://placehold.co/600x400"
+              alt="Previous HackOMania on-site photos"
+              width={600}
+              height={400}
+            />
+            <div className="flex flex-col justify-between gap-3">
+              <p className="flex flex-col gap-4 text-xl">
                 <p>
                   <span className="font-bold italic">HackOMania 2024</span> marked our return after
                   covid lockdowns and lifting of restrictions.
                 </p>
-                <p className="mt-3">
+                <p>
                   <span className="font-bold italic">Rakuten</span> hosted us as we Innovated for
                   tomorrow, building a resilient future! We thought it would be a slow start but we
                   were blown away by the enthusiasm of the participants and sponsors.{" "}
                 </p>
+              </p>
+              <div className="mt-6 flex justify-center gap-4">
+                <a
+                  href="https://hackomania2024.geekshacking.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md bg-hackomania-red p-5 py-3 text-center text-xl font-bold text-white"
+                >
+                  2024
+                </a>
+                <a
+                  href="https://hackomania2019.geekshacking.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md bg-hackomania-red p-5 py-3 text-center text-xl font-bold text-white"
+                >
+                  2019
+                </a>
+                <a
+                  href="https://hackomania2018.geekshacking.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md bg-hackomania-red p-5 py-3 text-center text-xl font-bold text-white"
+                >
+                  2018
+                </a>
               </div>
-
-              <button className="w-full rounded-md bg-hackomania-red py-3 text-xl font-bold text-white">
-                SEE MORE
-              </button>
             </div>
           </div>
         </section>
