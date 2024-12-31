@@ -3,6 +3,7 @@ import Prize from "@/components/custom/Prize";
 import TeamSection from "@/components/custom/TeamSection";
 import { goldenRules } from "@/public/data/goldenrules";
 import Image from "next/image";
+import Sponsors from "@/components/custom/Sponsors";
 
 export default async function Index() {
   return (
@@ -15,7 +16,7 @@ export default async function Index() {
             className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl"
             id="about-title"
           >
-            <Image src="/RedStar.svg" alt="Star" width={60} height={60} />
+            <Image src="/RedStar.svg" alt="" width={60} height={60} />
             <h1>HACKOMANIA 2024</h1>
           </div>
 
@@ -55,7 +56,7 @@ export default async function Index() {
             className="mb-7 flex flex-row items-center gap-3 fill-hackomania-green text-3xl font-bold text-hackomania-green md:mb-14 md:text-6xl"
             id="prizes-title"
           >
-            <Image src="/GreenStar.svg" alt="star" width={60} height={60} />
+            <Image src="/GreenStar.svg" alt="" width={60} height={60} />
             <h2>PRIZES</h2>
           </div>
 
@@ -174,6 +175,15 @@ export default async function Index() {
               </div>
             </div>
           </section>
+        </section>
+
+        <section className="py-10" id="sponsors">
+          <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
+            <Image src="/RedStar.svg" alt="" width={60} height={60} />
+            <h2>SPONSORS</h2>
+          </div>
+
+          <Sponsors />
         </section>
 
         <section className="py-10" id="team">
