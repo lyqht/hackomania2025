@@ -4,6 +4,7 @@ import TeamSection from "@/components/custom/TeamSection";
 import { goldenRules } from "@/public/data/goldenrules";
 import Image from "next/image";
 import Sponsors from "@/components/custom/Sponsors";
+import TimelineSection from "@/components/custom/TimelineSection";
 
 export default async function Index() {
   return (
@@ -97,7 +98,7 @@ export default async function Index() {
             </div>
           </div>
         </section>
-
+        <TimelineSection />
         <section className="py-10" id="prizes">
           <div
             className="mb-5 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-blue md:mb-10 md:text-6xl"
