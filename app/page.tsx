@@ -9,7 +9,7 @@ import TimelineSection from "@/components/custom/TimelineSection";
 export default async function Index() {
   return (
     <>
-      <div className="flex flex-1 flex-col overflow-hidden p-5 md:p-20">
+      <div className="flex flex-1 flex-col overflow-hidden p-5 md:p-20 lg:p-32">
         <head>{/* HackOMania 2025 Logo goes here */}</head>
 
         <section className="py-10" id="about">
