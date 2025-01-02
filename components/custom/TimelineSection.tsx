@@ -84,7 +84,7 @@ export default function Timeline() {
       <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-3">
         {/* Pre-Hack Column */}
         <div className="flex flex-col gap-4">
-          <h3 className="text-2xl font-bold">PREHACK</h3>
+          <h3 className="text-2xl font-bold lg:text-4xl">PREHACK</h3>
           <div className="flex flex-col gap-3">
             {PREHACK_SCHEDULE.map((item, index) => (
               <TimelineItem key={index} time={item.time} event={item.event} />
@@ -94,7 +94,7 @@ export default function Timeline() {
 
         {/* Day 1 Column */}
         <div className="flex flex-col gap-4">
-          <h3 className="text-2xl font-bold">DAY 1</h3>
+          <h3 className="text-2xl font-bold lg:text-4xl">DAY 1</h3>
           <div className="flex flex-col gap-3">
             {DAY1_SCHEDULE.map((item, index) => (
               <TimelineItem key={index} time={item.time} event={item.event} />
@@ -104,7 +104,7 @@ export default function Timeline() {
 
         {/* Day 2 Column */}
         <div className="flex flex-col gap-4">
-          <h3 className="text-2xl font-bold">DAY 2</h3>
+          <h3 className="text-2xl font-bold lg:text-4xl">DAY 2</h3>
           <div className="flex flex-col gap-3">
             {DAY2_SCHEDULE.map((item, index) => (
               <TimelineItem key={index} time={item.time} event={item.event} />
