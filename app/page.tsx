@@ -113,7 +113,7 @@ export default async function Index() {
             <h2>9 GOLDEN RULES</h2>
           </div>
           <div
-            className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3 md:grid-rows-3"
+            className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2 md:grid-rows-3 lg:grid-cols-3"
             id="golden-rules-grid"
           >
             {goldenRules.map((rule, index) => (
@@ -136,7 +136,7 @@ export default async function Index() {
 
             <div className="flex flex-col gap-5 md:flex-row">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4212.125700952453!2d103.8476065607605!3d1.2978671117348162!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da19ec2599519d%3A0x809fd655663da6d0!2sLazada%20One!5e1!3m2!1sen!2ssg!4v1735041072542!5m2!1sen!2ssg"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7946893513426!2d103.84796911744382!3d1.2979024999999969!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da19ec2599519d%3A0x809fd655663da6d0!2sLazada%20One!5e0!3m2!1sen!2stw!4v1735830756269!5m2!1sen!2stw"
                 className="h-auto w-full border-0 md:w-1/2"
                 loading="lazy"
               ></iframe>
@@ -170,10 +170,9 @@ export default async function Index() {
             <h2 className="mb-4 text-2xl font-bold text-hackomania-green md:text-5xl">
               MAIN EVENT
             </h2>
-
             <div className="flex flex-col gap-5 md:flex-row">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4212.125700952453!2d103.8476065607605!3d1.2978671117348162!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da19ec2599519d%3A0x809fd655663da6d0!2sLazada%20One!5e1!3m2!1sen!2ssg!4v1735041072542!5m2!1sen!2ssg"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8203085885248!2d103.8481571806732!3d1.2815570723565077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da190dd3c9d033%3A0x4cadb1e9e5280c4a!2s138%20Market%20St%2C%20%2320-01%20CapitaGreen%2C%20Singapore%20048946!5e0!3m2!1sen!2stw!4v1735830681400!5m2!1sen!2stw"
                 className="h-auto w-full border-0 md:w-1/2"
                 loading="lazy"
               ></iframe>
