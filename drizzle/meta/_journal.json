@@ -15,6 +15,13 @@
       "when": 1729401712280,
       "tag": "0001_rename_github_url_to_username",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1735825694044,
+      "tag": "0002_update_cascade",
+      "breakpoints": true
     }
   ]
 }
