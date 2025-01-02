@@ -61,8 +61,7 @@ export async function PUT(request: Request) {
     }
 
     // Parse the request body
-    const requestBody = await request.json();
-    const { selectedTeamID, teamName } = requestBody;
+    const { selectedTeamID, teamName } = await request.json();
     if (!selectedTeamID || !teamName) {
       return NextResponse.json(
         { error: "selectedTeamID and teamName is required" },
@@ -104,8 +103,7 @@ export async function POST(request: Request) {
     }
 
     // Parse the request body
-    const requestBody = await request.json();
-    const { teamName, teamMembers } = requestBody;
+    const { teamName, teamMembers } = await request.json();
     teamMembers.push(session.user.id); // Add the Current User to the list of team members
 
     // Create the Team
@@ -152,8 +150,7 @@ export async function DELETE(request: Request) {
     }
 
     // Parse the request body
-    const requestBody = await request.json();
-    const { selectedTeamID } = requestBody;
+    const { selectedTeamID } = await request.json();
     if (!selectedTeamID) {
       return NextResponse.json({ error: "Team ID is required" }, { status: 400 });
     }
