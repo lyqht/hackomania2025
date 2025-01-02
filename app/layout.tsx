@@ -2,6 +2,7 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import { ThemeProvider } from "next-themes";
 import NavigtionBar from "@/components/custom/NavigationBar";
 import "./globals.css";
+import ContactSection from "@/components/custom/ContactSection";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -28,7 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="flex w-full flex-1 flex-col items-center">
               <NavigtionBar />
               <div className="flex w-full flex-col">{children}</div>
-              <footer className="mx-auto flex w-full items-center justify-center gap-8 border-t py-16 text-center text-xs">
+              <footer className="mx-auto flex w-full flex-col items-center justify-center gap-8 border-t bg-hackomania-red py-16 text-center text-xs text-white">
+                <ContactSection />
                 <ThemeSwitcher />
               </footer>
             </div>

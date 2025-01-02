@@ -5,7 +5,6 @@ import { goldenRules } from "@/public/data/goldenrules";
 import Image from "next/image";
 import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
-
 export default async function Index() {
   return (
     <>
