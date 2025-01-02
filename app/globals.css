@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: #FFFBF5;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -32,10 +32,17 @@
     --hackomania-red: #AD2831;
     --hackomania-yellow: #FED05C;
     --hackomania-blue: #6C92EB;
-    --hackomania-green: #79AF8E;
+    --hackomania-green: #4C956C;
+
+    /* Hide Scrollbar */
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
   }
 
-  .dark {
+  :root::-webkit-scrollbar {
+    display: none;
+  }
+  /* .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
@@ -64,7 +71,7 @@
     --hackomania-yellow: #CBa64A;
     --hackomania-blue: #5675BC;
     --hackomania-green: #618C72;
-  }
+  } */
 }
 
 @layer base {
@@ -73,5 +80,13 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  @font-face {
+    font-family: 'Nexa Rust';
+    src: url('/fonts/NexaRustSlab-Black.woff') format('woff'),
+          url('/fonts/NexaRustSlab-Black.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
   }
 }
