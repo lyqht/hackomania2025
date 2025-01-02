@@ -1,4 +1,3 @@
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { ThemeProvider } from "next-themes";
 import NavigtionBar from "@/components/custom/NavigationBar";
 import "./globals.css";
@@ -31,7 +30,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div className="flex w-full flex-col">{children}</div>
               <footer className="mx-auto flex w-full flex-col items-center justify-center gap-8 border-t bg-hackomania-red py-16 text-center text-xs text-white">
                 <ContactSection />
-                <ThemeSwitcher />
+                {/* Hide theme switcher for now until we support dark mode design */}
+                {/* <ThemeSwitcher /> */}
               </footer>
             </div>
           </main>
