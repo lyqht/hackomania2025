@@ -39,7 +39,7 @@ export default async function Index() {
                   were blown away by the enthusiasm of the participants and sponsors.{" "}
                 </p>
               </p>
-              <div className="mt-6 flex justify-center gap-4">
+              <div className="mt-6 flex flex-wrap justify-center gap-4">
                 <a
                   href="https://hackomania2024.geekshacking.com/"
                   target="_blank"

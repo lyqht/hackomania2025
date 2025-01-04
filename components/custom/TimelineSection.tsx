@@ -36,7 +36,6 @@ const PREHACK_SCHEDULE: ScheduleItem[] = [
   { time: "02:30 PM", event: "Main Hall Workshop Slot 3" },
   { time: "03:15 PM", event: "Closing, Lucky Draw & Phototaking" },
   { time: "03:45 PM", event: "Networking" },
-  { time: "04:45 PM", event: "Clean-up venue" },
 ];
 
 const DAY1_SCHEDULE: ScheduleItem[] = [
