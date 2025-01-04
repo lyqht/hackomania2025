@@ -64,19 +64,26 @@ export default async function Index() {
                 >
                   2018
                 </a>
+                <a
+                  href="https://www.facebook.com/media/set/?set=oa.397402217293812&type=3"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md bg-hackomania-red p-5 py-3 text-center text-xl font-bold text-white"
+                >
+                  2017
+                </a>
+                <a
+                  href="https://www.facebook.com/media/set/?set=oa.206132056420830&type=3"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md bg-hackomania-red p-5 py-3 text-center text-xl font-bold text-white"
+                >
+                  2016
+                </a>
               </div>
             </div>
           </div>
         </section>
-
-        {/* <section className="py-10" id="challenges">
-          <div className="mb-7 md:mb-14 text-hackomania-blue text-3xl md:text-6xl font-bold flex flex-row gap-3 items-center" id="about-title">
-            <Image src="/BlueIcon.svg" alt="" width={60} height={60} className="fill-hackomania-blue" />
-            <h2>CHALLENGES</h2>
-          </div>
-
-          
-        </section> */}
 
         <section className="py-10" id="prizes">
           <div

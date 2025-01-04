@@ -53,7 +53,6 @@ const DAY1_SCHEDULE: ScheduleItem[] = [
 ];
 
 const DAY2_SCHEDULE: ScheduleItem[] = [
-  { time: "12:00 AM", event: "Merch Giving" },
   { time: "08:00 AM", event: "Breakfast" },
   { time: "09:00 AM", event: "Start team submission" },
 ];

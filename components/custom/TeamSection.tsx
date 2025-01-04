@@ -13,7 +13,6 @@ export default function TeamSection() {
     async function fetchTeamMembers() {
       const response = await fetch("/api/team");
       const data = await response.json();
-      console.log(data);
       setTeamMembers(data);
     }
 
@@ -21,7 +20,7 @@ export default function TeamSection() {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
       {teamMembers.map((member: TeamMember) => (
         <Profile key={member.name} member={member} />
       ))}
@@ -39,6 +38,7 @@ function Profile({ member }: { member: TeamMember }) {
         width={100}
         height={50}
         className="h-full w-full object-cover"
+        unoptimized={true}
       />
       <div
         id="details-overlay"
@@ -48,7 +48,7 @@ function Profile({ member }: { member: TeamMember }) {
           <div className="flex-grow"></div>
           <p className="text-2xl font-bold md:text-3xl">{member.name}</p>
           <p className="mb-3">
-            {member.team} - {member.role == "" ? "Core Member" : member.role}
+            {member.team} {member.role && `- ${member.role}`}
           </p>
           <div className="flex flex-row gap-3">
             {member.linkedin && (
