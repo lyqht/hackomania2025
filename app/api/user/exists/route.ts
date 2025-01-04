@@ -4,7 +4,7 @@ import { user } from "@/utils/db/schema/user";
 import { eq } from "drizzle-orm";
 
 // Note: This route takes in the user's GitHub Userna,e and check whether the user exists in the database
-export default async function GET(request: Request) {
+export async function GET(request: Request) {
   const requestBody = await request.json();
   const { ghUsername } = requestBody;
 
