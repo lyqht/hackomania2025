@@ -22,8 +22,8 @@ const sponsorCategories: Record<string, SponsorCategory> = {
       {
         name: "Stack",
         image: "/sponsors/STACK_Community_by_GovTech.png",
-        width: 717,
-        height: 280,
+        width: (717 * 4) / 5,
+        height: (280 * 4) / 5,
         url: "https://stack.gov.sg/",
       },
     ],
@@ -35,15 +35,15 @@ const sponsorCategories: Record<string, SponsorCategory> = {
       {
         name: "Interledger",
         image: "/sponsors/InterledgerFoundation.png",
-        width: 573,
-        height: 157,
+        width: (573 * 3) / 5,
+        height: (157 * 3) / 5,
         url: "https://interledger.org/",
       },
       {
         name: "DynamicWeb",
         image: "/sponsors/DynamicWeb.png",
-        width: 573,
-        height: 87,
+        width: (573 * 3) / 5,
+        height: (87 * 3) / 5,
         url: "https://www.dynamicweb.com/",
       },
     ],
@@ -55,15 +55,15 @@ const sponsorCategories: Record<string, SponsorCategory> = {
       {
         name: "SG Innovate",
         image: "/sponsors/SGInnovate.png",
-        width: 160,
-        height: 60,
+        width: (160 * 4) / 5,
+        height: (60 * 4) / 5,
         url: "https://www.sginnovate.com/",
       },
       {
         name: "ahrefs",
         image: "/sponsors/ahrefs.png",
-        width: 248,
-        height: 60,
+        width: (248 * 4) / 5,
+        height: (60 * 4) / 5,
         url: "https://ahrefs.com/",
       },
     ],
@@ -75,23 +75,23 @@ const sponsorCategories: Record<string, SponsorCategory> = {
       {
         name: "Azure",
         image: "/sponsors/Microsoft_Azure.png",
-        width: 302,
-        height: 60,
+        width: (302 * 4) / 5,
+        height: (60 * 4) / 5,
         url: "https://azure.microsoft.com/",
       },
       {
         name: "Google",
         image: "/sponsors/Google.png",
-        width: 211,
-        height: 60,
+        width: (211 * 4) / 5,
+        height: (60 * 4) / 5,
         url: "https://www.google.com/",
         class: "md:mt-4 lg:mt-8",
       },
       {
         name: "Open AI",
         image: "/sponsors/OpenAI.png",
-        width: 282,
-        height: 60,
+        width: (282 * 4) / 5,
+        height: (60 * 4) / 5,
         url: "https://openai.com/",
       },
     ],
@@ -103,15 +103,15 @@ const sponsorCategories: Record<string, SponsorCategory> = {
       {
         name: "Rakuten",
         image: "/sponsors/Rakuten.png",
-        width: 259,
-        height: 60,
+        width: (259 * 4) / 5,
+        height: (60 * 4) / 5,
         url: "https://global.rakuten.com/corp/",
       },
       {
         name: "Open Government Products",
         image: "/sponsors/OGP.png",
-        width: 331,
-        height: 60,
+        width: (331 * 4) / 5,
+        height: (60 * 4) / 5,
         url: "https://www.open.gov.sg/",
       },
     ],
@@ -121,7 +121,7 @@ const sponsorCategories: Record<string, SponsorCategory> = {
 
 export default function Sponsors() {
   return (
-    <div className="flex flex-col gap-16 md:gap-32 md:mb-24">
+    <div className="flex flex-col gap-16 md:mb-24 md:gap-32">
       {Object.values(sponsorCategories).map((category) => (
         <div key={category.title}>
           <h3 className="mb-5 text-center text-2xl font-bold text-hackomania-red md:mb-12 md:text-5xl">
