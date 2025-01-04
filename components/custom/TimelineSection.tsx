@@ -61,7 +61,7 @@ const DAY2_SCHEDULE: ScheduleItem[] = [
 export default function Timeline() {
   return (
     <section className="flex flex-col gap-10 py-10 md:flex-row" id="timeline">
-      <div className="relative h-[100px] min-h-0 w-full bg-yellow-400 md:h-auto md:w-[280px]">
+      <div className="relative h-[100px] min-h-0 w-full shrink bg-yellow-400 md:h-auto md:w-[180px] lg:w-[280px]">
         <div className="absolute start-[50%] top-1/2 flex origin-center -translate-x-1/2 -translate-y-1/2 rotate-0 items-center gap-2 md:start-[calc(100%-20px)] md:top-1/4 md:mt-12 md:-rotate-90 md:gap-4 lg:start-[calc(100%-42px)]">
           <svg
             width="98"
@@ -81,7 +81,7 @@ export default function Timeline() {
           </h2>
         </div>
       </div>
-      <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-3">
+      <div className="grid grow grid-cols-1 gap-8 md:grid-cols-3">
         {/* Pre-Hack Column */}
         <div className="flex flex-col gap-4">
           <h3 className="text-2xl font-bold lg:text-4xl">PREHACK</h3>

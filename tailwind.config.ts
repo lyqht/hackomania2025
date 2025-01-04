@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import animatePlugin from "tailwindcss-animate";
 
 const config = {
   darkMode: ["class"],
@@ -82,11 +83,12 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily: {
-        nexa: ['Nexa Rust'],
-      }
+        nexa: ["Nexa Rust"],
+        cheyenne: ["Cheyenne Sans"],
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animatePlugin],
 } satisfies Config;
 
 export default config;
