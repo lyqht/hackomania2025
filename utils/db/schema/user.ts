@@ -14,3 +14,5 @@ export const user = pgTable(
     checkRole: check("role_verification", sql`${table.role} IN ('admin', 'participant')`),
   }),
 );
+
+export type SelectUser = typeof user.$inferSelect;
