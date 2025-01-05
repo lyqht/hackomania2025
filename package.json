@@ -25,6 +25,7 @@
     "fs": "^0.0.1-security",
     "geist": "^1.2.1",
     "lucide-react": "^0.436.0",
+    "motion": "^11.15.0",
     "next": "latest",
     "next-themes": "^0.3.0",
     "postgres": "^3.4.4",
