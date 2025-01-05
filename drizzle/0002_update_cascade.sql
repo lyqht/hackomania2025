@@ -16,5 +16,5 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-ALTER TABLE "team_members" ADD CONSTRAINT "role" CHECK ("team_members"."role" IN ('leader', 'member'));--> statement-breakpoint
+ALTER TABLE "team_members" ADD CONSTRAINT "check_member_role" CHECK ("team_members"."role" IN ('leader', 'member'));--> statement-breakpoint
 ALTER TABLE "user" ADD CONSTRAINT "role_verification" CHECK ("user"."role" IN ('admin', 'participant'));

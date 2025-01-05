@@ -1,4 +1,3 @@
-import { SelectUser } from "@/utils/db/schema/user";
 import { getUser } from "@/utils/supabase/user";
 import { User } from "@supabase/supabase-js";
 import { headers } from "next/headers";
@@ -19,7 +18,7 @@ export default async function UserHome() {
     );
   }
 
-  const { user }: { user: SelectUser } = await retrieveUserResponse.json();
+  const { user } = await retrieveUserResponse.json();
 
   return (
     <div className="flex flex-col gap-5 p-5 md:p-20">
