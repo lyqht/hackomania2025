@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/utils/db";
 import { team, teamMembers } from "@/utils/db/schema/team";
 import { user } from "@/utils/db/schema/user";
@@ -104,6 +104,7 @@ export async function POST(request: Request) {
 
     // Parse the request body
     const { teamName } = await request.json();
+
     // Create the Team
     const insertTeamRequest = await db
       .insert(team)
@@ -133,7 +134,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   try {
     const supabase = createClient();
 
@@ -146,7 +147,8 @@ export async function DELETE(request: Request) {
     }
 
     // Parse the request body
-    const { selectedTeamID } = await request.json();
+    const searchParams = request.nextUrl.searchParams;
+    const selectedTeamID = searchParams.get("id");
     if (!selectedTeamID) {
       return NextResponse.json({ error: "Team ID is required" }, { status: 400 });
     }

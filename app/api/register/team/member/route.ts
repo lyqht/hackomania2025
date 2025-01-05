@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
   });
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   try {
     const supabase = createClient();
 
@@ -48,7 +48,10 @@ export async function DELETE(request: Request) {
     }
 
     // Parse the request body
-    const { teamId, deleteUserId } = await request.json();
+    const searchParams = request.nextUrl.searchParams;
+    const teamId = searchParams.get("id");
+    const deleteUserId = searchParams.get("userId");
+
     if (!teamId || !deleteUserId) {
       return NextResponse.json({ error: "Team ID and User ID are required" }, { status: 400 });
     }
@@ -68,6 +71,8 @@ export async function DELETE(request: Request) {
 
       await tx.delete(teamMembers).where(eq(teamMembers.userId, deleteUserId));
     });
+
+    return NextResponse.json({ status: "success" });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ status: 500 });
