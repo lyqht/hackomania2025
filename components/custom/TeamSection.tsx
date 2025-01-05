@@ -1,23 +1,12 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { TeamMember } from "@/app/api/team/route";
 import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa6";
+import { headers } from "next/headers";
 
-export default function TeamSection() {
-  const [teamMembers, setTeamMembers] = useState([]);
-
-  useEffect(() => {
-    async function fetchTeamMembers() {
-      const response = await fetch("/api/team");
-      const data = await response.json();
-      setTeamMembers(data);
-    }
-
-    fetchTeamMembers();
-  }, []);
+export default async function TeamSection() {
+  const head = headers().get("host")!;
+  const teamMembers = await (await fetch(`http://${head}/api/team`)).json();
 
   return (
     <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
