@@ -1,5 +1,4 @@
 import { ThemeProvider } from "next-themes";
-import NavigtionBar from "@/components/custom/NavigationBar";
 import "./globals.css";
 import ContactSection from "@/components/custom/ContactSection";
 
@@ -26,7 +25,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           <main className="flex min-h-screen flex-col items-center">
             <div className="flex w-full flex-1 flex-col items-center">
-              <NavigtionBar />
               <div className="w-full max-w-full">
                 <div className="m-2 rounded-lg border-2 border-hackomania-red p-4 text-lg font-medium text-hackomania-red md:mx-20">
                   <p>

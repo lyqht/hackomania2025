@@ -28,3 +28,5 @@ export const teamMembers = pgTable(
     checkRole: check("check_member_role", sql`${table.role} IN ('leader', 'member')`),
   }),
 );
+
+export type InsertTeam = typeof team.$inferInsert;
