@@ -1,24 +1,51 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
 import { InsertTeam } from "@/utils/db/schema/team";
+import { useRouter } from "next/navigation";
 
 export default function NoTeamManagement() {
+  const router = useRouter();
+
   const [joinTeamID, setJoinTeamID] = useState<string>("");
   const [createTeamInfo, setCreateTeamInfo] = useState<InsertTeam>();
 
   const [joinTeamPopup, setJoinTeamPopup] = useState(false);
   const [createTeamPopup, setCreateTeamPopup] = useState(false);
 
-  const [isJoiningTeam, startJoiningTeam] = useTransition();
-  const [isCreatingTeam, startCreatingTeam] = useTransition();
+  const [error, setError] = useState<string | null>();
+  const [loading, setLoading] = useState(false);
 
-  const joinExistingTeam = async () => {
-    startJoiningTeam(() => {});
-  };
+  const joinExistingTeam = async () => {};
 
   const createTeam = async () => {
-    startCreatingTeam(() => {});
+    setLoading(true);
+    if (createTeamInfo?.name === "") {
+      setError("Team Name cannot be empty");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/register/team", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          teamName: createTeamInfo?.name,
+        }),
+      });
+
+      if (res.ok) {
+        setCreateTeamPopup(false);
+        setError(null);
+        router.refresh();
+      } else {
+        setError("Failed to create team");
+      }
+    } catch (error) {
+      setError("An unexpected error occurred");
+      console.error(error);
+    }
+    setLoading(false);
   };
 
   return (
@@ -62,11 +89,12 @@ export default function NoTeamManagement() {
               onChange={(e) => setJoinTeamID(e.target.value)}
             />
             <button
-              className={`mt-3 w-full rounded-lg bg-hackomania-red p-2 font-semibold text-white ${isJoiningTeam && "cursor-not-allowed"}`}
+              className={`mt-3 w-full rounded-lg bg-hackomania-red p-2 font-semibold text-white ${loading && "cursor-not-allowed"}`}
               onClick={joinExistingTeam}
             >
-              {isJoiningTeam ? "Joining Team..." : "Join Team"}
+              {loading ? "Joining Team..." : "Join Team"}
             </button>
+            {error && <p className="mt-3 text-red-800">{error}</p>}
           </motion.div>
         </div>
       )}
@@ -95,11 +123,12 @@ export default function NoTeamManagement() {
               onChange={(e) => setCreateTeamInfo({ ...createTeamInfo, name: e.target.value })}
             />
             <button
-              className={`mt-3 w-full rounded-lg bg-hackomania-red p-2 font-semibold text-white ${isCreatingTeam && "cursor-not-allowed"}`}
+              className={`mt-3 w-full rounded-lg bg-hackomania-red p-2 font-semibold text-white ${loading && "cursor-not-allowed"}`}
               onClick={createTeam}
             >
-              {isCreatingTeam ? "Creating Team..." : "Create Team"}
+              {loading ? "Creating Team..." : "Create Team"}
             </button>
+            {error && <p className="mt-3 text-red-800">{error}</p>}
           </motion.div>
         </div>
       )}
