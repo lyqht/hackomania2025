@@ -103,9 +103,7 @@ export async function POST(request: Request) {
     }
 
     // Parse the request body
-    const { teamName, teamMembers } = await request.json();
-    teamMembers.push(session.user.id); // Add the Current User to the list of team members
-
+    const { teamName } = await request.json();
     // Create the Team
     const insertTeamRequest = await db
       .insert(team)
@@ -115,14 +113,12 @@ export async function POST(request: Request) {
       })
       .returning();
 
-    // For each team member, add them to the team
-    for (const teamMemberID in teamMembers) {
-      await db.insert(teamMembers).values({
-        teamId: insertTeamRequest[0].id,
-        userId: teamMemberID,
-        role: teamMemberID === session.user.id ? "leader" : "member",
-      });
-    }
+    // Add the Team Leader to the Team
+    await db.insert(teamMembers).values({
+      teamId: insertTeamRequest[0].id,
+      userId: session.user.id,
+      role: "leader",
+    });
 
     return NextResponse.json(
       {
@@ -161,7 +157,6 @@ export async function DELETE(request: Request) {
 
       // Perform Validation
       if (requestedTeam.length === 0) {
-        tx.rollback();
         return NextResponse.json({ error: "Team with ID not found" }, { status: 404 });
       }
 
