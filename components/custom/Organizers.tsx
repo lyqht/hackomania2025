@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa6";
 import { TeamMember, teamMembers } from "@/public/team/team";
 
-export default async function TeamSection() {
+export default async function Organizers() {
   return (
     <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
       {teamMembers.map((member: TeamMember) => (
