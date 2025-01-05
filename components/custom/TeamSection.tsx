@@ -29,7 +29,6 @@ export default function TeamSection() {
 }
 
 function Profile({ member }: { member: TeamMember }) {
-  useEffect(() => console.log(member), []);
   return (
     <div className="group relative h-40 max-w-full overflow-hidden rounded-xl bg-white md:h-[265px]">
       <Image
@@ -52,17 +51,17 @@ function Profile({ member }: { member: TeamMember }) {
           </p>
           <div className="flex flex-row gap-3">
             {member.linkedin && (
-              <Link href={member.linkedin}>
+              <Link href={member.linkedin} target="_blank" rel="noopener noreferrer">
                 <FaLinkedin className="text-2xl md:text-3xl" />
               </Link>
             )}
             {member.github && (
-              <Link href={member.github}>
+              <Link href={member.github} target="_blank" rel="noopener noreferrer">
                 <FaGithub className="text-2xl md:text-3xl" />
               </Link>
             )}
             {member.twitter && (
-              <Link href={member.twitter}>
+              <Link href={member.twitter} target="_blank" rel="noopener noreferrer">
                 <FaTwitter className="text-2xl md:text-3xl" />
               </Link>
             )}

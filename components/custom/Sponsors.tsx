@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 type Sponsor = {
   name: string;
@@ -131,7 +132,7 @@ export default function Sponsors() {
             className={`flex flex-col items-center justify-center gap-8 md:flex-row ${category.class}`}
           >
             {category.sponsors.map((sponsor) => (
-              <a
+              <Link
                 key={sponsor.name}
                 href={sponsor.url}
                 target="_blank"
@@ -145,7 +146,7 @@ export default function Sponsors() {
                   height={0}
                   className={`h-auto object-contain ${sponsor.class}`}
                 />
-              </a>
+              </Link>
             ))}
           </div>
         </div>

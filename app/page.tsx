@@ -5,6 +5,7 @@ import { goldenRules } from "@/public/data/goldenrules";
 import Image from "next/image";
 import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
+import Link from "next/link";
 export default async function Index() {
   return (
     <>
@@ -28,7 +29,7 @@ export default async function Index() {
               height={400}
             />
             <div className="flex flex-col justify-between gap-3">
-              <p className="flex flex-col gap-4 text-xl">
+              <div className="flex flex-col gap-4 text-xl">
                 <p>
                   <span className="font-bold italic">HackOMania 2024</span> marked our return after
                   covid lockdowns and lifting of restrictions.
@@ -38,48 +39,48 @@ export default async function Index() {
                   tomorrow, building a resilient future! We thought it would be a slow start but we
                   were blown away by the enthusiasm of the participants and sponsors.{" "}
                 </p>
-              </p>
+              </div>
               <div className="mt-6 flex flex-wrap justify-center gap-4">
-                <a
+                <Link
                   href="https://hackomania2024.geekshacking.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-md bg-hackomania-red p-5 py-3 text-center text-xl font-bold text-white"
                 >
                   2024
-                </a>
-                <a
+                </Link>
+                <Link
                   href="https://hackomania2019.geekshacking.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-md bg-hackomania-red p-5 py-3 text-center text-xl font-bold text-white"
                 >
                   2019
-                </a>
-                <a
+                </Link>
+                <Link
                   href="https://hackomania2018.geekshacking.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-md bg-hackomania-red p-5 py-3 text-center text-xl font-bold text-white"
                 >
                   2018
-                </a>
-                <a
+                </Link>
+                <Link
                   href="https://www.facebook.com/media/set/?set=oa.397402217293812&type=3"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-md bg-hackomania-red p-5 py-3 text-center text-xl font-bold text-white"
                 >
                   2017
-                </a>
-                <a
+                </Link>
+                <Link
                   href="https://www.facebook.com/media/set/?set=oa.206132056420830&type=3"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-md bg-hackomania-red p-5 py-3 text-center text-xl font-bold text-white"
                 >
                   2016
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -119,14 +120,14 @@ export default async function Index() {
             />
             <h2>9 GOLDEN RULES</h2>
           </div>
-          <div
+          <ol
             className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2 md:grid-rows-3 lg:grid-cols-3"
             id="golden-rules-grid"
           >
             {goldenRules.map((rule, index) => (
               <GoldenRule key={index} rule={rule.description} title={rule.title} index={index} />
             ))}
-          </div>
+          </ol>
         </section>
 
         <section className="py-10" id="venue">
@@ -138,7 +139,7 @@ export default async function Index() {
             <h2>VENUE</h2>
           </div>
 
-          <section id="pre-event">
+          <section className="py-10" id="pre-event">
             <h2 className="mb-4 text-2xl font-bold text-hackomania-green md:text-5xl">PRE EVENT</h2>
 
             <div className="flex flex-col gap-5 md:flex-row">
@@ -173,7 +174,7 @@ export default async function Index() {
             </div>
           </section>
 
-          <section id="main-event" className="my-8">
+          <section className="py-10" id="main-event">
             <h2 className="mb-4 text-2xl font-bold text-hackomania-green md:text-5xl">
               MAIN EVENT
             </h2>
@@ -210,7 +211,7 @@ export default async function Index() {
           </section>
         </section>
 
-        <section className="py-10" id="sponsors">
+        <section className="py-8" id="sponsors">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
             <Image src="/RedStar.svg" alt="" width={60} height={60} />
             <h2>SPONSORS</h2>
@@ -219,7 +220,7 @@ export default async function Index() {
           <Sponsors />
         </section>
 
-        <section className="py-10" id="team">
+        <section className="py-8" id="team">
           <div
             className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl"
             id="team-title"
