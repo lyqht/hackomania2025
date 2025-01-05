@@ -57,15 +57,12 @@ export async function DELETE(request: Request) {
     await db.transaction(async (tx) => {
       const teamReference = await tx.select().from(team).where(eq(team.id, teamId));
       if (teamReference.length === 0) {
-        tx.rollback();
         return NextResponse.json({ error: "Team not found" }, { status: 404 });
       }
       if (teamReference[0].leaderId !== session.user.id) {
-        tx.rollback();
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
       if (teamReference[0].leaderId === deleteUserId) {
-        tx.rollback();
         return NextResponse.json({ error: "Cannot remove the team leader" }, { status: 400 });
       }
 
@@ -91,32 +88,41 @@ export async function POST(request: Request) {
     }
 
     // Parse the request body
-    const { teamId, insertUserId } = await request.json();
-    if (!teamId || !insertUserId) {
-      return NextResponse.json({ error: "Team ID and User ID are required" }, { status: 400 });
+    const { teamId, addUserUsernames } = await request.json();
+    if (!teamId || !addUserUsernames) {
+      return NextResponse.json(
+        { error: "Team ID and Usernames to Add are required" },
+        { status: 400 },
+      );
     }
 
-    // Insert the user into the team
+    // Add each user to the team
     await db.transaction(async (tx) => {
-      const userReference = await tx.select().from(user).where(eq(user.id, insertUserId));
-      if (userReference.length === 0) {
-        tx.rollback();
-        return NextResponse.json({ error: "User not found" }, { status: 404 });
-      }
       const teamReference = await tx.select().from(team).where(eq(team.id, teamId));
       if (teamReference.length === 0) {
-        tx.rollback();
         return NextResponse.json({ error: "Team not found" }, { status: 404 });
       }
+      if (teamReference[0].leaderId !== session.user.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
 
-      await tx.insert(teamMembers).values({
-        teamId: teamId,
-        userId: insertUserId,
-        role: "member",
-      });
+      for (const username of addUserUsernames) {
+        const userReference = await tx.select().from(user).where(eq(user.githubUsername, username));
+        if (userReference.length === 0) {
+          tx.rollback();
+          return NextResponse.json(
+            { error: `User with GitHub Username (${username}) not found` },
+            { status: 404 },
+          );
+        }
+
+        await tx.insert(teamMembers).values({
+          teamId: teamId,
+          userId: userReference[0].id,
+          role: "member",
+        });
+      }
     });
-
-    return NextResponse.json({ status: "success" });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ status: 500 });
