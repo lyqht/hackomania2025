@@ -25,6 +25,6 @@ export const teamMembers = pgTable(
   (table) => ({
     // Ensures that each user can only be in one team at any time.
     uniqueConstraint: unique("uniqueTeamMember").on(table.teamId, table.userId),
-    checkRole: check("role", sql`${table.role} IN ('leader', 'member')`),
+    checkRole: check("check_member_role", sql`${table.role} IN ('leader', 'member')`),
   }),
 );

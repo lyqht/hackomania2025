@@ -8,7 +8,7 @@ export const user = pgTable(
     email: text().notNull().unique(),
     githubUsername: text().notNull(),
     createdAt: timestamp().notNull().defaultNow(),
-    role: text(),
+    role: text().default("participant"),
   },
   (table) => ({
     checkRole: check("role_verification", sql`${table.role} IN ('admin', 'participant')`),
