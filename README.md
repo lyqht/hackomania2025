@@ -111,6 +111,23 @@ To apply the migrations to your database:
 
 2. This will apply any pending migrations to your database.
 
+**If you encounter an error like below:**
+
+```
+<path_to_this_project>\node_modules\drizzle-kit\bin.cjs:37579
+              checkValue = checkValue.replace(/^CHECK\s*\(\(/, "").replace(/\)\)\s*$/, "");
+
+TypeError: Cannot read properties of undefined (reading 'replace')
+    at <path_to_this_project>\node_modules\drizzle-kit\bin.cjs:37579:39
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+```
+
+There could be an issue with the database's pooling mode. Check the `DATABASE_URL` and ensure that Session Mode is used instead of Transaction Mode.  
+To switch between modes, use the following ports:
+
+- 5432: Session Mode
+- 6543: Transaction Mode
+
 #### Best Practices
 
 - Always review generated migrations before applying them to your database.
