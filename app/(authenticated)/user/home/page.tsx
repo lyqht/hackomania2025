@@ -1,3 +1,4 @@
+import AddMembers from "@/components/custom/user-team/AddMembers";
 import EditTeamButtons from "@/components/custom/user-team/EditTeamButtons";
 import NoTeamManagement from "@/components/custom/user-team/NoTeamManagement";
 import TeamManagement from "@/components/custom/user-team/TeamManagement";
@@ -94,6 +95,10 @@ export default async function UserHome() {
 
             <div className="mt-2">
               <TeamManagement users={userTeam.users} teamId={userTeam.id} />
+            </div>
+
+            <div className="mt-2">
+              <AddMembers teamId={userTeam.id} numMembers={userTeam.users.length} />
             </div>
           </div>
         </section>

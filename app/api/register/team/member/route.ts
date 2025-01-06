@@ -105,20 +105,16 @@ export async function POST(request: Request) {
     await db.transaction(async (tx) => {
       const teamReference = await tx.select().from(team).where(eq(team.id, teamId));
       if (teamReference.length === 0) {
-        return NextResponse.json({ error: "Team not found" }, { status: 404 });
+        throw new Error("Team not found");
       }
       if (teamReference[0].leaderId !== session.user.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        throw new Error("Unauthorized");
       }
 
       for (const username of addUserUsernames) {
         const userReference = await tx.select().from(user).where(eq(user.githubUsername, username));
         if (userReference.length === 0) {
-          tx.rollback();
-          return NextResponse.json(
-            { error: `User with GitHub Username (${username}) not found` },
-            { status: 404 },
-          );
+          throw new Error(`User with GitHub Username (${username}) not found`);
         }
 
         await tx.insert(teamMembers).values({
@@ -128,8 +124,24 @@ export async function POST(request: Request) {
         });
       }
     });
+
+    return NextResponse.json({ status: "success" });
   } catch (err) {
     console.error(err);
+
+    // Map errors to the appropriate status codes
+    if (err instanceof Error) {
+      if (err.message === "Team not found") {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      if (err.message === "Unauthorized") {
+        return NextResponse.json({ error: err.message }, { status: 401 });
+      }
+      if (err.message.startsWith("User with GitHub Username")) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+    }
+
     return NextResponse.json({ status: 500 });
   }
 }
