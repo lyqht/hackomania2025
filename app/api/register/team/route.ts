@@ -61,16 +61,13 @@ export async function PUT(request: Request) {
     }
 
     // Parse the request body
-    const { selectedTeamID, teamName } = await request.json();
-    if (!selectedTeamID || !teamName) {
-      return NextResponse.json(
-        { error: "selectedTeamID and teamName is required" },
-        { status: 400 },
-      );
+    const { teamId, teamName } = await request.json();
+    if (!teamId || !teamName) {
+      return NextResponse.json({ error: "teamId and teamName is required" }, { status: 400 });
     }
 
     // Retrieve the team with the selectedTeamID
-    const requestedTeam = await db.select().from(team).where(eq(team.id, selectedTeamID));
+    const requestedTeam = await db.select().from(team).where(eq(team.id, teamId));
     if (requestedTeam.length === 0) {
       return NextResponse.json({ error: "Team with ID not found" }, { status: 404 });
     }
@@ -81,7 +78,7 @@ export async function PUT(request: Request) {
     }
 
     // Add the user to the team
-    await db.update(team).set({ name: teamName }).where(eq(team.id, selectedTeamID));
+    await db.update(team).set({ name: teamName }).where(eq(team.id, teamId));
 
     return NextResponse.json({ status: "success" });
   } catch (err) {

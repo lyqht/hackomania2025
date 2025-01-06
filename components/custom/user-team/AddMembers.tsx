@@ -26,8 +26,6 @@ export default function AddMembers({ teamId, numMembers }: { teamId: string; num
     });
 
     if (res.ok) {
-      console.log("Success");
-      console.log(await res.json());
       setError(null);
       setNewMemberUsername("");
       setLoading(false);
@@ -42,7 +40,7 @@ export default function AddMembers({ teamId, numMembers }: { teamId: string; num
       <p className="mb-1 text-lg font-semibold">Add Team Members</p>
       {numMembers < 5 ? (
         <>
-          <div className="flex w-full flex-row items-center gap-2 rounded-lg border border-gray-500 bg-background p-2">
+          <div className="flex w-full flex-row items-center gap-2 rounded-lg border border-gray-500 bg-background p-1">
             <label htmlFor="github-username" className="sr-only">
               GitHub Username
             </label>
