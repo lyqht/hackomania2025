@@ -25,8 +25,6 @@ export default function AddMembers({ teamId, numMembers }: { teamId: string; num
       }),
     });
 
-    console.log(res);
-
     if (res.ok) {
       console.log("Success");
       console.log(await res.json());

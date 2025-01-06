@@ -74,33 +74,35 @@ export default async function UserHome() {
               <EditTeamButtons teamID={userTeam.id} />
             )}
           </div>
-          <div id="no-team" className={`flex flex-col justify-center ${user.teamName && "hidden"}`}>
-            <p>
-              You have not joined a team. You may either create your own team, or join an existing
-              team using it&apos;s Team ID.
-            </p>
-            <div className="mt-2">
-              <NoTeamManagement />
-            </div>
-          </div>
 
-          <div
-            id="team-details"
-            className={`flex flex-col justify-center ${!user.teamName && "hidden"}`}
-          >
-            <p className="text-neutral-500">
-              <span className="font-medium">Number of Members: </span>
-              {userTeam.users.length}/5
-            </p>
-
-            <div className="mt-2">
-              <TeamManagement users={userTeam.users} teamId={userTeam.id} />
+          {!user.teamName && (
+            <div id="no-team" className="flex flex-col justify-center">
+              <p>
+                You have not joined a team. You may either create your own team, or join an existing
+                team using it&apos;s Team ID.
+              </p>
+              <div className="mt-2">
+                <NoTeamManagement />
+              </div>
             </div>
+          )}
 
-            <div className="mt-2">
-              <AddMembers teamId={userTeam.id} numMembers={userTeam.users.length} />
+          {user.teamName && (
+            <div id="team-details" className="flex flex-col justify-center">
+              <p className="text-neutral-500">
+                <span className="font-medium">Number of Members: </span>
+                {userTeam.users.length}/5
+              </p>
+
+              <div className="mt-2">
+                <TeamManagement users={userTeam.users} teamId={userTeam.id} />
+              </div>
+
+              <div className="mt-2">
+                <AddMembers teamId={userTeam.id} numMembers={userTeam.users.length} />
+              </div>
             </div>
-          </div>
+          )}
         </section>
       </div>
     </div>
