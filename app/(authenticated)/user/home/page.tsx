@@ -66,7 +66,7 @@ export default async function UserHome() {
         <div className="my-3 border border-neutral-400"></div>
 
         <section className="p-5">
-          <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-center">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center">
             <h2 className="text-2xl font-semibold">
               Your Team {user.teamName && <span className="font-normal">: {user.teamName}</span>}
             </h2>
@@ -88,11 +88,17 @@ export default async function UserHome() {
           )}
 
           {user.teamName && (
-            <div id="team-details" className="flex flex-col justify-center">
-              <p className="text-neutral-500">
-                <span className="font-medium">Number of Members: </span>
-                {userTeam.users.length}/5
-              </p>
+            <div id="team-details" className="flex flex-col justify-center gap-2">
+              <div>
+                <p className="text-neutral-500">
+                  <span className="font-medium">Team ID: </span>
+                  {userTeam.id}
+                </p>
+                <p className="text-neutral-500">
+                  <span className="font-medium">Number of Members: </span>
+                  {userTeam.users.length}/5
+                </p>
+              </div>
 
               <div className="mt-2">
                 <TeamManagement users={userTeam.users} teamId={userTeam.id} />

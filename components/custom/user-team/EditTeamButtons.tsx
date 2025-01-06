@@ -1,28 +1,97 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { motion } from "motion/react";
 
 export default function EditTeamButtons({ teamID }: { teamID: string }) {
-  const handleEditTeam = async () => {};
+  const [loading, setLoading] = useState<boolean>(false);
+  const [editTeamPopup, setEditTeamPopup] = useState<boolean>(false);
+  const [newTeamName, setNewTeamName] = useState<string>("");
+  const [error, setError] = useState<string | null>();
+  const router = useRouter();
+
+  const handleEditTeam = async () => {
+    setLoading(true);
+    const editRes = await fetch("/api/register/team", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        teamId: teamID,
+        teamName: newTeamName,
+      }),
+    });
+
+    if (editRes.ok) {
+      router.refresh();
+      setNewTeamName("");
+      setError(null);
+      setEditTeamPopup(false);
+    } else {
+      setError((await editRes.json()).error);
+    }
+
+    setLoading(false);
+  };
 
   const handleDeleteTeam = async () => {
-    await fetch(`/api/register/team?id=${teamID}`, {
-      method: "DELETE",
-    });
+    if (confirm("Are you sure you want to delete your team? This process cannot be undone.")) {
+      setLoading(true);
+      await fetch(`/api/register/team?id=${teamID}`, {
+        method: "DELETE",
+      });
+      router.refresh();
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex flex-row gap-3 md:ml-auto">
       <button
-        className="rounded-lg bg-blue-200 px-3 py-2 text-blue-900 hover:bg-blue-400"
-        onClick={handleEditTeam}
+        className="rounded-lg bg-blue-200 px-3 py-2 text-blue-900 duration-150 hover:bg-blue-400"
+        onClick={() => setEditTeamPopup(true)}
       >
         Edit Team
       </button>
       <button
-        className="rounded-lg bg-red-200 px-3 py-2 text-red-900 hover:bg-red-400"
+        className="rounded-lg bg-red-200 px-3 py-2 text-red-900 duration-150 hover:bg-red-400"
         onClick={handleDeleteTeam}
+        disabled={loading}
       >
         Delete Team
       </button>
+
+      {editTeamPopup && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={() => setEditTeamPopup(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            exit={{ opacity: 0 }}
+            className="m-5 rounded-lg bg-background p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-semibold">Edit Team Name</h3>
+            <input
+              type="text"
+              placeholder="New Team Name"
+              className="mt-3 w-full rounded-lg border border-gray-500 bg-background p-2"
+              value={newTeamName}
+              onChange={(e) => setNewTeamName(e.target.value)}
+            />
+            <button
+              className={`mt-3 w-full rounded-lg bg-hackomania-red p-2 font-semibold text-white ${loading && "cursor-not-allowed"}`}
+              onClick={handleEditTeam}
+              disabled={loading}
+            >
+              {loading ? "Updating Name..." : "Update Team Name"}
+            </button>
+            {error && <p className="mt-3 text-red-800">{error}</p>}
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }
