@@ -9,7 +9,7 @@ const EventbriteButton = () => {
   }, []);
 
   const modalButtonCheckout = useEventbrite({
-    eventId: process.env.NEXT_PUBLIC_EVENTBRITE_EVENT_ID,
+    eventId: process.env.NEXT_PUBLIC_EVENTBRITE_EVENT_ID || "",
     modal: true,
     onOrderComplete: handleOrderCompleted,
   });
