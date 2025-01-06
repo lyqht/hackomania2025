@@ -33,7 +33,6 @@ async function parseTeamList(): Promise<TeamMember[]> {
           console.error(error);
           reject(error);
         } else {
-          console.log(data);
           resolve(data);
         }
       },

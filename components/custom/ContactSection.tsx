@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function ContactSection() {
   return (
-    <div className="w-full p-5 text-start text-white md:p-20 lg:p-32">
+    <section id="contact" className="w-full p-5 text-start text-white md:p-20 lg:p-32">
       <div className="mx-auto max-w-6xl">
         {/* Header Section */}
         <div className="mb-12 flex items-center gap-4">
@@ -66,6 +66,6 @@ export default function ContactSection() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

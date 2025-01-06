@@ -1,27 +1,15 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { TeamMember } from "@/app/api/team/route";
 import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa6";
+import { headers } from "next/headers";
 
-export default function TeamSection() {
-  const [teamMembers, setTeamMembers] = useState([]);
-
-  useEffect(() => {
-    async function fetchTeamMembers() {
-      const response = await fetch("/api/team");
-      const data = await response.json();
-      console.log(data);
-      setTeamMembers(data);
-    }
-
-    fetchTeamMembers();
-  }, []);
+export default async function TeamSection() {
+  const head = headers().get("host")!;
+  const teamMembers = await (await fetch(`http://${head}/api/team`)).json();
 
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
       {teamMembers.map((member: TeamMember) => (
         <Profile key={member.name} member={member} />
       ))}
@@ -30,7 +18,6 @@ export default function TeamSection() {
 }
 
 function Profile({ member }: { member: TeamMember }) {
-  useEffect(() => console.log(member), []);
   return (
     <div className="group relative h-40 max-w-full overflow-hidden rounded-xl bg-white md:h-[265px]">
       <Image
@@ -39,6 +26,7 @@ function Profile({ member }: { member: TeamMember }) {
         width={100}
         height={50}
         className="h-full w-full object-cover"
+        unoptimized={true}
       />
       <div
         id="details-overlay"
@@ -48,21 +36,21 @@ function Profile({ member }: { member: TeamMember }) {
           <div className="flex-grow"></div>
           <p className="text-2xl font-bold md:text-3xl">{member.name}</p>
           <p className="mb-3">
-            {member.team} - {member.role == "" ? "Core Member" : member.role}
+            {member.team} {member.role && `- ${member.role}`}
           </p>
           <div className="flex flex-row gap-3">
             {member.linkedin && (
-              <Link href={member.linkedin}>
+              <Link href={member.linkedin} target="_blank" rel="noopener noreferrer">
                 <FaLinkedin className="text-2xl md:text-3xl" />
               </Link>
             )}
             {member.github && (
-              <Link href={member.github}>
+              <Link href={member.github} target="_blank" rel="noopener noreferrer">
                 <FaGithub className="text-2xl md:text-3xl" />
               </Link>
             )}
             {member.twitter && (
-              <Link href={member.twitter}>
+              <Link href={member.twitter} target="_blank" rel="noopener noreferrer">
                 <FaTwitter className="text-2xl md:text-3xl" />
               </Link>
             )}
