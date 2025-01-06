@@ -6,11 +6,17 @@ import Image from "next/image";
 import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
 import Link from "next/link";
+import EventbriteButton from "@/components/custom/EventbriteRegisterButton";
+
 export default async function Index() {
   return (
     <>
       <div className="flex flex-1 flex-col overflow-hidden p-5 md:p-20 lg:p-32">
         <head>{/* HackOMania 2025 Logo goes here */}</head>
+
+        <section className="py-10" id="registration">
+          <EventbriteButton />
+        </section>
 
         <section className="py-10" id="about">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">

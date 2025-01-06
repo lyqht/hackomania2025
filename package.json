@@ -31,6 +31,7 @@
     "prettier": "^3.3.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-eventbrite-popup-checkout": "^3.0.0",
     "react-icons": "^5.4.0"
   },
   "devDependencies": {
