@@ -4,22 +4,22 @@ export default function Prize({ index }: { index: number }) {
     {
       title: "Champion",
       amt: "$1,500",
-      img: "/prizes/Champion.png",
+      img: "/prizes/Champion.svg",
     },
     {
       title: "1st Runner Up",
       amt: "$1,000",
-      img: "/prizes/1stRunnerUp.png",
+      img: "/prizes/1stRunnerUp.svg",
     },
     {
       title: "2nd Runner Up",
       amt: "$500",
-      img: "/prizes/2ndRunnerUp.png",
+      img: "/prizes/2ndRunnerUp.svg",
     },
     {
       title: "People's Choice",
       amt: "$500",
-      img: "/prizes/PeopleChoice.png",
+      img: "/prizes/PeopleChoice.svg",
     },
   ];
 
@@ -32,7 +32,7 @@ export default function Prize({ index }: { index: number }) {
         height={index === 0 ? 200 : 150}
       />
       <h3
-        className={`${index === 0 ? "mb-2 text-3xl md:text-5xl" : "text-2xl md:text-4xl"} text-center`}
+        className={`${index === 0 ? "my-2 text-3xl md:text-5xl" : "text-2xl md:text-4xl"} text-center`}
       >
         {prizes[index].title}
       </h3>

@@ -21,26 +21,21 @@ interface ScheduleItem {
 
 // Configure schedules here
 const PREHACK_SCHEDULE: ScheduleItem[] = [
-  { time: "08:30 AM", event: "Organizing team call time" },
-  { time: "09:00 AM", event: "Venue Setup" },
   { time: "09:30 AM", event: "Registration" },
   { time: "10:00 AM", event: "Welcome and introduction" },
   { time: "10:15 AM", event: "Ice breaker" },
   { time: "10:30 AM", event: "Briefing" },
-  { time: "10:45 AM", event: "Sponsors to talk about the challenge" },
   { time: "11:15 AM", event: "Q&A" },
   { time: "11:30 AM", event: "Main Hall Workshop Slot 1" },
   { time: "12:30 PM", event: "Lunch" },
   { time: "01:00 PM", event: "Main Hall Workshop Slot 2" },
   { time: "02:00 PM", event: "Break" },
   { time: "02:30 PM", event: "Main Hall Workshop Slot 3" },
-  { time: "03:15 PM", event: "Closing, Lucky Draw & Phototaking" },
+  { time: "03:15 PM", event: "Closing" },
   { time: "03:45 PM", event: "Networking" },
-  { time: "04:45 PM", event: "Clean-up venue" },
 ];
 
 const DAY1_SCHEDULE: ScheduleItem[] = [
-  { time: "09:00 AM", event: "Event Preparation" },
   { time: "10:45 AM", event: "Registration" },
   { time: "11:15 AM", event: "Introduction" },
   { time: "11:30 AM", event: "Rakuten intro" },
@@ -53,7 +48,6 @@ const DAY1_SCHEDULE: ScheduleItem[] = [
 ];
 
 const DAY2_SCHEDULE: ScheduleItem[] = [
-  { time: "12:00 AM", event: "Merch Giving" },
   { time: "08:00 AM", event: "Breakfast" },
   { time: "09:00 AM", event: "Start team submission" },
 ];
