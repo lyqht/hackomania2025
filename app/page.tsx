@@ -14,8 +14,16 @@ export default async function Index() {
       <div className="flex flex-1 flex-col overflow-hidden p-5 md:p-20 lg:p-32">
         <header>{/* HackOMania 2025 Logo goes here */}</header>
 
-        <section className="py-10" id="registration">
+        <section className="flex flex-wrap justify-center gap-4 py-10" id="registration">
           <EventbriteButton />
+          <Link
+            href=""
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md border-4 border-hackomania-red p-5 py-3 text-center text-xl font-bold text-hackomania-red transition-all duration-300 hover:bg-hackomania-red hover:text-white"
+          >
+            LINKTREE
+          </Link>
         </section>
 
         <section className="py-10" id="about">

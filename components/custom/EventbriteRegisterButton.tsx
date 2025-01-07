@@ -17,11 +17,11 @@ const EventbriteButton = () => {
   return (
     <div
       id="EventbriteButton"
-      className="rounded-md bg-hackomania-red p-5 py-3 text-center text-xl font-bold text-white"
+      className="rounded-md border-4 border-hackomania-red p-5 py-3 text-center text-xl font-bold text-hackomania-red transition-all duration-300 hover:bg-hackomania-red hover:text-white"
     >
       {modalButtonCheckout && (
         <button id={modalButtonCheckout.id} type="button">
-          Register Now!
+          REGISTER NOW!
         </button>
       )}
     </div>
