@@ -12,7 +12,7 @@ export default async function Index() {
   return (
     <>
       <div className="flex flex-1 flex-col overflow-hidden p-5 md:p-20 lg:p-32">
-        <head>{/* HackOMania 2025 Logo goes here */}</head>
+        <header>{/* HackOMania 2025 Logo goes here */}</header>
 
         <section className="py-10" id="registration">
           <EventbriteButton />
