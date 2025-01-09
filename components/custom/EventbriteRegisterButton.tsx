@@ -1,29 +1,55 @@
 "use client";
 
-import React from "react";
-import useEventbrite from "react-eventbrite-popup-checkout";
+import { useEffect } from "react";
 
 const EventbriteButton = () => {
-  const handleOrderCompleted = React.useCallback(() => {
-    console.log("Order was completed successfully");
-  }, []);
+  const eventId = process.env.NEXT_PUBLIC_EVENTBRITE_EVENT_ID || "";
 
-  const modalButtonCheckout = useEventbrite({
-    eventId: process.env.NEXT_PUBLIC_EVENTBRITE_EVENT_ID || "",
-    modal: true,
-    onOrderComplete: handleOrderCompleted,
-  });
+  useEffect(() => {
+    const loadEventbriteScript = (): Promise<void> => {
+      return new Promise((resolve, reject) => {
+        const existingScript = document.querySelector(
+          "script[src='https://www.eventbrite.com/static/widgets/eb_widgets.js']",
+        );
+        if (existingScript) {
+          resolve();
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.src = "https://www.eventbrite.com/static/widgets/eb_widgets.js";
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error("Failed to load Eventbrite script."));
+        document.body.appendChild(script);
+      });
+    };
+
+    loadEventbriteScript()
+      .then(() => {
+        if (window.EBWidgets) {
+          window.EBWidgets.createWidget({
+            widgetType: "checkout",
+            eventId: eventId,
+            modal: true,
+            modalTriggerElementId: "EventbriteButton",
+            onOrderComplete: () => {
+              console.log("Order complete!");
+            },
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error loading Eventbrite script:", error);
+      });
+  }, [eventId]);
 
   return (
     <div
       id="EventbriteButton"
-      className="rounded-md border-4 border-hackomania-red p-5 py-3 text-center text-xl font-bold text-hackomania-red transition-all duration-300 hover:bg-hackomania-red hover:text-white"
+      className="cursor-pointer rounded-md border-4 border-hackomania-red p-5 py-3 text-center text-xl font-bold text-hackomania-red transition-all duration-300 hover:bg-hackomania-red hover:text-white"
     >
-      {modalButtonCheckout && (
-        <button id={modalButtonCheckout.id} type="button">
-          REGISTER NOW!
-        </button>
-      )}
+      REGISTER NOW
     </div>
   );
 };
