@@ -6,6 +6,7 @@ import Image from "next/image";
 import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
 import Link from "next/link";
+import EventbriteButton from "@/components/custom/EventbriteModalButton";
 export default async function Index() {
   return (
     <>
@@ -59,9 +60,7 @@ export default async function Index() {
 
                 {/* Action Buttons */}
                 <div className="mt-2 flex flex-row gap-3 md:mt-5">
-                  <button className="border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-2xl">
-                    REGISTER NOW
-                  </button>
+                  <EventbriteButton />
                   <button className="border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-2xl">
                     LINKTREE
                   </button>
