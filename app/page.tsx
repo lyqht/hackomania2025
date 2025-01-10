@@ -7,6 +7,7 @@ import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
 import Link from "next/link";
 import EventbriteButton from "@/components/custom/EventbriteModalButton";
+
 export default async function Index() {
   return (
     <>

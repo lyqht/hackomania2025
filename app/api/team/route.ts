@@ -2,15 +2,7 @@
 import * as fs from "fs";
 import { CsvError, parse } from "csv-parse";
 import { NextResponse } from "next/server";
-
-export type TeamMember = {
-  team: string;
-  name: string;
-  role: string;
-  linkedin: string;
-  twitter: string;
-  github: string;
-};
+import { TeamMember } from "@/public/team/team";
 
 async function parseTeamList(): Promise<TeamMember[]> {
   return new Promise((resolve, reject) => {

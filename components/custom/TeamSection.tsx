@@ -1,13 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { TeamMember } from "@/app/api/team/route";
 import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa6";
-import { headers } from "next/headers";
+import { TeamMember, teamMembers } from "@/public/team/team";
 
 export default async function TeamSection() {
-  const head = (await headers()).get("host")!;
-  const teamMembers = await (await fetch(`http://${head}/api/team`)).json();
-
   return (
     <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
       {teamMembers.map((member: TeamMember) => (
