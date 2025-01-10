@@ -6,11 +6,70 @@ import Image from "next/image";
 import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
 import Link from "next/link";
+import EventbriteButton from "@/components/custom/EventbriteModalButton";
+
 export default async function Index() {
   return (
     <>
-      <div className="flex flex-1 flex-col overflow-hidden p-5 md:p-20 lg:p-32">
-        <head>{/* HackOMania 2025 Logo goes here */}</head>
+      <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
+        <header className="flex w-full flex-col items-center justify-center py-20">
+          <div className="flex w-full max-w-[90vw] flex-col items-start md:max-w-[60vw]">
+            {/* HackOMania Logo */}
+            <Image
+              src="/hackomania.svg"
+              alt="HackOMania Logo"
+              width={0}
+              height={0}
+              className="hidden h-auto w-full md:block"
+              priority
+            />
+
+            {/* HackOMania Mobile Logo */}
+            <Image
+              src="/hackomania-mobile-logo.svg"
+              alt="HackOMania Logo"
+              width={0}
+              height={0}
+              className="block h-auto w-[80vw] py-5 md:hidden"
+              priority
+            />
+
+            {/* Event Details */}
+            <div className="flex w-full flex-col items-start gap-4 md:flex-row">
+              {/* Year Logo */}
+              <Image
+                src="/2025.svg"
+                alt="2025 Logo"
+                width={0}
+                height={0}
+                className="hidden h-auto w-[15vw] md:block md:w-[10vw]"
+              />
+
+              {/* Event Cards */}
+              <div className="flex flex-grow flex-col gap-4">
+                {/* Pre-Event Card */}
+                <div className="flex flex-row items-center bg-hackomania-red p-4 text-white">
+                  <h3 className="text-xl font-bold md:text-3xl">PRE EVENT</h3>
+                  <p className="ml-auto text-sm md:text-base">8 February, Saturday</p>
+                </div>
+
+                {/* Main Event Card */}
+                <div className="flex flex-row items-center bg-hackomania-red p-4 text-white">
+                  <h3 className="text-xl font-bold md:text-3xl">MAIN EVENT</h3>
+                  <p className="ml-auto text-sm md:text-base">15-16 February, Saturday-Sunday</p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-2 flex flex-row gap-3 md:mt-5">
+                  <EventbriteButton />
+                  <button className="border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-2xl">
+                    LINKTREE
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
 
         <section className="py-10" id="about">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
