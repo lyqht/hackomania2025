@@ -63,9 +63,14 @@ export default async function Index() {
                 {/* Action Buttons */}
                 <div className="mt-2 flex flex-row gap-3 md:mt-5">
                   <EventbriteButton />
-                  <button className="border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-2xl">
+                  <a
+                    className="cursor-pointer border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-2xl"
+                    href="https://linktr.ee/hackomania2025"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     LINKTREE
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
