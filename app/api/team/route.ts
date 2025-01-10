@@ -48,7 +48,10 @@ export async function GET() {
     if (err instanceof CsvError) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     } else {
-      return NextResponse.error();
+      return NextResponse.json(
+        { error: "An error occurred while parsing the team list" },
+        { status: 500 },
+      );
     }
   }
 }

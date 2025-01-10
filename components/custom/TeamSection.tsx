@@ -6,7 +6,12 @@ import { headers } from "next/headers";
 
 export default async function TeamSection() {
   const head = (await headers()).get("host")!;
-  const teamMembers = await (await fetch(`http://${head}/api/team`)).json();
+  const response = await fetch(`http://${head}/api/team`);
+  const teamMembers: TeamMember[] = await response.json();
+
+  if (!response.ok) {
+    return <div>Error loading team members</div>;
+  }
 
   return (
     <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
