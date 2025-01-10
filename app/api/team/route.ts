@@ -13,36 +13,39 @@ export type TeamMember = {
 };
 
 async function parseTeamList(): Promise<TeamMember[]> {
-  return new Promise((resolve, reject) => {
-    const filePath = "public/team/teamlist.csv";
-    const fileHeader = ["team", "name", "role", "linkedin", "github", "twitter"];
+  const filePath = "public/team/teamlist.csv";
+  const fileHeader = ["team", "name", "role", "linkedin", "github", "twitter"];
 
-    // Read file content
-    const fileContent = fs.readFileSync(filePath, { encoding: "utf-8" });
+  try {
+    const fileContent = await fs.promises.readFile(filePath, { encoding: "utf-8" });
 
-    // Parse the CSV data
-    parse(
-      fileContent,
-      {
-        columns: fileHeader,
-        delimiter: ",",
-        skip_empty_lines: true,
-      },
-      (error, data: TeamMember[]) => {
-        if (error) {
-          console.error(error);
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      },
-    );
-  });
+    return new Promise((resolve, reject) => {
+      parse(
+        fileContent,
+        {
+          columns: fileHeader,
+          delimiter: ",",
+          skip_empty_lines: true,
+        },
+        (error, data: TeamMember[]) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(data);
+          }
+        },
+      );
+    });
+  } catch (err) {
+    console.error("Error reading file:", err);
+    throw err;
+  }
 }
 
 export async function GET() {
   try {
     const teamList: TeamMember[] = await parseTeamList();
+    console.log(teamList);
     return NextResponse.json(teamList);
   } catch (err) {
     if (err instanceof CsvError) {

@@ -47,7 +47,7 @@ const EventbriteButton = () => {
   return (
     <div
       id="EventbriteButton"
-      className="cursor-pointer rounded-md border-4 border-hackomania-red p-5 py-3 text-center text-xl font-bold text-hackomania-red transition-all duration-300 hover:bg-hackomania-red hover:text-white"
+      className="border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-2xl"
     >
       REGISTER NOW
     </div>
