@@ -24,7 +24,7 @@ export default function Prize({ index }: { index: number }) {
   ];
 
   return (
-    <div className="flex flex-col items-center font-bold text-hackomania-green">
+    <div className="flex flex-col items-center gap-3 font-bold text-hackomania-green">
       <Image
         src={prizes[index].img}
         alt={prizes[index].title}

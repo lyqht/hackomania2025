@@ -7,6 +7,7 @@ import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
 import Link from "next/link";
 import EventbriteButton from "@/components/custom/EventbriteModalButton";
+import OldImageCarousel from "@/components/custom/OldImageCarousel";
 
 export default async function Index() {
   return (
@@ -78,13 +79,10 @@ export default async function Index() {
           </div>
 
           <div className="flex flex-col gap-5 md:flex-row">
-            <Image
-              src="https://placehold.co/600x400"
-              alt="Previous HackOMania on-site photos"
-              width={600}
-              height={400}
-            />
-            <div className="flex flex-col justify-between gap-3">
+            <div className="w-full md:w-1/2">
+              <OldImageCarousel />
+            </div>
+            <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-4 text-xl">
                 <p>
                   <span className="font-bold italic">HackOMania 2024</span> marked our return after
@@ -96,7 +94,7 @@ export default async function Index() {
                   were blown away by the enthusiasm of the participants and sponsors.{" "}
                 </p>
               </div>
-              <div className="mt-6 flex flex-wrap justify-center gap-4">
+              <div className="mb-auto mt-6 flex flex-wrap justify-center gap-4">
                 <Link
                   href="https://hackomania2024.geekshacking.com/"
                   target="_blank"
@@ -151,7 +149,7 @@ export default async function Index() {
           <div>
             <Prize index={0} />
 
-            <div className="mt-5 flex flex-col justify-center md:flex-row md:gap-20">
+            <div className="mt-7 flex flex-col justify-center md:flex-row md:gap-20">
               <Prize index={1} />
               <Prize index={2} />
               <Prize index={3} />
