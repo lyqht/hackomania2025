@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "github",

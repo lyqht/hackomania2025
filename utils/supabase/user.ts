@@ -4,7 +4,7 @@ import { createClient } from "./server";
 export async function getUser({
   toRedirectToSignIn = true,
 }: { toRedirectToSignIn?: boolean } = {}) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const {
     data: { user },
