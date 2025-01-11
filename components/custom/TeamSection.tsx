@@ -15,7 +15,7 @@ export default async function TeamSection() {
 
 function Profile({ member }: { member: TeamMember }) {
   return (
-    <div className="group relative h-40 max-w-full overflow-hidden rounded-xl bg-white md:h-[265px]">
+    <div className="group/team relative h-40 max-w-full overflow-hidden rounded-xl bg-white md:h-[265px]">
       <Image
         alt={member.name}
         src={`/team/images/${member.name.replace(" ", "").toLowerCase()}.jpg`}
@@ -26,7 +26,7 @@ function Profile({ member }: { member: TeamMember }) {
       />
       <div
         id="details-overlay"
-        className="absolute left-0 top-0 z-10 h-full w-full overflow-hidden rounded-xl bg-black bg-opacity-40 p-5 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100"
+        className="absolute left-0 top-0 z-10 h-full w-full overflow-hidden rounded-xl bg-black bg-opacity-40 p-5 text-white opacity-0 transition-opacity group-hover/team:opacity-100 group-focus/team:opacity-100"
       >
         <div className="flex h-full w-full flex-col">
           <div className="flex-grow"></div>
