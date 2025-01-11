@@ -74,26 +74,12 @@ const sponsorCategories: Record<string, SponsorCategory> = {
     title: "PARTNERS",
     sponsors: [
       {
-        name: "Azure",
-        image: "/sponsors/Microsoft_Azure.png",
-        width: (302 * 4) / 5,
-        height: (60 * 4) / 5,
-        url: "https://azure.microsoft.com/",
-      },
-      {
         name: "Google",
         image: "/sponsors/Google.png",
         width: (211 * 4) / 5,
         height: (60 * 4) / 5,
         url: "https://www.google.com/",
         class: "md:mt-4 lg:mt-8",
-      },
-      {
-        name: "Open AI",
-        image: "/sponsors/OpenAI.png",
-        width: (282 * 4) / 5,
-        height: (60 * 4) / 5,
-        url: "https://openai.com/",
       },
     ],
     class: "gap-8 xl:gap-24 mx-24",
