@@ -164,6 +164,10 @@ p, span, a {
   @apply font-cheyenne;
 }
 
+a {
+  @apply active:font-bold;
+}
+
 .grid-bg {
   background-image: 
     linear-gradient(to right, rgba(76, 149, 108, 0.1) 1px, transparent 1px),
