@@ -7,7 +7,7 @@ import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
 import Link from "next/link";
 import EventbriteButton from "@/components/custom/EventbriteModalButton";
-import OldImageCarousel from "@/components/custom/OldImageCarousel";
+import ImageCarousel from "@/components/custom/ImageCarousel";
 
 export default async function Index() {
   return (
@@ -85,7 +85,7 @@ export default async function Index() {
 
           <div className="flex flex-col gap-5 md:flex-row">
             <div className="w-full md:w-1/2">
-              <OldImageCarousel />
+              <ImageCarousel />
             </div>
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-4 text-xl">

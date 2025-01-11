@@ -5,7 +5,7 @@ import { ReactElement } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 
-export default function OldImageCarousel() {
+export default function ImageCarousel() {
   const imageLinks: ReactElement[] = [
     <Image
       width={0}
