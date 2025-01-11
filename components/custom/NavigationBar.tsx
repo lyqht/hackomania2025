@@ -24,7 +24,8 @@ export default function NavigtionBar() {
   // TODO: Add Framer Motion Animate
 
   return (
-    <div className={`w-screen ${styles.grid} pb-10`}>
+    <div className={`relative w-screen`}>
+      <div className={`absolute end-0 h-96 w-full md:h-60 ${styles.grid}`}></div>
       <div className="m-2 bg-hackomania-red p-5 md:mx-20 md:my-10">
         <nav className="hidden flex-row justify-end gap-3 text-white md:flex" id="full-nav">
           {navigationLinks.map((link) => (

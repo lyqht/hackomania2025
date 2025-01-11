@@ -7,12 +7,13 @@ import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
 import Link from "next/link";
 import EventbriteButton from "@/components/custom/EventbriteModalButton";
+import ImageCarousel from "@/components/custom/ImageCarousel";
 
 export default async function Index() {
   return (
     <>
       <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
-        <header className="flex w-full flex-col items-center justify-center py-20">
+        <header className="flex w-full flex-col items-center justify-center py-0 md:py-20">
           <div className="flex w-full max-w-[90vw] flex-col items-start md:max-w-[60vw]">
             {/* HackOMania Logo */}
             <Image
@@ -62,9 +63,14 @@ export default async function Index() {
                 {/* Action Buttons */}
                 <div className="mt-2 flex flex-row gap-3 md:mt-5">
                   <EventbriteButton />
-                  <button className="border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-2xl">
+                  <a
+                    className="cursor-pointer border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-2xl"
+                    href="https://linktr.ee/hackomania2025"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     LINKTREE
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
@@ -78,13 +84,10 @@ export default async function Index() {
           </div>
 
           <div className="flex flex-col gap-5 md:flex-row">
-            <Image
-              src="https://placehold.co/600x400"
-              alt="Previous HackOMania on-site photos"
-              width={600}
-              height={400}
-            />
-            <div className="flex flex-col justify-between gap-3">
+            <div className="w-full md:w-1/2">
+              <ImageCarousel />
+            </div>
+            <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-4 text-xl">
                 <p>
                   <span className="font-bold italic">HackOMania 2024</span> marked our return after
@@ -96,7 +99,7 @@ export default async function Index() {
                   were blown away by the enthusiasm of the participants and sponsors.{" "}
                 </p>
               </div>
-              <div className="mt-6 flex flex-wrap justify-center gap-4">
+              <div className="mb-auto mt-6 flex flex-wrap justify-center gap-4">
                 <Link
                   href="https://hackomania2024.geekshacking.com/"
                   target="_blank"
@@ -151,7 +154,7 @@ export default async function Index() {
           <div>
             <Prize index={0} />
 
-            <div className="mt-5 flex flex-col justify-center md:flex-row md:gap-20">
+            <div className="mt-7 flex flex-col justify-center md:flex-row md:gap-20">
               <Prize index={1} />
               <Prize index={2} />
               <Prize index={3} />
