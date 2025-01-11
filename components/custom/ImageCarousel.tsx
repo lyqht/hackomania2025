@@ -53,5 +53,14 @@ export default function ImageCarousel() {
       unoptimized={true}
     />,
   ];
-  return <AliceCarousel disableButtonsControls={true} autoPlay={true} items={imageLinks} />;
+  return (
+    <AliceCarousel
+      disableButtonsControls
+      autoWidth
+      autoPlay
+      autoPlayInterval={1000}
+      infinite
+      items={imageLinks}
+    />
+  );
 }
