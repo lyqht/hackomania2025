@@ -50,7 +50,7 @@ const DAY1_SCHEDULE: ScheduleItem[] = [
   { time: "11:15 AM", event: "Introduction" },
   { time: "11:30 AM", event: "Rakuten intro" },
   { time: "11:45 AM", event: "Safety briefing" },
-  { time: "12:00 PM", event: "Platinum sponsor key note" },
+  { time: "12:00 PM", event: "Keynote" },
   { time: "12:15 PM", event: "Hackathon briefing" },
   { time: "12:30 PM", event: "Lunch" },
   { time: "01:00 PM", event: "Hackathon kick off & team registration start" },

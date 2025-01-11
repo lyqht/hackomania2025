@@ -49,20 +49,24 @@ export default async function Index() {
               {/* Event Cards */}
               <div className="flex flex-grow flex-col gap-4">
                 {/* Pre-Event Card */}
-                <div className="flex flex-row items-center bg-hackomania-red p-4 text-white">
-                  <h3 className="text-xl font-bold md:text-3xl">PRE EVENT</h3>
-                  <p className="ml-auto text-sm md:text-base">8 February, Saturday</p>
+                <div className="flex flex-row items-center justify-between gap-10 bg-hackomania-red p-4 text-white">
+                  <div className="flex flex-col">
+                    <h3 className="text-nowrap text-xl font-bold md:text-3xl">PRE EVENT</h3>
+                    <p className="text-sm md:text-base">8 February, Saturday</p>
+                  </div>
+                  <EventbriteButton />
                 </div>
 
                 {/* Main Event Card */}
-                <div className="flex flex-row items-center bg-hackomania-red p-4 text-white">
-                  <h3 className="text-xl font-bold md:text-3xl">MAIN EVENT</h3>
-                  <p className="ml-auto text-sm md:text-base">15-16 February, Saturday-Sunday</p>
+                <div className="flex flex-row items-center justify-between gap-3 bg-hackomania-red p-4 text-white">
+                  <h3 className="text-nowrap text-xl font-bold md:text-3xl">MAIN EVENT</h3>
+                  <p className="ml-auto text-right text-sm md:text-base">
+                    15-16 February, Saturday-Sunday
+                  </p>
                 </div>
 
                 {/* Action Buttons */}
                 <div className="mt-2 flex flex-row gap-3 md:mt-5">
-                  <EventbriteButton />
                   <a
                     className="cursor-pointer border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-2xl"
                     href="https://linktr.ee/hackomania2025"
