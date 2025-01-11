@@ -79,10 +79,7 @@ export default function Timeline() {
             viewBox="0 0 98 95"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-[25px] md:w-[60px] lg:w-[98px]"
-            initial={{ rotate: -180 }}
-            animate={{ rotate: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-[25px] animate-spin-slow md:w-[60px] lg:w-[98px]"
           >
             <path
               d="M31.9691 57.1844L15.9846 84.8705L33.0154 94.7033L49 67.0172L64.9846 94.7033L82.0154 84.8705L66.0309 57.1844H98V37.5189H66.0309L82.0154 9.83278L64.9846 0L49 27.6861L33.0154 0L15.9845 9.83278L31.9691 37.5189H0V57.1844H31.9691Z"

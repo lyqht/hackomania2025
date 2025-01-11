@@ -77,7 +77,7 @@ export default async function Index() {
           </div>
         </header>
 
-        <section className="py-10" id="about">
+        <section className="group py-10 intersect:animate-slide-in-from-left" id="about">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
             <Image src="/RedStar.svg" alt="" width={60} height={60} />
             <h2>HACKOMANIA 2024</h2>
@@ -145,23 +145,19 @@ export default async function Index() {
           </div>
         </section>
 
-        <section className="py-10" id="prizes">
+        <section className="group py-10 intersect:animate-slide-in-from-right" id="prizes">
           <div className="mb-7 flex flex-row items-center gap-3 fill-hackomania-green text-3xl font-bold text-hackomania-green md:mb-14 md:text-6xl">
             <Image src="/GreenStar.svg" alt="" width={60} height={60} />
             <h2>PRIZES</h2>
           </div>
           <Prizes />
         </section>
+
         <TimelineSection />
-        <section className="py-10" id="prizes">
+
+        <section className="group py-10 intersect:animate-slide-in-from-left" id="golden-rules">
           <div className="mb-5 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-blue md:mb-10 md:text-6xl">
-            <Image
-              src="/BlueIcon.svg"
-              alt=""
-              width={60}
-              height={60}
-              className="fill-hackomania-blue"
-            />
+            <Image src="/BlueIcon.svg" alt="" width={60} height={60} />
             <h2>9 GOLDEN RULES</h2>
           </div>
           <ol
@@ -174,7 +170,7 @@ export default async function Index() {
           </ol>
         </section>
 
-        <section className="py-10" id="venue">
+        <section className="group py-10 intersect:animate-slide-in-from-right" id="venue">
           <div className="mb-5 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-green md:mb-10 md:text-6xl">
             <Image src="/GreenStar.svg" alt="" width={60} height={60} />
             <h2>VENUE</h2>
@@ -256,27 +252,25 @@ export default async function Index() {
           </div>
         </section>
 
-        <section className="py-8" id="sponsors">
+        <section className="group py-8 intersect:animate-slide-in-from-left" id="sponsors">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
             <Image src="/RedStar.svg" alt="" width={60} height={60} />
             <h2>SPONSORS</h2>
           </div>
-
           <Sponsors />
         </section>
 
-        <section className="py-8" id="team">
+        <section className="group py-8 intersect:animate-slide-in-from-right" id="team">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
             <Image
               src="/MeetTheTeam.svg"
               alt="Icon"
               width={60}
               height={60}
-              className="fill-hackomania-red"
+              className="intersect:animate-spin-slow"
             />
             <h2>MEET THE TEAM</h2>
           </div>
-
           <TeamSection />
         </section>
       </div>
