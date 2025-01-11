@@ -5,7 +5,7 @@ interface TimelineItemProps {
 
 export function TimelineItem({ time, event }: TimelineItemProps) {
   return (
-    <div className="group relative flex flex-col rounded-md border border-neutral-300 p-4">
+    <div className="group relative z-10 flex flex-col rounded-md border border-neutral-300 bg-white p-4">
       <div className="absolute bottom-0 right-0 h-0 w-0 border-b-[15px] border-r-[15px] border-b-transparent border-r-neutral-300 transition-colors duration-200 group-hover:border-r-red-600"></div>
 
       <span className="text-lg font-medium text-red-600">{time}</span>
@@ -54,8 +54,8 @@ const DAY2_SCHEDULE: ScheduleItem[] = [
 
 export default function Timeline() {
   return (
-    <section className="flex flex-col gap-10 py-10 md:flex-row" id="timeline">
-      <div className="relative h-[100px] min-h-0 w-full shrink bg-yellow-400 md:h-auto md:w-[180px] lg:w-[280px]">
+    <section className="relative flex flex-col gap-10 py-10 md:flex-row" id="timeline">
+      <div className="relative z-10 h-[100px] min-h-0 w-full shrink bg-yellow-400 md:h-auto md:w-[180px] lg:w-[280px]">
         <div className="absolute start-[50%] top-1/2 flex origin-center -translate-x-1/2 -translate-y-1/2 rotate-0 items-center gap-2 md:start-[calc(100%-20px)] md:top-1/4 md:mt-12 md:-rotate-90 md:gap-4 lg:start-[calc(100%-42px)]">
           <svg
             width="98"
@@ -106,6 +106,7 @@ export default function Timeline() {
           </div>
         </div>
       </div>
+      <div className={`grid-bg absolute bottom-0 h-96 w-full md:h-60`}></div>
     </section>
   );
 }
