@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 interface TimelineItemProps {
   time: string;
   event: string;
@@ -5,12 +9,18 @@ interface TimelineItemProps {
 
 export function TimelineItem({ time, event }: TimelineItemProps) {
   return (
-    <div className="group relative z-10 flex flex-col rounded-md border border-neutral-300 bg-white p-4">
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.3 }}
+      className="group relative z-10 flex flex-col rounded-md border border-neutral-300 bg-white p-4"
+    >
       <div className="absolute bottom-0 right-0 h-0 w-0 border-b-[15px] border-r-[15px] border-b-transparent border-r-neutral-300 transition-colors duration-200 group-hover:border-r-red-600"></div>
-
       <span className="text-lg font-medium text-red-600">{time}</span>
       <span className="text-lg text-neutral-800">{event}</span>
-    </div>
+    </motion.div>
   );
 }
 
@@ -55,56 +65,89 @@ const DAY2_SCHEDULE: ScheduleItem[] = [
 export default function Timeline() {
   return (
     <section className="relative flex flex-col gap-10 py-10 md:flex-row" id="timeline">
-      <div className="relative z-10 h-[100px] min-h-0 w-full shrink bg-yellow-400 md:h-auto md:w-[180px] lg:w-[280px]">
-        <div className="absolute start-[50%] top-1/2 flex origin-center -translate-x-1/2 -translate-y-1/2 rotate-0 items-center gap-2 md:start-[calc(100%-20px)] md:top-1/4 md:mt-12 md:-rotate-90 md:gap-4 lg:start-[calc(100%-42px)]">
-          <svg
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="relative z-10 h-[100px] min-h-0 w-full shrink bg-yellow-400 md:h-auto md:w-[180px] lg:w-[280px]"
+      >
+        <div className="absolute start-[50%] top-1/2 flex origin-center -translate-x-1/2 -translate-y-1/2 rotate-0 items-center gap-2 md:start-[calc(100%-42px)] md:top-[40%] md:-rotate-90 md:gap-4 lg:start-[calc(100%-42px)]">
+          <motion.svg
             width="98"
             height="95"
             viewBox="0 0 98 95"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className="w-[25px] md:w-[60px] lg:w-[98px]"
+            initial={{ rotate: -180 }}
+            animate={{ rotate: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <path
               d="M31.9691 57.1844L15.9846 84.8705L33.0154 94.7033L49 67.0172L64.9846 94.7033L82.0154 84.8705L66.0309 57.1844H98V37.5189H66.0309L82.0154 9.83278L64.9846 0L49 27.6861L33.0154 0L15.9845 9.83278L31.9691 37.5189H0V57.1844H31.9691Z"
               fill="#FFFBF5"
             />
-          </svg>
-          <h2 className="whitespace-nowrap text-3xl font-bold uppercase text-white md:text-6xl lg:text-9xl">
+          </motion.svg>
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="whitespace-nowrap text-3xl font-bold uppercase text-white md:text-6xl lg:text-9xl"
+          >
             Timeline
-          </h2>
+          </motion.h2>
         </div>
-      </div>
+      </motion.div>
+
       <div className="grid grow grid-cols-1 gap-8 md:grid-cols-3">
         {/* Pre-Hack Column */}
-        <div className="flex flex-col gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col gap-4"
+        >
           <h3 className="text-2xl font-bold lg:text-4xl">PREHACK</h3>
           <div className="flex flex-col gap-3">
             {PREHACK_SCHEDULE.map((item, index) => (
               <TimelineItem key={index} time={item.time} event={item.event} />
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Day 1 Column */}
-        <div className="flex flex-col gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex flex-col gap-4"
+        >
           <h3 className="text-2xl font-bold lg:text-4xl">DAY 1</h3>
           <div className="flex flex-col gap-3">
             {DAY1_SCHEDULE.map((item, index) => (
               <TimelineItem key={index} time={item.time} event={item.event} />
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Day 2 Column */}
-        <div className="flex flex-col gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="flex flex-col gap-4"
+        >
           <h3 className="text-2xl font-bold lg:text-4xl">DAY 2</h3>
           <div className="flex flex-col gap-3">
             {DAY2_SCHEDULE.map((item, index) => (
               <TimelineItem key={index} time={item.time} event={item.event} />
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
       <div className={`grid-bg absolute bottom-0 h-96 w-full md:h-60`}></div>
     </section>
