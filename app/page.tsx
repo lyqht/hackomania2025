@@ -13,7 +13,7 @@ export default async function Index() {
   return (
     <>
       <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
-        <header className="flex w-full flex-col items-center justify-center py-20">
+        <header className="flex w-full flex-col items-center justify-center py-0 md:py-20">
           <div className="flex w-full max-w-[90vw] flex-col items-start md:max-w-[60vw]">
             {/* HackOMania Logo */}
             <Image
