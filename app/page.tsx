@@ -1,5 +1,4 @@
 import GoldenRule from "@/components/custom/GoldenRule";
-import Prize from "@/components/custom/Prize";
 import TeamSection from "@/components/custom/TeamSection";
 import { goldenRules } from "@/public/data/goldenrules";
 import Image from "next/image";
@@ -8,6 +7,7 @@ import TimelineSection from "@/components/custom/TimelineSection";
 import Link from "next/link";
 import EventbriteButton from "@/components/custom/EventbriteModalButton";
 import ImageCarousel from "@/components/custom/ImageCarousel";
+import Prizes from "@/components/custom/Prizes";
 
 export default async function Index() {
   return (
@@ -150,16 +150,7 @@ export default async function Index() {
             <Image src="/GreenStar.svg" alt="" width={60} height={60} />
             <h2>PRIZES</h2>
           </div>
-
-          <div>
-            <Prize index={0} />
-
-            <div className="mt-7 flex flex-col justify-center md:flex-row md:gap-20">
-              <Prize index={1} />
-              <Prize index={2} />
-              <Prize index={3} />
-            </div>
-          </div>
+          <Prizes />
         </section>
         <TimelineSection />
         <section className="py-10" id="prizes">
