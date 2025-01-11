@@ -24,11 +24,14 @@ export default function NavigtionBar() {
 
   return (
     <div className={`relative w-screen`}>
-      <div className={`grid-bg absolute h-96 w-full md:h-60`}></div>
       <div className="m-2 bg-hackomania-red p-5 md:mx-20 md:my-10">
         <nav className="hidden flex-row justify-end gap-3 text-white md:flex" id="full-nav">
           {navigationLinks.map((link) => (
-            <Link key={link.title} href={link.href} className="text-white">
+            <Link
+              key={link.title}
+              href={link.href}
+              className="text-white hover:underline active:font-bold"
+            >
               {link.title}
             </Link>
           ))}
@@ -56,6 +59,7 @@ export default function NavigtionBar() {
           </nav>
         )}
       </div>
+      <div className={`grid-bg absolute h-96 w-full md:h-60`}></div>
     </div>
   );
 }
