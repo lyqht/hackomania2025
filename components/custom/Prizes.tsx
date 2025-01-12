@@ -5,25 +5,25 @@ import Image from "next/image";
 
 const prizes = [
   {
-    title: "Champion",
-    amount: "$1,500",
-    img: "/prizes/Champion.svg",
-    width: 200,
-    height: 200,
-    titleClassName: "my-2 text-3xl md:text-5xl text-center",
-  },
-  {
-    title: "1st Runner Up",
+    title: "Challenge 1 Winner",
     amount: "$1,000",
-    img: "/prizes/1stRunnerUp.svg",
+    img: "/prizes/Champion.svg",
     width: 150,
     height: 150,
     titleClassName: "text-2xl md:text-4xl text-center",
   },
   {
-    title: "2nd Runner Up",
-    amount: "$500",
-    img: "/prizes/2ndRunnerUp.svg",
+    title: "Challenge 2 Winner",
+    amount: "$1,000",
+    img: "/prizes/Champion.svg",
+    width: 150,
+    height: 150,
+    titleClassName: "text-2xl md:text-4xl text-center",
+  },
+  {
+    title: "Challenge 3 Winner",
+    amount: "$1,000",
+    img: "/prizes/Champion.svg",
     width: 150,
     height: 150,
     titleClassName: "text-2xl md:text-4xl text-center",
@@ -77,18 +77,9 @@ function Prize({ img, title, width, height, titleClassName, amount }: PrizeProps
 
 export default function Prizes() {
   return (
-    <div>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      >
-        <Prize {...prizes[0]} />
-      </motion.div>
-
-      <div className="mt-10 flex flex-col justify-center gap-10 md:mt-14 md:flex-row md:gap-20">
-        {prizes.slice(1).map((prize, index) => (
+    <div className="flex flex-col gap-12">
+      <div className="flex flex-col justify-center gap-10 md:mt-14 md:flex-row md:gap-20">
+        {prizes.slice(0, 3).map((prize, index) => (
           <motion.div
             key={prize.title}
             initial={{ opacity: 0, y: 20 }}
@@ -100,6 +91,14 @@ export default function Prizes() {
           </motion.div>
         ))}
       </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
+        <Prize {...prizes[3]} />
+      </motion.div>
     </div>
   );
 }
