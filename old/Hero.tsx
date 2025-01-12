@@ -34,7 +34,7 @@ export default function Hero() {
               className="w-auto"
               width={60}
               height={40}
-              src="/geekshacking.webp"
+              src="/geekshacking.png"
               alt="GeeksHacking Singapore"
             />
           </Link>

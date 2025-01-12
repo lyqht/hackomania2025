@@ -9,7 +9,7 @@ export default function ContactSection() {
         <div className="mb-12 flex items-center gap-4">
           <h2 className="text-3xl font-bold md:text-5xl">CONTACT US</h2>
           <Image
-            src="/geekshacking.webp"
+            src="/geekshacking.png"
             alt="GeeksHacking Logo"
             width={100}
             height={50}

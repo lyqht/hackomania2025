@@ -27,6 +27,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="flex min-h-screen flex-col items-center">
             <div className="flex w-full flex-1 flex-col items-center">
               <NavigtionBar />
+              <div className="w-full max-w-full">
+                <div className="m-2 rounded-lg border-2 border-hackomania-red p-4 text-lg font-medium text-hackomania-red md:mx-20">
+                  <p>
+                    We are still actively updating the website! Please check back for more
+                    information! :)
+                  </p>
+                </div>
+              </div>
+
               <div className="flex w-full flex-col">{children}</div>
               <footer className="mx-auto flex w-full flex-col items-center justify-center gap-8 border-t bg-hackomania-red py-16 text-center text-xs text-white">
                 <ContactSection />
