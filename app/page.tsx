@@ -1,6 +1,4 @@
-import GoldenRule from "@/components/custom/GoldenRule";
 import TeamSection from "@/components/custom/TeamSection";
-import { goldenRules } from "@/public/data/goldenrules";
 import Image from "next/image";
 import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
@@ -8,6 +6,7 @@ import Link from "next/link";
 import EventbriteButton from "@/components/custom/EventbriteModalButton";
 import ImageCarousel from "@/components/custom/ImageCarousel";
 import Prizes from "@/components/custom/Prizes";
+import GoldenRules from "@/components/custom/GoldenRules";
 
 export default async function Index() {
   return (
@@ -162,16 +161,9 @@ export default async function Index() {
         <section className="group py-10 intersect:animate-slide-in-from-left" id="golden-rules">
           <div className="mb-5 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-blue md:mb-10 md:text-6xl">
             <Image src="/BlueIcon.svg" alt="" width={60} height={60} />
-            <h2>9 GOLDEN RULES</h2>
+            <h2>7 GOLDEN RULES</h2>
           </div>
-          <ol
-            className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2 md:grid-rows-3 lg:grid-cols-3"
-            id="golden-rules-grid"
-          >
-            {goldenRules.map((rule, index) => (
-              <GoldenRule key={index} rule={rule.description} title={rule.title} index={index} />
-            ))}
-          </ol>
+          <GoldenRules />
         </section>
 
         <section className="group py-10 intersect:animate-slide-in-from-right" id="venue">
