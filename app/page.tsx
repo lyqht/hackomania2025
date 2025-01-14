@@ -11,8 +11,8 @@ import GoldenRules from "@/components/custom/GoldenRules";
 export default async function Index() {
   return (
     <>
-      <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
-        <header className="flex w-full flex-col items-center justify-center py-0 md:py-20">
+      <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 md:pb-4 lg:px-32">
+        <header className="flex w-full flex-col items-center justify-center pt-0 md:pb-4 md:pt-10">
           <div className="flex w-full max-w-[90vw] flex-col items-start md:max-w-[60vw]">
             {/* HackOMania Logo */}
             <Image
@@ -65,7 +65,7 @@ export default async function Index() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="mt-2 flex flex-row gap-3 md:mt-5">
+                <div className="md:mt mt-2 flex flex-row gap-3">
                   <a
                     className="cursor-pointer border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-2xl"
                     href="https://linktr.ee/hackomania2025"
@@ -79,6 +79,14 @@ export default async function Index() {
             </div>
           </div>
         </header>
+
+        <div className="flex flex-row items-center text-3xl font-bold text-hackomania-yellow md:gap-1 md:text-6xl">
+          <Image src="/ThemeYellowScallop.svg" alt="" width={60} height={60} />
+          <h2 className="whitespace-pre-line text-center leading-snug">
+            HEALTHY LIVING FOR A CONNECTED WORLD
+          </h2>
+          <Image src="/ThemeYellowScallop.svg" alt="" width={60} height={60} />
+        </div>
 
         <section className="group py-10 intersect:animate-slide-in-from-left" id="about">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
