@@ -30,15 +30,15 @@ export const teamMembers = [
     role: "",
     linkedin: "https://www.linkedin.com/in/joel-loh-2074a6207/",
     twitter: "",
-    github: "https://github.com/julwrites",
+    github: "https://github.com/Jlorj",
   },
   {
     team: "Programs",
     name: "Sam",
     role: "",
-    linkedin: "",
+    linkedin: "https://www.linkedin.com/in/sam-tyk",
     twitter: "",
-    github: "",
+    github: "https://www.github.com/misterdoobdoob",
   },
   {
     team: "Programs",
