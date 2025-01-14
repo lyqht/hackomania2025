@@ -1,13 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
+import { FaTelegram, FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa6";
 
 export default function ContactSection() {
   return (
     <section id="contact" className="w-full p-5 text-start text-white md:p-16 lg:p-20">
       <div className="mx-auto max-w-6xl">
-        {/* Header Section */}
-        <div className="mb-12 flex items-center gap-4">
-          <h2 className="text-3xl font-bold md:text-5xl">CONTACT US</h2>
+        {/* About Section */}
+        <div className="mb-4 flex items-center gap-4">
+          <h2 className="text-3xl font-bold md:text-5xl">About GeeksHacking</h2>
           <Image
             src="/geekshacking.png"
             alt="GeeksHacking Logo"
@@ -16,18 +17,21 @@ export default function ContactSection() {
             className="object-contain"
           />
         </div>
+        <div className="mb-4 space-y-4 text-lg">
+          <p>
+            GeeksHacking is a geeky community that seeks to Give back and Grow together. We organize
+            events and workshops to help students and professionals alike to learn and grow
+            together. HackOMania is one of our flagship events that we organize annually.
+          </p>
+        </div>
+
+        {/* Header Section */}
+        <div className="mb-4 flex items-center gap-4">
+          <h2 className="text-3xl font-bold md:text-5xl">CONTACT US</h2>
+        </div>
 
         {/* Content Section */}
-        <div className="space-y-8 text-lg">
-          {/* Telegram Section */}
-          <div>
-            Click{" "}
-            <Link href="https://t.me/geekshacking" className="text-yellow-300 hover:underline">
-              here
-            </Link>{" "}
-            to join GeeksHacking&apos;s Telegram channel!
-          </div>
-
+        <div className="space-y-4 text-lg">
           {/* General Enquiries Section */}
           <div>
             <h3 className="mb-2 text-xl font-bold md:text-3xl">For general enquiries</h3>
@@ -41,7 +45,7 @@ export default function ContactSection() {
               </Link>{" "}
               or contact us through our{" "}
               <Link
-                href="https://facebook.com/geekshacking"
+                href="https://www.facebook.com/HackOManiaSG"
                 className="text-yellow-300 hover:underline"
               >
                 Facebook page
@@ -63,6 +67,37 @@ export default function ContactSection() {
               </Link>{" "}
               for sponsorship enquiries.
             </p>
+          </div>
+
+          {/* Social Media Section */}
+          <div>
+            <h3 className="mb-4 text-xl font-bold md:text-3xl">Follow Us</h3>
+            <div className="flex gap-4">
+              <Link href="https://t.me/geekshacking" target="_blank" rel="noopener noreferrer">
+                <FaTelegram className="text-2xl md:text-3xl" />
+              </Link>
+              <Link
+                href="https://www.facebook.com/HackOManiaSG"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaFacebook className="text-2xl md:text-3xl" />
+              </Link>
+              <Link
+                href="https://www.instagram.com/geekshacking"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaInstagram className="text-2xl md:text-3xl" />
+              </Link>
+              <Link
+                href="https://www.linkedin.com/company/geekshacking"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaLinkedin className="text-2xl md:text-3xl" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
