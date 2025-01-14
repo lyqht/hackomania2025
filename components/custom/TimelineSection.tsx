@@ -92,7 +92,7 @@ export default function Timeline() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="whitespace-nowrap text-3xl font-bold uppercase text-white md:text-6xl lg:text-9xl"
           >
-            Timeline
+            Schedule
           </motion.h2>
         </div>
       </motion.div>
