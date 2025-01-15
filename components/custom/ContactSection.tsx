@@ -7,17 +7,24 @@ export default function ContactSection() {
     <section id="contact" className="w-full p-5 text-start text-white md:p-16 lg:p-20">
       <div className="mx-auto max-w-6xl">
         {/* About Section */}
-        <div className="mb-4 flex items-center gap-4">
+        <div className="mb-4 flex flex-col items-start gap-4 md:flex-row md:items-center">
+          <Image
+            src="/geekshacking.png"
+            alt="GeeksHacking Logo"
+            width={100}
+            height={50}
+            className="block object-contain md:hidden"
+          />
           <h2 className="text-3xl font-bold md:text-5xl">About GeeksHacking</h2>
           <Image
             src="/geekshacking.png"
             alt="GeeksHacking Logo"
             width={100}
             height={50}
-            className="object-contain"
+            className="hidden object-contain md:block"
           />
         </div>
-        <div className="mb-4 space-y-4 text-lg">
+        <div className="my-4 space-y-4 text-lg">
           <p>
             GeeksHacking is a geeky community that seeks to Give back and Grow together. We organize
             events and workshops to help students and professionals alike to learn and grow

@@ -80,7 +80,7 @@ export default async function Index() {
           </div>
         </header>
 
-        <div className="flex flex-row items-center text-3xl font-bold text-hackomania-yellow md:gap-1 md:text-6xl">
+        <div className="my-10 flex flex-row items-center text-3xl font-bold text-hackomania-yellow md:my-28 md:gap-1 md:text-6xl">
           <Image src="/ThemeYellowScallop.svg" alt="" width={60} height={60} />
           <h2 className="whitespace-pre-line text-center leading-snug">
             HEALTHY LIVING FOR A CONNECTED WORLD
