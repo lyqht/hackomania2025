@@ -23,6 +23,7 @@ function Profile({ member }: { member: TeamMember }) {
         height={50}
         className="h-full w-full object-cover"
         unoptimized={true}
+        aria-label={`Portrait of ${member.name}`}
       />
       <div
         id="details-overlay"
@@ -37,17 +38,26 @@ function Profile({ member }: { member: TeamMember }) {
           <div className="flex flex-row gap-3">
             {member.linkedin && (
               <Link href={member.linkedin} target="_blank" rel="noopener noreferrer">
-                <FaLinkedin className="text-2xl md:text-3xl" />
+                <FaLinkedin
+                  className="text-2xl md:text-3xl"
+                  aria-label={`LinkedIn of ${member.name}`}
+                />
               </Link>
             )}
             {member.github && (
               <Link href={member.github} target="_blank" rel="noopener noreferrer">
-                <FaGithub className="text-2xl md:text-3xl" />
+                <FaGithub
+                  className="text-2xl md:text-3xl"
+                  aria-label={`GitHub of ${member.name}`}
+                />
               </Link>
             )}
             {member.twitter && (
               <Link href={member.twitter} target="_blank" rel="noopener noreferrer">
-                <FaTwitter className="text-2xl md:text-3xl" />
+                <FaTwitter
+                  className="text-2xl md:text-3xl"
+                  aria-label={`Twitter of ${member.name}`}
+                />
               </Link>
             )}
           </div>
