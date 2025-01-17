@@ -45,7 +45,7 @@ export default async function Index() {
                   height={0}
                   className="hidden h-auto w-[15vw] md:block md:w-[10vw]"
                 />
-                <a
+                <Link
                   className="flex items-center gap-2 border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-xl"
                   href="https://linktr.ee/hackomania2025"
                   target="_blank"
@@ -63,7 +63,7 @@ export default async function Index() {
                     />
                   </svg>
                   LINKTREE
-                </a>
+                </Link>
               </div>
 
               {/* Event Cards */}
@@ -100,7 +100,7 @@ export default async function Index() {
         <section className="group py-10 intersect:animate-slide-in-from-left" id="about">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
             <Image src="/RedStar.svg" alt="" width={60} height={60} />
-            <h2>HACKOMANIA 2024</h2>
+            <h2>About HACKOMANIA</h2>
           </div>
 
           <div className="flex flex-col gap-5 md:flex-row">
@@ -110,13 +110,16 @@ export default async function Index() {
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-4 text-xl">
                 <p>
-                  <span className="font-bold italic">HackOMania 2024</span> marked our return after
-                  covid lockdowns and lifting of restrictions.
+                  HackOMania is GeeksHacking’s annual hackathon. We bring together students, tech
+                  enthusiasts, and tech professionals for 24 hours to tackle real world challenges.
                 </p>
                 <p>
-                  <span className="font-bold italic">Rakuten</span> hosted us as we Innovated for
-                  tomorrow, building a resilient future! We thought it would be a slow start but we
-                  were blown away by the enthusiasm of the participants and sponsors.{" "}
+                  Now in its 6th year, HackOMania 2025 challenges you to develop innovative
+                  solutions to break free from digital addictions, unhealthy habits, and reconnect
+                  with the real world. Let’s build a{" "}
+                  <span className="font-bold italic">
+                    healthier, more connected world, together!
+                  </span>
                 </p>
               </div>
               <div className="mb-auto mt-6 flex flex-wrap justify-center gap-4">
