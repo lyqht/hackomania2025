@@ -103,12 +103,12 @@ export default async function Index() {
             <h2>About HACKOMANIA</h2>
           </div>
 
-          <div className="flex flex-col gap-5 md:flex-row">
+          <div className="flex flex-col gap-5 md:flex-row md:py-10">
             <div className="w-full md:w-1/2">
               <ImageCarousel />
             </div>
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col gap-4 text-xl">
+            <div className="flex flex-col gap-3 md:gap-8">
+              <div className="flex flex-col gap-4 text-balance text-center text-base md:text-xl">
                 <p>
                   HackOMania is GeeksHacking’s annual hackathon. We bring together students, tech
                   enthusiasts, and tech professionals for 24 hours to tackle real world challenges.
