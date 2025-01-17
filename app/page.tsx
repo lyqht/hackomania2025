@@ -35,21 +35,42 @@ export default async function Index() {
             />
 
             {/* Event Details */}
-            <div className="flex w-full flex-col items-start gap-4 md:flex-row">
-              {/* Year Logo */}
-              <Image
-                src="/2025.svg"
-                alt="2025 Logo"
-                width={0}
-                height={0}
-                className="hidden h-auto w-[15vw] md:block md:w-[10vw]"
-              />
+            <div className="flex w-full flex-col gap-4 md:flex-row">
+              <div className="flex flex-col justify-between gap-4">
+                {/* Year Logo */}
+                <Image
+                  src="/2025.svg"
+                  alt="2025 Logo"
+                  width={0}
+                  height={0}
+                  className="hidden h-auto w-[15vw] md:block md:w-[10vw]"
+                />
+                <Link
+                  className="flex items-center gap-2 border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-xl"
+                  href="https://linktr.ee/hackomania2025"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="var(--hackomania-red)"
+                      d="m13.736 5.853l4.005-4.117l2.325 2.38l-4.2 4.005h5.908v3.305h-5.937l4.229 4.108l-2.325 2.334l-5.74-5.769l-5.741 5.769l-2.325-2.325l4.229-4.108H2.226V8.121h5.909l-4.2-4.004l2.324-2.381l4.005 4.117V0h3.472zm-3.472 10.306h3.472V24h-3.472z"
+                    />
+                  </svg>
+                  LINKTREE
+                </Link>
+              </div>
 
               {/* Event Cards */}
-              <div className="flex flex-grow flex-col gap-4">
+              <div className="flex grow flex-col gap-4">
                 {/* Pre-Event Card */}
-                <div className="flex flex-row items-center justify-between gap-10 bg-hackomania-red p-4 text-white">
-                  <div className="flex flex-col">
+                <div className="flex flex-row items-center justify-between gap-1 bg-hackomania-red p-4 text-white">
+                  <div className="flex flex-col text-start">
                     <h3 className="text-nowrap text-xl font-bold md:text-3xl">PRE EVENT</h3>
                     <p className="text-sm md:text-base">8 February, Saturday</p>
                   </div>
@@ -58,21 +79,17 @@ export default async function Index() {
 
                 {/* Main Event Card */}
                 <div className="flex flex-row items-center justify-between gap-3 bg-hackomania-red p-4 text-white">
-                  <h3 className="text-nowrap text-xl font-bold md:text-3xl">MAIN EVENT</h3>
-                  <p className="ml-auto text-right text-sm md:text-base">
-                    15-16 February, Saturday-Sunday
-                  </p>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="md:mt mt-2 flex flex-row gap-3">
+                  <div className="flex grow flex-col text-start">
+                    <h3 className="text-nowrap text-xl font-bold md:text-3xl">MAIN EVENT</h3>
+                    <p className="text-sm md:text-base">15-16 February, Saturday-Sunday</p>
+                  </div>
                   <a
-                    className="cursor-pointer border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-2xl"
-                    href="https://linktr.ee/hackomania2025"
+                    href="https://forms.gle/py3AQyYHfjWmPtEM7"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="border-hackomania-white text-hackomania-white shrink border-4 p-1.5 text-base font-bold transition-all hover:bg-white hover:text-hackomania-red md:p-3 md:px-5 md:text-2xl"
                   >
-                    LINKTREE
+                    PRE-REGISTER
                   </a>
                 </div>
               </div>
@@ -91,15 +108,15 @@ export default async function Index() {
         <section className="group py-10 intersect:animate-slide-in-from-left" id="about">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
             <Image src="/RedStar.svg" alt="" width={60} height={60} />
-            <h2>About Hackomania</h2>
+            <h2>About HACKOMANIA</h2>
           </div>
 
-          <div className="flex flex-col gap-5 md:flex-row">
+          <div className="flex flex-col gap-5 md:flex-row md:py-10">
             <div className="w-full md:w-1/2">
               <ImageCarousel />
             </div>
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col gap-4 text-xl">
+            <div className="flex flex-col gap-3 md:gap-8">
+              <div className="flex flex-col gap-4 text-balance text-center text-base md:text-xl">
                 <p>
                   HackOMania is GeeksHacking’s annual hackathon. We bring together students, tech
                   enthusiasts, and tech professionals for 24 hours to tackle real world challenges.
@@ -107,7 +124,10 @@ export default async function Index() {
                 <p>
                   Now in its 6th year, HackOMania 2025 challenges you to develop innovative
                   solutions to break free from digital addictions, unhealthy habits, and reconnect
-                  with the real world. Let’s build a healthier, more connected world, together.
+                  with the real world. Let’s build a{" "}
+                  <span className="font-bold italic">
+                    healthier, more connected world, together!
+                  </span>
                 </p>
               </div>
               <div className="mb-auto mt-6 flex flex-wrap justify-center gap-4">
