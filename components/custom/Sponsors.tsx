@@ -92,7 +92,7 @@ const sponsorCategories: Record<string, SponsorCategory> = {
         image: "/sponsors/Rakuten.png",
         width: (259 * 4) / 5,
         height: (60 * 4) / 5,
-        url: "https://global.rakuten.com/corp/",
+        url: "https://www.linkedin.com/company/rakuten-asia-pte-ltd",
       },
       {
         name: "Open Government Products",
