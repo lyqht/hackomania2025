@@ -58,10 +58,18 @@ export default async function Index() {
 
                 {/* Main Event Card */}
                 <div className="flex flex-row items-center justify-between gap-3 bg-hackomania-red p-4 text-white">
-                  <h3 className="text-nowrap text-xl font-bold md:text-3xl">MAIN EVENT</h3>
-                  <p className="ml-auto text-right text-sm md:text-base">
-                    15-16 February, Saturday-Sunday
-                  </p>
+                  <div className="flex flex-col text-start">
+                    <h3 className="text-nowrap text-xl font-bold md:text-3xl">MAIN EVENT</h3>
+                    <p className="text-sm md:text-base">15-16 February, Saturday-Sunday</p>
+                  </div>
+                  <a
+                    href="https://forms.gle/py3AQyYHfjWmPtEM7"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border-hackomania-white text-hackomania-white border-4 p-1.5 text-base font-bold transition-all hover:bg-white hover:text-hackomania-red md:p-3 md:px-5 md:text-2xl"
+                  >
+                    REGISTER YOUR INTEREST
+                  </a>
                 </div>
 
                 {/* Action Buttons */}
