@@ -1,4 +1,4 @@
-import TeamSection from "@/components/custom/TeamSection";
+import Organizers from "@/components/custom/Organizers";
 import Image from "next/image";
 import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
@@ -281,7 +281,7 @@ export default async function Index() {
           <Sponsors />
         </section>
 
-        <section className="group py-8 intersect:animate-slide-in-from-right" id="team">
+        <section className="group py-8 intersect:animate-slide-in-from-right" id="organizers">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
             <Image
               src="/MeetTheTeam.svg"
@@ -290,9 +290,9 @@ export default async function Index() {
               height={60}
               className="intersect:animate-spin-slow"
             />
-            <h2>MEET THE TEAM</h2>
+            <h2>Meet the Organizers</h2>
           </div>
-          <TeamSection />
+          <Organizers />
         </section>
       </div>
     </>

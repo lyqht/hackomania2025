@@ -14,7 +14,7 @@ const navigationLinks = [
   { title: "TIMELINE", href: "#timeline" },
   { title: "VENUE", href: "#venue" },
   { title: "SPONSORS", href: "#sponsors" },
-  { title: "TEAM", href: "#team" },
+  { title: "ORGANIZERS", href: "#organizers" },
   { title: "CONTACT", href: "#contact" },
 ];
 
