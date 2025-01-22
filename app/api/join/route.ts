@@ -7,7 +7,7 @@ import { team, teamMembers } from "@/utils/db/schema/team";
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Fetch the user's session
     const {

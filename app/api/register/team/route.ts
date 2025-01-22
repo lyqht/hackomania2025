@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 
 export async function GET() {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Fetch the user's session
     const {
@@ -50,7 +50,7 @@ export async function GET() {
 
 export async function PUT(request: Request) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Fetch the user's session
     const {
@@ -89,7 +89,7 @@ export async function PUT(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Fetch the user's session
     const {
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Fetch the user's session
     const {
