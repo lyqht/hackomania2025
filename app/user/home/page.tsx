@@ -8,7 +8,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 
 export default async function UserHome() {
-  const host = headers().get("host");
+  const host = (await headers()).get("host");
   const supabaseUser = (await getUser()) as User;
   const retrieveUserResponse = await fetch(`http://${host!}/api/user?id=${supabaseUser.id}`);
 
