@@ -122,7 +122,7 @@ TypeError: Cannot read properties of undefined (reading 'replace')
     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
 ```
 
-There could be an issue with the database's pooling mode. Check the `DATABASE_URL` and ensure that Session Mode is used instead of Transaction Mode.  
+There could be an issue with the database's pooling mode. Check the `POSTGRES_URL` and ensure that Session Mode is used instead of Transaction Mode.  
 To switch between modes, use the following ports:
 
 - 5432: Session Mode

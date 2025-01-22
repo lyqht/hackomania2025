@@ -1,12 +1,12 @@
 import { config } from "dotenv";
-import { drizzle } from 'drizzle-orm/postgres-js'
+import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
-config({ path: '.env' });
+config({ path: ".env" });
 
-const url = process.env.DATABASE_URL;
+const url = process.env.POSTGRES_URL;
 if (!url) {
-    throw new Error('DATABASE_URL is not defined');
+  throw new Error("POSTGRES_URL is not defined");
 }
 
 const client = postgres(url);
