@@ -30,9 +30,16 @@ export default async function Index() {
               alt="HackOMania Logo"
               width={0}
               height={0}
-              className="block h-auto w-[80vw] py-5 md:hidden"
+              className="block h-auto w-[80vw] py-2 md:hidden"
               priority
             />
+            {/* HackOMania Mobile Theme Banner */}
+
+            <div className="flex flex-row items-center pb-5 text-2xl font-bold text-hackomania-blue md:hidden md:py-9 md:text-6xl">
+              <h2 className="whitespace-pre-line text-center leading-snug">
+                HEALTHY LIVING FOR A CONNECTED WORLD
+              </h2>
+            </div>
 
             {/* Event Details */}
             <div className="flex w-full flex-col gap-4 md:flex-row">
@@ -97,12 +104,15 @@ export default async function Index() {
           </div>
         </header>
 
-        <div className="my-10 flex flex-row items-center text-3xl font-bold text-hackomania-yellow md:my-28 md:gap-1 md:text-6xl">
-          <Image src="/ThemeYellowScallop.svg" alt="" width={60} height={60} />
+        {/* HackOMania Theme Banner */}
+
+        {/* <div className="md:flex mt-4 mb-24 flex flex-row items-center gap-1 text-6xl font-bold text-hackomania-blue hidden"> */}
+        <div className="my-28 flex hidden flex-row items-center gap-1 text-6xl font-bold text-hackomania-blue md:flex">
+          <Image src="/ThemeBlueScallop.svg" alt="" width={60} height={60} />
           <h2 className="whitespace-pre-line text-center leading-snug">
             HEALTHY LIVING FOR A CONNECTED WORLD
           </h2>
-          <Image src="/ThemeYellowScallop.svg" alt="" width={60} height={60} />
+          <Image src="/ThemeBlueScallop.svg" alt="" width={60} height={60} />
         </div>
 
         <section className="group py-10 intersect:animate-slide-in-from-left" id="about">
