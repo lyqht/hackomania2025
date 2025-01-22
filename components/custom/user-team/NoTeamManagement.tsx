@@ -8,7 +8,7 @@ export default function NoTeamManagement() {
   const router = useRouter();
 
   const [joinTeamID, setJoinTeamID] = useState<string>("");
-  const [createTeamInfo, setCreateTeamInfo] = useState<InsertTeam>();
+  const [createTeamInfo, setCreateTeamInfo] = useState<InsertTeam>({ name: "" });
 
   const [joinTeamPopup, setJoinTeamPopup] = useState(false);
   const [createTeamPopup, setCreateTeamPopup] = useState(false);
@@ -20,8 +20,9 @@ export default function NoTeamManagement() {
 
   const createTeam = async () => {
     setLoading(true);
-    if (createTeamInfo?.name === "") {
+    if (!createTeamInfo.name) {
       setError("Team Name cannot be empty");
+      setLoading(false);
       return;
     }
 
@@ -30,7 +31,7 @@ export default function NoTeamManagement() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          teamName: createTeamInfo?.name,
+          teamName: createTeamInfo.name,
         }),
       });
 
@@ -119,7 +120,7 @@ export default function NoTeamManagement() {
               type="text"
               placeholder="Team Name"
               className="mt-3 w-full rounded-lg border border-gray-500 bg-background p-2"
-              value={createTeamInfo?.name}
+              value={createTeamInfo.name}
               onChange={(e) => setCreateTeamInfo({ ...createTeamInfo, name: e.target.value })}
             />
             <button
