@@ -1,16 +1,27 @@
+import EventbriteButton from "@/components/custom/EventbriteModalButton";
+import GitHubSignInButton from "@/components/custom/GitHubSignInButton";
+import GoldenRules from "@/components/custom/GoldenRules";
+import ImageCarousel from "@/components/custom/ImageCarousel";
+import NavigationBar from "@/components/custom/NavigationBar/NavigationBar";
 import Organizers from "@/components/custom/Organizers";
-import Image from "next/image";
+import Prizes from "@/components/custom/Prizes";
 import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
+import Image from "next/image";
 import Link from "next/link";
-import EventbriteButton from "@/components/custom/EventbriteModalButton";
-import ImageCarousel from "@/components/custom/ImageCarousel";
-import Prizes from "@/components/custom/Prizes";
-import GoldenRules from "@/components/custom/GoldenRules";
 
 export default async function Index() {
   return (
     <>
+      <NavigationBar />
+      <div className="w-full max-w-full">
+        <div className="z-30 m-2 rounded-lg border-2 border-hackomania-red p-4 text-lg font-medium text-hackomania-red md:mx-20">
+          <p className="mb-4">
+            We are still actively updating the website! Please check back for more information! :)
+          </p>
+          <GitHubSignInButton />
+        </div>
+      </div>
       <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
         <header className="flex w-full flex-col items-center justify-center py-0 md:py-20">
           <h1 className="sr-only">HackOMania 2025</h1>
@@ -129,13 +140,14 @@ export default async function Index() {
             <div className="flex flex-col gap-3 md:gap-8">
               <div className="flex flex-col gap-4 text-balance text-center text-base md:text-xl">
                 <p>
-                  HackOMania is GeeksHacking’s annual hackathon. We bring together students, tech
-                  enthusiasts, and tech professionals for 24 hours to tackle real world challenges.
+                  HackOMania is GeeksHacking&apos;s annual hackathon. We bring together students,
+                  tech enthusiasts, and tech professionals for 24 hours to tackle real world
+                  challenges.
                 </p>
                 <p>
                   Now in its 6th year, HackOMania 2025 challenges you to develop innovative
                   solutions to break free from digital addictions, unhealthy habits, and reconnect
-                  with the real world. Let’s build a{" "}
+                  with the real world. Let&apos;s build a{" "}
                   <span className="font-bold italic">
                     healthier, more connected world, together!
                   </span>
