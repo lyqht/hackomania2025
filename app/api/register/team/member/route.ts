@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Fetch the user's session
     const {
@@ -81,7 +81,7 @@ export async function DELETE(request: NextRequest) {
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Fetch the user's session
     const {
