@@ -49,12 +49,8 @@ export default async function UserHome() {
           <h2 className="mb-3 text-2xl font-semibold">Your Information</h2>
           <div className="flex flex-col justify-around gap-2 md:flex-row md:text-center">
             <div>
-              <p className="text-xl font-medium">Applicant ID</p>
-              <p>{user.id}</p>
-            </div>
-            <div>
-              <p className="text-xl font-medium">Registration Status</p>
-              <p>Not Registered</p>
+              <p className="text-xl font-medium">Pre-event</p>
+              <p>Not registered</p>
             </div>
             <div>
               <p className="text-xl font-medium">GitHub Account</p>
