@@ -7,6 +7,8 @@ import TeamManagement from "@/components/custom/user-team/TeamManagement";
 import { getUser } from "@/utils/supabase/user";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
+import { Suspense } from "react";
+import LoadingSpinner from "@/components/custom/LoadingSpinner";
 
 export default async function UserHome() {
   const supabaseUser = (await getUser()) as User;
@@ -51,51 +53,54 @@ export default async function UserHome() {
 
         <div className="my-3 border border-neutral-400"></div>
 
-        <section className="p-5">
+        <Suspense fallback={<LoadingSpinner />}>
+          <section className="p-5">
             {userTeam && (
-          <div className="flex flex-col gap-3 md:flex-row md:items-center">
-            <h2 className="text-2xl font-semibold">
-              Your Team {user.teamName && <span className="font-normal">: {user.teamName}</span>}
-            </h2>
+              <div className="flex flex-col gap-3 md:flex-row md:items-center">
+                <h2 className="text-2xl font-semibold">
+                  Your Team{" "}
+                  {user.teamName && <span className="font-normal">: {user.teamName}</span>}
+                </h2>
                 {userTeam.leaderId === user.id && <EditTeamButtons teamID={userTeam.id} />}
               </div>
             )}
 
             {userTeam == null && (
-            <div id="no-team" className="flex flex-col justify-center">
-              <p>
-                You have not joined a team. You may either create your own team, or join an existing
-                team using it&apos;s Team ID.
-              </p>
-              <div className="mt-2">
-                <NoTeamManagement />
+              <div id="no-team" className="flex flex-col justify-center">
+                <p>
+                  You have not joined a team. You may either create your own team, or join an
+                  existing team using it&apos;s Team ID.
+                </p>
+                <div className="mt-2">
+                  <NoTeamManagement />
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
             {userTeam && (
-            <div id="team-details" className="flex flex-col justify-center gap-2">
-              <div>
-                <p className="text-neutral-500">
-                  <span className="font-medium">Team ID: </span>
-                  {userTeam.id}
-                </p>
-                <p className="text-neutral-500">
-                  <span className="font-medium">Number of Members: </span>
-                  {userTeam.users.length}/5
-                </p>
-              </div>
+              <div id="team-details" className="flex flex-col justify-center gap-2">
+                <div>
+                  <p className="text-neutral-500">
+                    <span className="font-medium">Team ID: </span>
+                    {userTeam.id}
+                  </p>
+                  <p className="text-neutral-500">
+                    <span className="font-medium">Number of Members: </span>
+                    {userTeam.users.length}/5
+                  </p>
+                </div>
 
-              <div className="mt-2">
-                <TeamManagement users={userTeam.users} teamId={userTeam.id} />
-              </div>
+                <div className="mt-2">
+                  <TeamManagement users={userTeam.users} teamId={userTeam.id} />
+                </div>
 
-              <div className="mt-2">
-                <AddMembers teamId={userTeam.id} numMembers={userTeam.users.length} />
+                <div className="mt-2">
+                  <AddMembers teamId={userTeam.id} numMembers={userTeam.users.length} />
+                </div>
               </div>
-            </div>
-          )}
-        </section>
+            )}
+          </section>
+        </Suspense>
       </div>
     </div>
   );
