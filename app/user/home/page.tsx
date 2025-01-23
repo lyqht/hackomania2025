@@ -1,5 +1,5 @@
-import { getTeamById } from "@/app/services/team";
-import { getUserById } from "@/app/services/user";
+import { getTeamById, Team } from "@/app/services/team";
+import { getUserById, UserInfo } from "@/app/services/user";
 import SuspenseLoadingSpinner from "@/components/custom/SuspenseLoadingSpinner";
 import EditTeamButtons from "@/components/custom/user-team/EditTeamButtons";
 import TeamManagementSection from "@/components/custom/user-team/TeamManagementSection";
@@ -7,6 +7,49 @@ import { getUser } from "@/utils/supabase/user";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { Suspense } from "react";
+
+interface UserInfoSectionProps {
+  githubUsername: string;
+}
+
+function UserInfoSection({ githubUsername }: UserInfoSectionProps) {
+  return (
+    <section className="p-5">
+      <h2 className="mb-3 text-2xl font-semibold">Your Information</h2>
+      <div className="flex flex-col justify-around gap-2 md:flex-row md:text-center">
+        <div>
+          <p className="text-xl font-medium">Pre-event</p>
+          <p>Not registered</p>
+        </div>
+        <div>
+          <p className="text-xl font-medium">GitHub Account</p>
+          <Link href={`https://github.com/${githubUsername}`}>{githubUsername}</Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+interface TeamInfoSectionProps {
+  user: UserInfo;
+  userTeam: Team | null;
+}
+
+function TeamInfoSection({ user, userTeam }: TeamInfoSectionProps) {
+  return (
+    <section className="p-5" id="team-management">
+      {userTeam && (
+        <div className="flex flex-col gap-3 md:flex-row md:items-center">
+          <h2 className="text-2xl font-semibold">
+            Your Team {user.teamName && <span className="font-normal">: {user.teamName}</span>}
+          </h2>
+          {userTeam.leaderId === user.id && <EditTeamButtons teamID={userTeam.id} />}
+        </div>
+      )}
+      <TeamManagementSection user={user} userTeam={userTeam} />
+    </section>
+  );
+}
 
 export default async function UserHome() {
   const supabaseUser = (await getUser()) as User;
@@ -24,6 +67,10 @@ export default async function UserHome() {
   }
 
   const userTeam = user.teamId ? await getTeamById(user.teamId) : null;
+  // Generate a unique key based on team state and timestamp to force remount
+  const teamKey = userTeam
+    ? `team-${userTeam.id}-${userTeam.name}-${Date.now()}`
+    : `no-team-${Date.now()}`;
 
   return (
     <div className="flex flex-col gap-5 p-5 md:p-20">
@@ -35,52 +82,14 @@ export default async function UserHome() {
       </div>
 
       <div className="rounded-lg border border-neutral-400">
-        <section className="p-5">
-          <h2 className="mb-3 text-2xl font-semibold">Your Information</h2>
-          <div className="flex flex-col justify-around gap-2 md:flex-row md:text-center">
-            <div>
-              <p className="text-xl font-medium">Pre-event</p>
-              <p>Not registered</p>
-            </div>
-            <div>
-              <p className="text-xl font-medium">GitHub Account</p>
-              <Link href={`https://github.com/${user.githubUsername}`}>{user.githubUsername}</Link>
-            </div>
-          </div>
-        </section>
+        <Suspense fallback={<SuspenseLoadingSpinner />}>
+          <UserInfoSection githubUsername={user.githubUsername} />
+        </Suspense>
 
         <div className="my-3 border border-neutral-400"></div>
 
-        <Suspense fallback={<SuspenseLoadingSpinner />}>
-          <section className="p-5" id="team-management">
-            <Suspense
-              fallback={
-                <div className="flex justify-center">
-                  <SuspenseLoadingSpinner />
-                </div>
-              }
-            >
-              {userTeam && (
-                <div className="flex flex-col gap-3 md:flex-row md:items-center">
-                  <h2 className="text-2xl font-semibold">
-                    Your Team{" "}
-                    {user.teamName && <span className="font-normal">: {user.teamName}</span>}
-                  </h2>
-                  {userTeam.leaderId === user.id && <EditTeamButtons teamID={userTeam.id} />}
-                </div>
-              )}
-            </Suspense>
-
-            <Suspense
-              fallback={
-                <div className="mt-4 flex justify-center">
-                  <SuspenseLoadingSpinner />
-                </div>
-              }
-            >
-              <TeamManagementSection user={user} userTeam={userTeam} />
-            </Suspense>
-          </section>
+        <Suspense key={teamKey} fallback={<SuspenseLoadingSpinner />}>
+          <TeamInfoSection key={teamKey} user={user} userTeam={userTeam} />
         </Suspense>
       </div>
     </div>

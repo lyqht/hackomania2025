@@ -3,6 +3,8 @@ import AddMembers from "./AddMembers";
 import NoTeamManagement from "./NoTeamManagement";
 import TeamManagement from "./TeamManagement";
 import { Team } from "@/app/services/team";
+import { Suspense } from "react";
+import SuspenseLoadingSpinner from "../SuspenseLoadingSpinner";
 
 export default async function TeamManagementSection({
   userTeam,
@@ -10,6 +12,11 @@ export default async function TeamManagementSection({
   user: UserInfo;
   userTeam: Team | null;
 }) {
+  // Generate a unique key based on team state
+  const teamKey = userTeam
+    ? `team-${userTeam.id}-${userTeam.users.length}-${userTeam.users.map((u) => u.id).join("-")}`
+    : "no-team";
+
   return userTeam ? (
     <div id="team-details" className="flex flex-col justify-center gap-2">
       <div>
@@ -24,11 +31,15 @@ export default async function TeamManagementSection({
       </div>
 
       <div className="mt-2">
-        <TeamManagement users={userTeam.users} teamId={userTeam.id} />
+        <Suspense key={`management-${teamKey}`} fallback={<SuspenseLoadingSpinner />}>
+          <TeamManagement users={userTeam.users} teamId={userTeam.id} />
+        </Suspense>
       </div>
 
       <div className="mt-2">
-        <AddMembers teamId={userTeam.id} numMembers={userTeam.users.length} />
+        <Suspense key={`members-${teamKey}`} fallback={<SuspenseLoadingSpinner />}>
+          <AddMembers teamId={userTeam.id} numMembers={userTeam.users.length} />
+        </Suspense>
       </div>
     </div>
   ) : (
@@ -38,7 +49,9 @@ export default async function TeamManagementSection({
         using it&apos;s Team ID.
       </p>
       <div className="mt-2">
-        <NoTeamManagement />
+        <Suspense fallback={<SuspenseLoadingSpinner />}>
+          <NoTeamManagement />
+        </Suspense>
       </div>
     </div>
   );
