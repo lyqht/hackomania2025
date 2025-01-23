@@ -1,4 +1,4 @@
-import EventbriteButton from "@/components/custom/EventbriteModalButton";
+import EventbriteCheckoutWidgetButton from "@/components/custom/EventbriteCheckoutWidgetButton";
 import GitHubSignInButton from "@/components/custom/GitHubSignInButton";
 import GoldenRules from "@/components/custom/GoldenRules";
 import ImageCarousel from "@/components/custom/ImageCarousel";
@@ -93,7 +93,7 @@ export default async function Index() {
                     <p className="text-nowrap text-xl font-bold md:text-3xl">PRE EVENT</p>
                     <p className="text-sm md:text-base">8 February, Saturday</p>
                   </div>
-                  <EventbriteButton />
+                  <EventbriteCheckoutWidgetButton />
                 </div>
 
                 {/* Main Event Card */}
