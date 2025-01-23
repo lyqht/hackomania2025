@@ -1,4 +1,4 @@
-import TeamSection from "@/components/custom/TeamSection";
+import Organizers from "@/components/custom/Organizers";
 import Image from "next/image";
 import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
@@ -11,8 +11,9 @@ import GoldenRules from "@/components/custom/GoldenRules";
 export default async function Index() {
   return (
     <>
-      <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 md:pb-4 lg:px-32">
-        <header className="flex w-full flex-col items-center justify-center pt-0 md:pb-4 md:pt-10">
+      <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
+        <header className="flex w-full flex-col items-center justify-center py-0 md:py-20">
+          <h1 className="sr-only">HackOMania 2025</h1>
           <div className="flex w-full max-w-[90vw] flex-col items-start md:max-w-[60vw]">
             {/* HackOMania Logo */}
             <Image
@@ -71,7 +72,7 @@ export default async function Index() {
                 {/* Pre-Event Card */}
                 <div className="flex flex-row items-center justify-between gap-1 bg-hackomania-red p-4 text-white">
                   <div className="flex flex-col text-start">
-                    <h3 className="text-nowrap text-xl font-bold md:text-3xl">PRE EVENT</h3>
+                    <p className="text-nowrap text-xl font-bold md:text-3xl">PRE EVENT</p>
                     <p className="text-sm md:text-base">8 February, Saturday</p>
                   </div>
                   <EventbriteButton />
@@ -80,7 +81,7 @@ export default async function Index() {
                 {/* Main Event Card */}
                 <div className="flex flex-row items-center justify-between gap-3 bg-hackomania-red p-4 text-white">
                   <div className="flex grow flex-col text-start">
-                    <h3 className="text-nowrap text-xl font-bold md:text-3xl">MAIN EVENT</h3>
+                    <p className="text-nowrap text-xl font-bold md:text-3xl">MAIN EVENT</p>
                     <p className="text-sm md:text-base">15-16 February, Saturday-Sunday</p>
                   </div>
                   <a
@@ -208,9 +209,11 @@ export default async function Index() {
 
               <div className="flex flex-col gap-5 md:flex-row">
                 <iframe
+                  title="Lazada One Location Map"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7946893513426!2d103.84796911744382!3d1.2979024999999969!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da19ec2599519d%3A0x809fd655663da6d0!2sLazada%20One!5e0!3m2!1sen!2stw!4v1735830756269!5m2!1sen!2stw"
                   className="h-auto w-full border-0 md:w-1/2"
                   loading="lazy"
+                  aria-label="Map showing location of Lazada One at 51 Bras Basah Road"
                 ></iframe>
 
                 <div>
@@ -244,9 +247,11 @@ export default async function Index() {
               </h3>
               <div className="flex flex-col gap-5 md:flex-row">
                 <iframe
+                  title="CapitaGreen Location Map"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8203085885248!2d103.8481571806732!3d1.2815570723565077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da190dd3c9d033%3A0x4cadb1e9e5280c4a!2s138%20Market%20St%2C%20%2320-01%20CapitaGreen%2C%20Singapore%20048946!5e0!3m2!1sen!2stw!4v1735830681400!5m2!1sen!2stw"
                   className="h-auto w-full border-0 md:w-1/2"
                   loading="lazy"
+                  aria-label="Map showing location of CapitaGreen at 138 Market Street"
                 ></iframe>
 
                 <div>
@@ -284,7 +289,7 @@ export default async function Index() {
           <Sponsors />
         </section>
 
-        <section className="group py-8 intersect:animate-slide-in-from-right" id="team">
+        <section className="group py-8 intersect:animate-slide-in-from-right" id="organizers">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
             <Image
               src="/MeetTheTeam.svg"
@@ -293,9 +298,9 @@ export default async function Index() {
               height={60}
               className="intersect:animate-spin-slow"
             />
-            <h2>MEET THE TEAM</h2>
+            <h2>Meet the Organizers</h2>
           </div>
-          <TeamSection />
+          <Organizers />
         </section>
       </div>
     </>
