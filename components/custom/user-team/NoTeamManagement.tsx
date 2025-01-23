@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { motion } from "motion/react";
 import { InsertTeam } from "@/utils/db/schema/team";
 import { useRouter } from "next/navigation";
@@ -15,53 +15,63 @@ export default function NoTeamManagement() {
   const [createTeamPopup, setCreateTeamPopup] = useState(false);
 
   const [error, setError] = useState<string | null>();
-  const [loading, setLoading] = useState(false);
+  const [isJoinPending, startJoinTransition] = useTransition();
+  const [isCreatePending, startCreateTransition] = useTransition();
 
-  const joinExistingTeam = async () => {};
+  const joinExistingTeam = async () => {
+    if (isJoinPending) return;
+
+    startJoinTransition(async () => {
+      // TODO: Implement join team logic
+    });
+  };
 
   const createTeam = async () => {
-    setLoading(true);
+    if (isCreatePending) return;
+
     if (!createTeamInfo.name) {
       setError("Team Name cannot be empty");
-      setLoading(false);
       return;
     }
 
-    try {
-      const res = await fetch("/api/register/team", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          teamName: createTeamInfo.name,
-        }),
-      });
+    startCreateTransition(async () => {
+      try {
+        const res = await fetch("/api/register/team", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            teamName: createTeamInfo.name,
+          }),
+        });
 
-      if (res.ok) {
-        setCreateTeamPopup(false);
-        setError(null);
-        router.refresh();
-      } else {
-        setError("Failed to create team");
+        if (res.ok) {
+          setCreateTeamPopup(false);
+          setError(null);
+          router.refresh();
+        } else {
+          setError("Failed to create team");
+        }
+      } catch (error) {
+        setError("An unexpected error occurred");
+        console.error(error);
       }
-    } catch (error) {
-      setError("An unexpected error occurred");
-      console.error(error);
-    }
-    setLoading(false);
+    });
   };
 
   return (
     <>
       <div className="flex w-full flex-row gap-5">
         <button
-          className="rounded-lg border-2 border-hackomania-red p-3 py-2 text-center font-semibold text-hackomania-red duration-150 hover:bg-hackomania-red hover:text-white"
+          className="rounded-lg border-2 border-hackomania-red p-3 py-2 text-center font-semibold text-hackomania-red duration-150 hover:bg-hackomania-red hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => setJoinTeamPopup(true)}
+          disabled={isJoinPending || isCreatePending}
         >
           Join Existing Team
         </button>
         <button
-          className="rounded-lg bg-hackomania-red p-3 py-2 text-center text-white"
+          className="rounded-lg bg-hackomania-red p-3 py-2 text-center text-white disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => setCreateTeamPopup(true)}
+          disabled={isJoinPending || isCreatePending}
         >
           Create Team
         </button>
@@ -89,12 +99,21 @@ export default function NoTeamManagement() {
               className="mt-3 w-full rounded-lg border border-gray-500 bg-background p-2"
               value={joinTeamID}
               onChange={(e) => setJoinTeamID(e.target.value)}
+              disabled={isJoinPending}
             />
             <button
-              className={`mt-3 w-full rounded-lg bg-hackomania-red p-2 font-semibold text-white ${loading && "cursor-not-allowed"}`}
+              className="mt-3 w-full rounded-lg bg-hackomania-red p-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
               onClick={joinExistingTeam}
+              disabled={isJoinPending}
             >
-              {loading ? "Joining Team..." : "Join Team"}
+              {isJoinPending ? (
+                <div className="flex flex-row items-center justify-center gap-2">
+                  <ButtonLoadingSpinner color="white" />
+                  <span>Joining Team...</span>
+                </div>
+              ) : (
+                "Join Team"
+              )}
             </button>
             {error && <p className="mt-3 text-red-800">{error}</p>}
           </motion.div>
@@ -123,13 +142,22 @@ export default function NoTeamManagement() {
               className="mt-3 w-full rounded-lg border border-gray-500 bg-background p-2"
               value={createTeamInfo.name}
               onChange={(e) => setCreateTeamInfo({ ...createTeamInfo, name: e.target.value })}
+              disabled={isCreatePending}
             />
             <button
-              className={`mt-3 w-full rounded-lg bg-hackomania-red p-2 font-semibold text-white ${loading && "cursor-not-allowed"}`}
+              className="mt-3 w-full rounded-lg bg-hackomania-red p-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
               onClick={createTeam}
+              disabled={isCreatePending}
             >
               <div className="flex flex-row items-center justify-center gap-2">
-                {loading ? <ButtonLoadingSpinner color="white" /> : <p>Create Team</p>}
+                {isCreatePending ? (
+                  <>
+                    <ButtonLoadingSpinner color="white" />
+                    <span>Creating Team...</span>
+                  </>
+                ) : (
+                  <p>Create Team</p>
+                )}
               </div>
             </button>
             {error && <p className="mt-3 text-red-800">{error}</p>}
