@@ -1,18 +1,18 @@
+import { getTeamById } from "@/app/services/team";
+import { getUserById } from "@/app/services/user";
 import AddMembers from "@/components/custom/user-team/AddMembers";
 import EditTeamButtons from "@/components/custom/user-team/EditTeamButtons";
 import NoTeamManagement from "@/components/custom/user-team/NoTeamManagement";
 import TeamManagement from "@/components/custom/user-team/TeamManagement";
 import { getUser } from "@/utils/supabase/user";
 import { User } from "@supabase/supabase-js";
-import { headers } from "next/headers";
 import Link from "next/link";
 
 export default async function UserHome() {
-  const host = (await headers()).get("host");
   const supabaseUser = (await getUser()) as User;
-  const retrieveUserResponse = await fetch(`http://${host!}/api/user?id=${supabaseUser.id}`);
+  const user = await getUserById(supabaseUser.id);
 
-  if (!retrieveUserResponse.ok) {
+  if (!user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="rounded-xl border border-gray-500 p-5">
@@ -23,17 +23,7 @@ export default async function UserHome() {
     );
   }
 
-  const { user } = await retrieveUserResponse.json();
-  let userTeam;
-  if (user.teamName) {
-    const retrieveTeamResponse = await fetch(`http://${host!}/api/team?id=${user.teamId}`, {
-      method: "GET",
-    });
-
-    if (retrieveTeamResponse.ok) {
-      userTeam = await retrieveTeamResponse.json();
-    }
-  }
+  const userTeam = user.teamId ? await getTeamById(user.teamId) : null;
 
   return (
     <div className="flex flex-col gap-5 p-5 md:p-20">
@@ -62,16 +52,16 @@ export default async function UserHome() {
         <div className="my-3 border border-neutral-400"></div>
 
         <section className="p-5">
+            {userTeam && (
           <div className="flex flex-col gap-3 md:flex-row md:items-center">
             <h2 className="text-2xl font-semibold">
               Your Team {user.teamName && <span className="font-normal">: {user.teamName}</span>}
             </h2>
-            {user.teamName && userTeam.leaderId === user.id && (
-              <EditTeamButtons teamID={userTeam.id} />
+                {userTeam.leaderId === user.id && <EditTeamButtons teamID={userTeam.id} />}
+              </div>
             )}
-          </div>
 
-          {!user.teamName && (
+            {userTeam == null && (
             <div id="no-team" className="flex flex-col justify-center">
               <p>
                 You have not joined a team. You may either create your own team, or join an existing
@@ -83,7 +73,7 @@ export default async function UserHome() {
             </div>
           )}
 
-          {user.teamName && (
+            {userTeam && (
             <div id="team-details" className="flex flex-col justify-center gap-2">
               <div>
                 <p className="text-neutral-500">
