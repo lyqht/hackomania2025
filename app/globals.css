@@ -82,86 +82,14 @@
   body {
     @apply bg-background text-foreground;
   }
-
-  @font-face {
-    font-family: 'Nexa Rust';
-    src: url('/fonts/NexaRustSlab-Black.woff') format('woff'),
-          url('/fonts/NexaRustSlab-Black.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-  }
-
-  @font-face {
-    font-family: 'Cheyenne Sans';
-    src: url('/fonts/CheyenneSans-Light.otf') format('opentype'),
-         url('/fonts/CheyenneSans-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-  }
-
-  @font-face {
-    font-family: 'Cheyenne Sans';
-    src: url('/fonts/CheyenneSans-Regular.otf') format('opentype'),
-         url('/fonts/CheyenneSans-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-  }
-
-  @font-face {
-    font-family: 'Cheyenne Sans';
-    src: url('/fonts/CheyenneSans-Medium.otf') format('opentype'),
-         url('/fonts/CheyenneSans-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-  }
-
-  @font-face {
-    font-family: 'Cheyenne Sans';
-    src: url('/fonts/CheyenneSans-Bold.otf') format('opentype'),
-         url('/fonts/CheyenneSans-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-  }
-
-  @font-face {
-    font-family: 'Cheyenne Sans';
-    src: url('/fonts/CheyenneSans-LightItalic.otf') format('opentype'),
-         url('/fonts/CheyenneSans-LightItalic.ttf') format('truetype');
-    font-weight: 300;
-    font-style: italic;
-  }
-
-  @font-face {
-    font-family: 'Cheyenne Sans';
-    src: url('/fonts/CheyenneSans-Italic.otf') format('opentype'),
-         url('/fonts/CheyenneSans-Italic.ttf') format('truetype');
-    font-weight: 400;
-    font-style: italic;
-  }
-
-  @font-face {
-    font-family: 'Cheyenne Sans';
-    src: url('/fonts/CheyenneSans-MediumItalic.otf') format('opentype'),
-         url('/fonts/CheyenneSans-MediumItalic.ttf') format('truetype');
-    font-weight: 500;
-    font-style: italic;
-  }
-
-  @font-face {
-    font-family: 'Cheyenne Sans';
-    src: url('/fonts/CheyenneSans-BoldItalic.otf') format('opentype'),
-         url('/fonts/CheyenneSans-BoldItalic.ttf') format('truetype');
-    font-weight: 700;
-    font-style: italic;
-  }
 }
 
 h1, h2, h3 {
-  @apply font-nexa;
+  font-family: var(--font-nexa);
 }
 
 p, span, a {
-  @apply font-cheyenne;
+  font-family: var(--font-cheyenne);
 }
 
 a {

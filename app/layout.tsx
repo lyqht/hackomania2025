@@ -1,5 +1,6 @@
 import ContactSection from "@/components/custom/ContactSection";
 import { ThemeProvider } from "next-themes";
+import { cheyenneSans, nexaRust } from "./fonts";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -15,7 +16,11 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${nexaRust.variable} ${cheyenneSans.variable}`}
+      suppressHydrationWarning
+    >
       <body className="bg-background text-foreground">
         <ThemeProvider
           attribute="class"
