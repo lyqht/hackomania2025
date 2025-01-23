@@ -25,7 +25,7 @@ const sponsorCategories: Record<string, SponsorCategory> = {
         image: "/sponsors/STACK_Community_by_GovTech.png",
         width: (717 * 4) / 5,
         height: (280 * 4) / 5,
-        url: "https://stack.gov.sg/",
+        url: "https://www.developer.tech.gov.sg/communities/building-a-community/resources/community-development-directory",
       },
     ],
     class: "mx-12",
@@ -58,7 +58,7 @@ const sponsorCategories: Record<string, SponsorCategory> = {
         image: "/sponsors/SGInnovate.png",
         width: (160 * 4) / 5,
         height: (60 * 4) / 5,
-        url: "https://www.sginnovate.com/",
+        url: "https://www.sginnovate.com/career-development-jobs",
       },
       {
         name: "ahrefs",
@@ -90,7 +90,7 @@ const sponsorCategories: Record<string, SponsorCategory> = {
         class: "md:mt-4 lg:mt-8",
       },
     ],
-    class: "gap-8 xl:gap-24 mx-24",
+    class: "gap-8 xl:gap-24",
   },
   venue: {
     title: "VENUE SPONSORS",
