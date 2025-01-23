@@ -1,5 +1,7 @@
+import { checkEventbriteRegistration } from "@/app/services/eventbrite";
 import { getTeamById, Team } from "@/app/services/team";
 import { getUserById, UserInfo } from "@/app/services/user";
+import EventbriteCheckoutWidgetButton from "@/components/custom/EventbriteCheckoutWidgetButton";
 import SuspenseLoadingSpinner from "@/components/custom/SuspenseLoadingSpinner";
 import EditTeamButtons from "@/components/custom/user-team/EditTeamButtons";
 import TeamManagementSection from "@/components/custom/user-team/TeamManagementSection";
@@ -8,22 +10,35 @@ import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { Suspense } from "react";
 
-interface UserInfoSectionProps {
-  githubUsername: string;
+async function EventbriteStatus({ user }: { user: UserInfo }) {
+  const eventbriteData = await checkEventbriteRegistration(user.email);
+
+  return (
+    <div>
+      <p className="text-xl font-medium">Pre-event</p>
+      <Suspense fallback={<p className="text-neutral-600">Checking registration...</p>}>
+        <p className={eventbriteData.registered ? "text-green-600" : "text-red-600"}>
+          {eventbriteData.registered ? "Registered on Eventbrite ✓" : "You're not registerd yet."}
+        </p>
+        {!eventbriteData.registered && <EventbriteCheckoutWidgetButton />}
+      </Suspense>
+    </div>
+  );
 }
 
-function UserInfoSection({ githubUsername }: UserInfoSectionProps) {
+interface UserInfoSectionProps {
+  user: UserInfo;
+}
+
+function UserInfoSection({ user }: UserInfoSectionProps) {
   return (
     <section className="p-5">
       <h2 className="mb-3 text-2xl font-semibold">Your Information</h2>
       <div className="flex flex-col justify-around gap-2 md:flex-row md:text-center">
-        <div>
-          <p className="text-xl font-medium">Pre-event</p>
-          <p>Not registered</p>
-        </div>
+        <EventbriteStatus user={user} />
         <div>
           <p className="text-xl font-medium">GitHub Account</p>
-          <Link href={`https://github.com/${githubUsername}`}>{githubUsername}</Link>
+          <Link href={`https://github.com/${user.githubUsername}`}>{user.githubUsername}</Link>
         </div>
       </div>
     </section>
@@ -48,8 +63,9 @@ function TeamInfoSection({ user, userTeam }: TeamInfoSectionProps) {
       )}
       <TeamManagementSection user={user} userTeam={userTeam} />
     </section>
-  );
+  )
 }
+
 
 export default async function UserHome() {
   const supabaseUser = (await getUser()) as User;
@@ -83,7 +99,7 @@ export default async function UserHome() {
 
       <div className="rounded-lg border border-neutral-400">
         <Suspense fallback={<SuspenseLoadingSpinner />}>
-          <UserInfoSection githubUsername={user.githubUsername} />
+          <UserInfoSection user={user} />
         </Suspense>
 
         <div className="my-3 border border-neutral-400"></div>
