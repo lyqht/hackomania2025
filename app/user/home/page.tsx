@@ -1,6 +1,6 @@
 import { getTeamById } from "@/app/services/team";
 import { getUserById } from "@/app/services/user";
-import LoadingSpinner from "@/components/custom/LoadingSpinner";
+import SuspenseLoadingSpinner from "@/components/custom/SuspenseLoadingSpinner";
 import EditTeamButtons from "@/components/custom/user-team/EditTeamButtons";
 import TeamManagementSection from "@/components/custom/user-team/TeamManagementSection";
 import { getUser } from "@/utils/supabase/user";
@@ -51,12 +51,12 @@ export default async function UserHome() {
 
         <div className="my-3 border border-neutral-400"></div>
 
-        <Suspense fallback={<LoadingSpinner />}>
+        <Suspense fallback={<SuspenseLoadingSpinner />}>
           <section className="p-5" id="team-management">
             <Suspense
               fallback={
                 <div className="flex justify-center">
-                  <LoadingSpinner />
+                  <SuspenseLoadingSpinner />
                 </div>
               }
             >
@@ -74,7 +74,7 @@ export default async function UserHome() {
             <Suspense
               fallback={
                 <div className="mt-4 flex justify-center">
-                  <LoadingSpinner />
+                  <SuspenseLoadingSpinner />
                 </div>
               }
             >

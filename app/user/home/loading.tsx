@@ -1,4 +1,4 @@
-import LoadingSpinner from "@/components/custom/LoadingSpinner";
+import SuspenseLoadingSpinner from "@/components/custom/SuspenseLoadingSpinner";
 
 export default function Loading() {
   return (
@@ -26,7 +26,7 @@ export default function Loading() {
         <div className="my-3 border border-neutral-400"></div>
 
         <section className="p-5">
-          <LoadingSpinner />
+          <SuspenseLoadingSpinner />
         </section>
       </div>
     </div>
