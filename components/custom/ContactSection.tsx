@@ -20,6 +20,7 @@ export default function ContactSection() {
             width={100}
             height={50}
             className="object-contain"
+            aria-label="GeeksHacking Logo"
           />
         </div>  
 
@@ -32,7 +33,7 @@ export default function ContactSection() {
               Drop us an email at{" "}
               <Link
                 href="mailto:contact@geekshacking.com"
-                className="text-yellow-300 hover:underline"
+                className="border-b-yellow border-b text-yellow-300 hover:border-b-2"
               >
                 contact@geekshacking.com
               </Link>
@@ -46,7 +47,7 @@ export default function ContactSection() {
               Please contact{" "}
               <Link
                 href="mailto:sponsor@geekshacking.com"
-                className="text-yellow-300 hover:underline"
+                className="border-b-yellow border-b text-yellow-300 hover:border-b-2"
               >
                 sponsor@geekshacking.com
               </Link>{" "}
@@ -62,7 +63,8 @@ export default function ContactSection() {
                 href="https://t.me/geekshacking"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-yellow-300 hover:text-yellow-400"
+                className="text-yellow-300 transition-all duration-300 hover:-translate-y-1 hover:text-yellow-400"
+                aria-label="Telegram of GeeksHacking"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +84,8 @@ export default function ContactSection() {
                 href="https://www.facebook.com/HackOManiaSG/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-yellow-300 hover:text-yellow-400"
+                className="text-yellow-300 hover:-translate-y-1 hover:text-yellow-400"
+                aria-label="Facebook for HackOMania"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +105,8 @@ export default function ContactSection() {
                 href="https://www.instagram.com/geekshacking"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-yellow-300 hover:text-yellow-400"
+                className="text-yellow-300 hover:-translate-y-1 hover:text-yellow-400"
+                aria-label="Instagram for GeeksHacking"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +128,8 @@ export default function ContactSection() {
                 href="https://www.linkedin.com/company/geekshacking"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-yellow-300 hover:text-yellow-400"
+                className="text-yellow-300 hover:-translate-y-1 hover:text-yellow-400"
+                aria-label="LinkedIn for GeeksHacking"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
