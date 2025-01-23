@@ -22,7 +22,7 @@ export default function ContactSection() {
             className="object-contain"
             aria-label="GeeksHacking Logo"
           />
-        </div>
+        </div>  
 
         {/* Content Section */}
         <div className="space-y-8 text-lg">
