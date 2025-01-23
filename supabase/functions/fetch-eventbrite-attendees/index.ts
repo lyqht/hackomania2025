@@ -1,5 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import type { EventbriteAttendee, EventbriteResponse, AttendeeMainInfo } from "./eventbrite.d.ts";
+import type {
+  EventbriteAttendee,
+  EventbriteResponse,
+  AttendeeMainInfo,
+} from "types/eventbrite.d.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
