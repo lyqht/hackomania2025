@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { InsertTeam } from "@/utils/db/schema/team";
 import { useRouter } from "next/navigation";
+import ButtonLoadingSpinner from "../ButtonLoadingSpinner";
 
 export default function NoTeamManagement() {
   const router = useRouter();
@@ -127,7 +128,9 @@ export default function NoTeamManagement() {
               className={`mt-3 w-full rounded-lg bg-hackomania-red p-2 font-semibold text-white ${loading && "cursor-not-allowed"}`}
               onClick={createTeam}
             >
-              {loading ? "Creating Team..." : "Create Team"}
+              <div className="flex flex-row items-center justify-center gap-2">
+                {loading ? <ButtonLoadingSpinner color="white" /> : <p>Create Team</p>}
+              </div>
             </button>
             {error && <p className="mt-3 text-red-800">{error}</p>}
           </motion.div>

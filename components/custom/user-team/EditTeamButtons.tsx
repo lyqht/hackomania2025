@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "motion/react";
+import ButtonLoadingSpinner from "../ButtonLoadingSpinner";
 
 export default function EditTeamButtons({ teamID }: { teamID: string }) {
   const [loading, setLoading] = useState<boolean>(false);
@@ -34,7 +35,7 @@ export default function EditTeamButtons({ teamID }: { teamID: string }) {
   };
 
   const handleDeleteTeam = async () => {
-    if (confirm("Are you sure you want to delete your team? This process cannot be undone.")) {
+    if (confirm("Are you sure you want to delete your team? This process is irreversible.")) {
       setLoading(true);
       await fetch(`/api/register/team?id=${teamID}`, {
         method: "DELETE",
@@ -57,7 +58,7 @@ export default function EditTeamButtons({ teamID }: { teamID: string }) {
         onClick={handleDeleteTeam}
         disabled={loading}
       >
-        Delete Team
+        {loading ? <ButtonLoadingSpinner /> : <p>Delete Team</p>}
       </button>
 
       {editTeamPopup && (
