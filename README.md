@@ -30,7 +30,7 @@ This repo is created using the [Next.js and Supabase Starter Kit](https://github
 - Next.js for frontend
 - Tailwind CSS for styling
 - shadcn/ui for components
-- Supabase for database and authentication
+- Supabase for database, authentication and edge function
 - Drizzle ORM for migrations and queries
 
 ## Deployment
@@ -55,6 +55,67 @@ This project has been deployed at [https://hackomania2025.vercel.app/](https://h
 - Auth with GitHub is added by following this guide for [Login with GitHub | Supabase Docs](https://supabase.com/docs/guides/auth/social-login/auth-github).
 
 Demo of signing up with GitHub: https://share.cleanshot.com/lFT0Q4LR
+
+#### Edge Functions
+
+The project includes a Supabase Edge Function to fetch Eventbrite attendees:
+
+- **Function Name**: `fetch-eventbrite-attendees`
+- **Purpose**: Retrieves attendees from a specified Eventbrite event, handling pagination automatically to get all attendees
+- **Required Environment Variables**:
+  - `EVENTBRITE_EVENT_ID`: The ID of the Eventbrite event
+  - `EVENTBRITE_PRIVATE_TOKEN`: Eventbrite private token obtained through creating an Eventbrite api key
+- **Query Parameters**:
+  - `email` (optional): Find an attendee by their email address
+- **Response Format**:
+  - Without email parameter: Returns all attendees across all pages
+    ```typescript
+    {
+      attendees: Array<{
+        checked_in: boolean;
+        first_name: string;
+        last_name: string;
+        email: string;
+        name: string;
+        gender?: string;
+        cell_phone?: string;
+        answers: Array<{
+          answer?: string;
+          question: string;
+        }>;
+      }>;
+      pagination: {
+        object_count: number;
+      }
+    }
+    ```
+  - With email parameter:
+    - If found: Returns single attendee object with the structure shown above
+    - If not found: Returns 404 with `{ error: "Attendee not found" }`
+
+To test the function:
+
+```bash
+# Get all attendees (automatically fetches all pages)
+curl -i --location --request GET 'https://<project-ref>.supabase.co/functions/v1/fetch-eventbrite-attendees' \
+  --header 'Authorization: Bearer <supabase-anon-key>'
+
+# Get specific attendee by email (searches across all pages)
+curl -i --location --request GET 'https://<project-ref>.supabase.co/functions/v1/fetch-eventbrite-attendees?email=user@example.com' \
+  --header 'Authorization: Bearer <supabase-anon-key>'
+```
+
+Or using the Supabase client in your Next.js application:
+
+```typescript
+// Get all attendees
+const { data: allAttendees, error } = await supabase.functions.invoke("fetch-eventbrite-attendees");
+
+// Get specific attendee by email
+const { data: attendee, error } = await supabase.functions.invoke("fetch-eventbrite-attendees", {
+  queryParams: { email: "user@example.com" },
+});
+```
 
 ### Drizzle
 
