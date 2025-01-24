@@ -65,42 +65,29 @@ The project includes a Supabase Edge Function to fetch Eventbrite attendees:
 - **Required Environment Variables**:
   - `EVENTBRITE_EVENT_ID`: The ID of the Eventbrite event
   - `EVENTBRITE_PRIVATE_TOKEN`: Eventbrite private token obtained through creating an Eventbrite api key
+  - `SUPABASE_URL`: Your Supabase project URL
+  - `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase service role key
 - **Query Parameters**:
   - `email` (optional): Find an attendee by their email address
-- **Response Format**:
-  - Without email parameter: Returns all attendees across all pages
-    ```typescript
-    {
-      attendees: Array<{
-        checked_in: boolean;
-        first_name: string;
-        last_name: string;
-        email: string;
-        name: string;
-        gender?: string;
-        cell_phone?: string;
-        answers: Array<{
-          answer?: string;
-          question: string;
-        }>;
-      }>;
-      pagination: {
-        object_count: number;
-      }
-    }
-    ```
-  - With email parameter:
-    - If found: Returns single attendee object with the structure shown above
-    - If not found: Returns 404 with `{ error: "Attendee not found" }`
+  - `latest` (optional): Set to "1" to bypass cache and fetch latest data from Eventbrite
+- **Caching**:
+  - Results are cached in Supabase database for 24 hours to minimize Eventbrite API calls
+  - Cache is bypassed when `latest=1` is used
+  - Cache is automatically refreshed after expiration
+  - Cache persists across function instances and cold starts
 
 To test the function:
 
 ```bash
-# Get all attendees (automatically fetches all pages)
+# Get all attendees (uses cache if available)
 curl -i --location --request GET 'https://<project-ref>.supabase.co/functions/v1/fetch-eventbrite-attendees' \
   --header 'Authorization: Bearer <supabase-anon-key>'
 
-# Get specific attendee by email (searches across all pages)
+# Get latest attendees (bypasses cache)
+curl -i --location --request GET 'https://<project-ref>.supabase.co/functions/v1/fetch-eventbrite-attendees?latest=1' \
+  --header 'Authorization: Bearer <supabase-anon-key>'
+
+# Get specific attendee by email (uses cache if available)
 curl -i --location --request GET 'https://<project-ref>.supabase.co/functions/v1/fetch-eventbrite-attendees?email=user@example.com' \
   --header 'Authorization: Bearer <supabase-anon-key>'
 ```
@@ -108,10 +95,18 @@ curl -i --location --request GET 'https://<project-ref>.supabase.co/functions/v1
 Or using the Supabase client in your Next.js application:
 
 ```typescript
-// Get all attendees
+// Get all attendees (uses cache if available)
 const { data: allAttendees, error } = await supabase.functions.invoke("fetch-eventbrite-attendees");
 
-// Get specific attendee by email
+// Get latest attendees (bypasses cache)
+const { data: latestAttendees, error } = await supabase.functions.invoke(
+  "fetch-eventbrite-attendees",
+  {
+    queryParams: { latest: "1" },
+  },
+);
+
+// Get specific attendee by email (uses cache if available)
 const { data: attendee, error } = await supabase.functions.invoke("fetch-eventbrite-attendees", {
   queryParams: { email: "user@example.com" },
 });
@@ -153,7 +148,7 @@ After defining or updating your schema, generate migrations using Drizzle Kit:
 1. Run the following command:
 
    ```bash
-   npx drizzle-kit generate:pg --name=some_change
+   npx drizzle-kit generate --name=some_change
    ```
 
 2. This will create a new migration file in the `./drizzle` directory (as specified in `drizzle.config.ts`).
@@ -167,27 +162,10 @@ To apply the migrations to your database:
 1. Run the following command:
 
    ```bash
-   npx drizzle-kit push:pg
+   npx drizzle-kit push
    ```
 
 2. This will apply any pending migrations to your database.
-
-**If you encounter an error like below:**
-
-```
-<path_to_this_project>\node_modules\drizzle-kit\bin.cjs:37579
-              checkValue = checkValue.replace(/^CHECK\s*\(\(/, "").replace(/\)\)\s*$/, "");
-
-TypeError: Cannot read properties of undefined (reading 'replace')
-    at <path_to_this_project>\node_modules\drizzle-kit\bin.cjs:37579:39
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-```
-
-There could be an issue with the database's pooling mode. Check the `POSTGRES_URL` and ensure that Session Mode is used instead of Transaction Mode.  
-To switch between modes, use the following ports:
-
-- 5432: Session Mode
-- 6543: Transaction Mode
 
 #### Best Practices
 
