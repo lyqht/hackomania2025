@@ -1,4 +1,4 @@
-import { checkEventbriteRegistration } from "@/app/services/eventbrite";
+import { checkMainEventRegistration, checkPreEventRegistration } from "@/app/services/eventbrite";
 import { getTeamById, Team } from "@/app/services/team";
 import { getUserById, UserInfo } from "@/app/services/user";
 import EventbriteCheckoutWidgetButton from "@/components/custom/EventbriteCheckoutWidgetButton";
@@ -7,21 +7,46 @@ import EditTeamButtons from "@/components/custom/user-team/EditTeamButtons";
 import TeamManagementSection from "@/components/custom/user-team/TeamManagementSection";
 import { getUser } from "@/utils/supabase/user";
 import { User } from "@supabase/supabase-js";
-import Link from "next/link";
 import { Suspense } from "react";
 
-async function EventbriteStatus({ user }: { user: UserInfo }) {
-  const eventbriteData = await checkEventbriteRegistration(user.email);
+async function EventRegistrationStatus({ user }: { user: UserInfo }) {
+  const [preEventData, mainEventData] = await Promise.all([
+    checkPreEventRegistration(user.email),
+    checkMainEventRegistration(user.email),
+  ]);
 
   return (
-    <div>
-      <p className="text-xl font-medium">Pre-event</p>
-      <Suspense fallback={<p className="text-neutral-600">Checking registration...</p>}>
-        <p className={eventbriteData.registered ? "text-green-600" : "text-red-600"}>
-          {eventbriteData.registered ? "Registered on Eventbrite ✓" : "You're not registerd yet."}
-        </p>
-        {!eventbriteData.registered && <EventbriteCheckoutWidgetButton />}
-      </Suspense>
+    <div className="grid grow grid-cols-2 items-start justify-center p-8 text-center">
+      <div>
+        <p className="text-xl font-medium">Pre-event</p>
+        <p className="mb-8 italic">8 February 2025, Saturday</p>
+        <Suspense fallback={<p className="text-neutral-600">Checking registration...</p>}>
+          <p className={preEventData.registered ? "text-green-600" : "text-red-600"}>
+            {preEventData.registered ? "Registered ✓" : "Not registered"}
+          </p>
+          {!preEventData.registered && <EventbriteCheckoutWidgetButton />}
+          {!preEventData.registered && (
+            <p className="text-sm">
+              ⚠️ You will not be allowed to join the event without registration.
+            </p>
+          )}
+        </Suspense>
+      </div>
+
+      <div>
+        <p className="text-xl font-medium">Main Event</p>
+        <p className="mb-8 italic">15-16 February 2025, Saturday-Sunday</p>
+        <Suspense fallback={<p className="text-neutral-600">Checking registration...</p>}>
+          <p className={mainEventData.registered ? "text-green-600" : "text-red-600"}>
+            {mainEventData.registered ? "Approved ✓" : "You're not registered yet."}
+          </p>
+          {!mainEventData.registered && (
+            <p className="text-sm">
+              ⚠️ You will not be allowed to join the event without registration.
+            </p>
+          )}
+        </Suspense>
+      </div>
     </div>
   );
 }
@@ -34,13 +59,7 @@ function UserInfoSection({ user }: UserInfoSectionProps) {
   return (
     <section className="p-5">
       <h2 className="mb-3 text-2xl font-semibold">Your Information</h2>
-      <div className="flex flex-col justify-around gap-2 md:flex-row md:text-center">
-        <EventbriteStatus user={user} />
-        <div>
-          <p className="text-xl font-medium">GitHub Account</p>
-          <Link href={`https://github.com/${user.githubUsername}`}>{user.githubUsername}</Link>
-        </div>
-      </div>
+      <EventRegistrationStatus user={user} />
     </section>
   );
 }
@@ -63,9 +82,8 @@ function TeamInfoSection({ user, userTeam }: TeamInfoSectionProps) {
       )}
       <TeamManagementSection user={user} userTeam={userTeam} />
     </section>
-  )
+  );
 }
-
 
 export default async function UserHome() {
   const supabaseUser = (await getUser()) as User;
@@ -105,7 +123,7 @@ export default async function UserHome() {
         <div className="my-3 border border-neutral-400"></div>
 
         <Suspense key={teamKey} fallback={<SuspenseLoadingSpinner />}>
-          <TeamInfoSection key={teamKey} user={user} userTeam={userTeam} />
+          {<TeamInfoSection key={teamKey} user={user} userTeam={userTeam} />}
         </Suspense>
       </div>
     </div>
