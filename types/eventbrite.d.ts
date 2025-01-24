@@ -72,5 +72,4 @@ export interface EventbriteResponse {
 
 type SimplifiedAttendeeAnswers = Pick<EventbriteAttendee["answers"], "answer" | "question">;
 export type AttendeeMainInfo = Pick<EventbriteAttendee, "checked_in"> &
-  EventbriteAttendee["profile"] &
-  SimplifiedAttendeeAnswers;
+  EventbriteAttendee["profile"] & { answers: SimplifiedAttendeeAnswers[] };
