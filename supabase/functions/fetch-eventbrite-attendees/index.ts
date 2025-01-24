@@ -9,15 +9,14 @@ import type {
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 function extractAttendeeMainInfo(
   attendee: EventbriteAttendee,
-): TablesInsert<"eventbrite_registrations"> {
+): TablesInsert<"pre_event_registrations"> {
   return {
     checked_in: attendee.checked_in,
     ...attendee.profile,
@@ -34,7 +33,7 @@ async function getAllAttendees(
   if (!forceLatest) {
     // Try to get from cache
     const { data: cachedAttendees, error } = await supabaseClient
-      .from("eventbrite_registrations")
+      .from("pre_event_registrations")
       .select("*")
       .eq("event_id", eventId)
       .order("updated_at", { ascending: true });
@@ -84,9 +83,7 @@ async function getAllAttendees(
   } while (continuation);
 
   // Update cache
-  const attendeesToInsert: AttendeeMainInfo[] = allAttendees.map((
-    attendee,
-  ) => ({
+  const attendeesToInsert: AttendeeMainInfo[] = allAttendees.map((attendee) => ({
     event_id: eventId,
     attendee_id: attendee.id,
     first_name: attendee.profile.first_name,
@@ -99,13 +96,10 @@ async function getAllAttendees(
     answers: attendee.answers,
   }));
 
-  await supabaseClient.from("eventbrite_registrations").upsert(
-    attendeesToInsert,
-    {
-      onConflict: "event_id,attendee_id",
-      ignoreDuplicates: false,
-    },
-  );
+  await supabaseClient.from("pre_event_registrations").upsert(attendeesToInsert, {
+    onConflict: "event_id,attendee_id",
+    ignoreDuplicates: false,
+  });
 
   return allAttendees.map(extractAttendeeMainInfo);
 }
@@ -130,12 +124,7 @@ serve(async (req: Request) => {
     const email = url.searchParams.get("email");
     const forceLatest = url.searchParams.get("latest") === "1";
 
-    const allAttendees = await getAllAttendees(
-      eventId,
-      privateToken,
-      forceLatest,
-      supabase,
-    );
+    const allAttendees = await getAllAttendees(eventId, privateToken, forceLatest, supabase);
 
     if (email) {
       const foundAttendee = allAttendees.find(
@@ -175,9 +164,7 @@ serve(async (req: Request) => {
       },
     );
   } catch (error) {
-    const errorMessage = error instanceof Error
-      ? error.message
-      : "Unknown error occurred";
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: {
