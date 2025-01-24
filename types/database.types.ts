@@ -3,6 +3,51 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      main_event_registrations: {
+        Row: {
+          approved_by: string | null;
+          created_at: string;
+          email: string;
+          first_name: string;
+          github_profile_url: string | null;
+          has_team: boolean;
+          id: string;
+          last_name: string;
+          linkedin_profile_url: string | null;
+          team_name: string | null;
+          ticket_email: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          approved_by?: string | null;
+          created_at?: string;
+          email: string;
+          first_name: string;
+          github_profile_url?: string | null;
+          has_team: boolean;
+          id?: string;
+          last_name: string;
+          linkedin_profile_url?: string | null;
+          team_name?: string | null;
+          ticket_email?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          approved_by?: string | null;
+          created_at?: string;
+          email?: string;
+          first_name?: string;
+          github_profile_url?: string | null;
+          has_team?: boolean;
+          id?: string;
+          last_name?: string;
+          linkedin_profile_url?: string | null;
+          team_name?: string | null;
+          ticket_email?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       pre_event_registrations: {
         Row: {
           answers: Json[] | null;
