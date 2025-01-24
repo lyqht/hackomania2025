@@ -75,10 +75,10 @@ const sponsorCategories: Record<string, SponsorCategory> = {
     sponsors: [
       {
         name: "Google",
-        image: "/sponsors/Google.png",
-        width: (211 * 4) / 5,
-        height: (60 * 4) / 5,
-        url: "https://www.google.com/",
+        image: "/sponsors/GoogleCloud.png",
+        width: (544 * 3) / 5,
+        height: (96 * 3) / 5,
+        url: "https://cloud.google.com/innovators?hl=en",
         class: "md:mt-4 lg:mt-8",
       },
       {
@@ -90,7 +90,7 @@ const sponsorCategories: Record<string, SponsorCategory> = {
         class: "md:mt-4 lg:mt-8",
       },
     ],
-    class: "gap-8 xl:gap-24",
+    class: "gap-8 xl:gap-24 mx-24",
   },
   venue: {
     title: "VENUE SPONSORS",
