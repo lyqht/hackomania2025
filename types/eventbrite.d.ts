@@ -70,6 +70,9 @@ export interface EventbriteResponse {
   };
 }
 
-type SimplifiedAttendeeAnswers = Pick<EventbriteAttendee["answers"], "answer" | "question">;
-export type AttendeeMainInfo = Pick<EventbriteAttendee, "checked_in"> &
-  EventbriteAttendee["profile"] & { answers: SimplifiedAttendeeAnswers[] };
+export type AttendeeMainInfo =
+  & Pick<EventbriteAttendee, "checked_in">
+  & Omit<EventbriteAttendee["profile"], "addresses">
+  & {
+    answers: EventbriteAttendee["answers"];
+  };
