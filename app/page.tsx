@@ -19,7 +19,7 @@ export default async function Index() {
           <p className="mb-4">
             We are still actively updating the website! Please check back for more information! :)
           </p>
-          <GitHubSignInButton />
+          {process.env.NEXT_PUBLIC_SHOW_GITHUB_SIGN_IN === "true" && <GitHubSignInButton />}
         </div>
       </div>
       <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
