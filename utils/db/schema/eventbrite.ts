@@ -10,7 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const eventbritePreEvent = pgTable(
-  "eventbrite_registrations",
+  "pre_event_registrations",
   {
     id: uuid("id").defaultRandom().primaryKey(),
     eventId: text("event_id").notNull(),
@@ -27,10 +27,7 @@ export const eventbritePreEvent = pgTable(
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (table) => ({
-    eventAttendeeIdx: uniqueIndex("event_attendee_idx").on(
-      table.eventId,
-      table.attendeeId,
-    ),
+    eventAttendeeIdx: uniqueIndex("event_attendee_idx").on(table.eventId, table.attendeeId),
     emailIdx: index("email_idx").on(table.email),
   }),
 );

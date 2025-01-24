@@ -29,6 +29,13 @@
       "when": 1737689987214,
       "tag": "0003_add_eventbrite_registrations",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1737699747410,
+      "tag": "0004_update_registrations_table_name",
+      "breakpoints": true
     }
   ]
 }
