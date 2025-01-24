@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-const EventbriteButton = () => {
+const EventbriteCheckoutWidgetButton = () => {
   const eventId = process.env.NEXT_PUBLIC_EVENTBRITE_EVENT_ID || "";
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const EventbriteButton = () => {
             widgetType: "checkout",
             eventId: eventId,
             modal: true,
-            modalTriggerElementId: "EventbriteButton",
+            modalTriggerElementId: "EventbriteCheckoutWidgetButton",
             onOrderComplete: () => {
               console.log("Order complete!");
             },
@@ -46,7 +46,7 @@ const EventbriteButton = () => {
 
   return (
     <button
-      id="EventbriteButton"
+      id="EventbriteCheckoutWidgetButton"
       className="border-hackomania-white text-hackomania-white border-4 p-1.5 text-base font-bold transition-all hover:bg-white hover:text-hackomania-red md:p-3 md:px-5 md:text-2xl"
     >
       REGISTER NOW
@@ -54,4 +54,4 @@ const EventbriteButton = () => {
   );
 };
 
-export default EventbriteButton;
+export default EventbriteCheckoutWidgetButton;
