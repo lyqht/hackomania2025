@@ -9,7 +9,8 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
-export const eventbritePreEvent = pgTable(
+// Pre-event registrations are fetched from eventbrite and stored in this table
+export const preEventRegistrations = pgTable(
   "pre_event_registrations",
   {
     id: uuid("id").defaultRandom().primaryKey(),
@@ -29,5 +30,28 @@ export const eventbritePreEvent = pgTable(
   (table) => ({
     eventAttendeeIdx: uniqueIndex("event_attendee_idx").on(table.eventId, table.attendeeId),
     emailIdx: index("email_idx").on(table.email),
+  }),
+);
+
+// Main event registrations are fetched from google sheets and stored in this table
+export const mainEventRegistrations = pgTable(
+  "main_event_registrations",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    firstName: text("first_name").notNull(),
+    lastName: text("last_name").notNull(),
+    email: text("email").notNull().unique(),
+    githubProfileUrl: text("github_profile_url"),
+    linkedinProfileUrl: text("linkedin_profile_url"),
+    hasTeam: boolean("has_team").notNull(),
+    teamName: text("team_name"),
+    ticketEmail: text("ticket_email"),
+    approvedBy: text("approved_by"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    emailIdx: uniqueIndex("main_event_email_idx").on(table.email),
+    teamNameIdx: index("team_name_idx").on(table.teamName),
   }),
 );
