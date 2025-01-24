@@ -40,7 +40,7 @@ export const mainEventRegistrations = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     firstName: text("first_name").notNull(),
     lastName: text("last_name").notNull(),
-    email: text("email").notNull(),
+    email: text("email").notNull().unique(),
     githubProfileUrl: text("github_profile_url"),
     linkedinProfileUrl: text("linkedin_profile_url"),
     hasTeam: boolean("has_team").notNull(),

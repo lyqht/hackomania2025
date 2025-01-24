@@ -43,6 +43,13 @@
       "when": 1737705768972,
       "tag": "0005_create_main_event_registrations",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1737707121700,
+      "tag": "0006_unique-indexes",
+      "breakpoints": true
     }
   ]
 }
