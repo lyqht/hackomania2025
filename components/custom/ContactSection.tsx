@@ -22,7 +22,7 @@ export default function ContactSection() {
             className="object-contain"
             aria-label="GeeksHacking Logo"
           />
-        </div>  
+        </div>
 
         {/* Content Section */}
         <div className="space-y-8 text-lg">
@@ -60,7 +60,7 @@ export default function ContactSection() {
             <h3 className="mb-4 text-xl font-bold md:text-3xl">Follow Us</h3>
             <div className="flex gap-6">
               <Link
-                href="https://t.me/geekshacking"
+                href="https://t.me/+Bm2NuYfzo243NThl"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-yellow-300 transition-all duration-300 hover:-translate-y-1 hover:text-yellow-400"
