@@ -1,0 +1,1 @@
+ALTER TABLE "eventbrite_registrations" RENAME TO "pre_event_registrations";
