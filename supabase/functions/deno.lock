@@ -1,7 +1,27 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@std/bytes@^1.0.3": "1.0.4",
+    "jsr:@std/csv@*": "1.0.5",
+    "jsr:@std/streams@^1.0.8": "1.0.8",
     "npm:@types/node@*": "22.5.4"
+  },
+  "jsr": {
+    "@std/bytes@1.0.4": {
+      "integrity": "11a0debe522707c95c7b7ef89b478c13fb1583a7cfb9a85674cd2cc2e3a28abc"
+    },
+    "@std/csv@1.0.5": {
+      "integrity": "02006ffd77e84b2bf01968d4e792f0b5cba057c73dc6a89accb96d803493675f",
+      "dependencies": [
+        "jsr:@std/streams"
+      ]
+    },
+    "@std/streams@1.0.8": {
+      "integrity": "b41332d93d2cf6a82fe4ac2153b930adf1a859392931e2a19d9fabfb6f154fb3",
+      "dependencies": [
+        "jsr:@std/bytes"
+      ]
+    }
   },
   "npm": {
     "@types/node@22.5.4": {
@@ -38,6 +58,14 @@
     "https://deno.land/std@0.168.0/async/retry.ts": "e8e5173623915bbc0ddc537698fa418cf875456c347eda1ed453528645b42e67",
     "https://deno.land/std@0.168.0/async/tee.ts": "3a47cc4e9a940904fd4341f0224907e199121c80b831faa5ec2b054c6d2eff5e",
     "https://deno.land/std@0.168.0/http/server.ts": "e99c1bee8a3f6571ee4cdeb2966efad465b8f6fe62bec1bdb59c1f007cc4d155",
+    "https://deno.land/std@0.181.0/_util/asserts.ts": "178dfc49a464aee693a7e285567b3d0b555dc805ff490505a8aae34f9cfb1462",
+    "https://deno.land/std@0.181.0/csv/_io.ts": "a0adec0dff2a55519f3782f931ed4340959d3be55cf92381ee424fc0d9b3bc65",
+    "https://deno.land/std@0.181.0/csv/mod.ts": "5f6fdc984c00d77776880bc135e4cd8dd1446d94a9640864361142313a1bbcd6",
+    "https://deno.land/std@0.181.0/csv/parse.ts": "03efc935a257780dd126bca06cbf879665d2ce8ee5a88c0015d45aa2274dcdc2",
+    "https://deno.land/std@0.181.0/csv/stream.ts": "240a14563dba0bc30786a9bf667a194c8bc29a0b4a300317b554088324791bc5",
+    "https://deno.land/std@0.181.0/csv/stringify.ts": "f0dd4baa8b282b37d91a025ec458dc814d357e934778026661b9ebdf0d3a59a2",
+    "https://deno.land/std@0.181.0/streams/_common.ts": "f45cba84f0d813de3326466095539602364a9ba521f804cc758f7a475cda692d",
+    "https://deno.land/std@0.181.0/streams/text_delimiter_stream.ts": "244304c832ec282d1b7ccf927f79c9f07debd061ab80c3d51f912365e8d31d30",
     "https://esm.sh/@supabase/auth-js@2.67.3/denonext/auth-js.mjs": "95cad9d3f1829294d4f277191e4b937ca297a63054f14deccf3ac1dfcd9bd1ad",
     "https://esm.sh/@supabase/functions-js@2.4.4/denonext/functions-js.mjs": "7adeb257410ef3c4a8a1eb9b4ff416c0075d1c32860ca04913c8a9dace1de6a6",
     "https://esm.sh/@supabase/node-fetch@2.6.15/denonext/node-fetch.mjs": "0bae9052231f4f6dbccc7234d05ea96923dbf967be12f402764580b6bf9f713d",
