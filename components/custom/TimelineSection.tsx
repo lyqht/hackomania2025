@@ -36,17 +36,17 @@ const PREHACK_SCHEDULE: ScheduleItem[] = [
   { time: "10:15 AM", event: "Ice breaker" },
   { time: "10:30 AM", event: "Briefing" },
   { time: "11:15 AM", event: "Q&A" },
-  { time: "11:30 AM", event: "Main Hall Workshop Slot 1" },
+  { time: "11:30 AM", event: "Main Hall Workshop 1" },
   { time: "12:30 PM", event: "Lunch" },
-  { time: "01:00 PM", event: "Main Hall Workshop Slot 2" },
+  { time: "01:00 PM", event: "Main Hall Workshop 2" },
   { time: "02:00 PM", event: "Break" },
-  { time: "02:30 PM", event: "Main Hall Workshop Slot 3" },
+  { time: "02:15 PM", event: "Main Hall Workshop 3" },
   { time: "03:15 PM", event: "Closing" },
   { time: "03:45 PM", event: "Networking" },
 ];
 
 const DAY1_SCHEDULE: ScheduleItem[] = [
-  { time: "10:45 AM", event: "Registration" },
+  { time: "10:30 AM", event: "Registration" },
   { time: "11:15 AM", event: "Introduction" },
   { time: "11:30 AM", event: "Rakuten intro" },
   { time: "11:45 AM", event: "Safety briefing" },
