@@ -47,6 +47,13 @@ const sponsorCategories: Record<string, SponsorCategory> = {
         height: (202 * 3) / 5,
         url: "https://www.kitchencopilot.com/",
       },
+      {
+        name: "SP Group",
+        image: "/sponsors/SP_Group.png",
+        width: (572 * 3) / 5,
+        height: (162 * 3) / 5,
+        url: "https://www.spgroup.com.sg/about-us/careers/",
+      },
     ],
     class: "gap-8 xl:gap-24 mx-12",
   },
