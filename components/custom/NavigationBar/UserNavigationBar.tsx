@@ -15,14 +15,14 @@ export default function UserNavigationBar() {
   }
 
   return (
-    <div className={`w-screen ${styles.grid} pb-10`}>
+    <div className={`w-screen ${styles.grid}`}>
       <div className="m-2 bg-hackomania-red p-5 md:mx-20 md:my-10">
         <nav className="hidden flex-row justify-start gap-3 text-white md:flex" id="full-nav">
           <Link className="flex cursor-pointer flex-row items-center gap-2 px-3 py-1" href="/">
             <FaArrowLeft />
             <span>Back to Landing Page</span>
           </Link>
-          <button className="ml-auto cursor-pointer px-3 py-1" onClick={handleLogout}>
+          <button className="ml-auto cursor-pointer px-3 py-1 text-lg" onClick={handleLogout}>
             Logout
           </button>
         </nav>

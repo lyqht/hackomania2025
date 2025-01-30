@@ -126,7 +126,7 @@ export default function AddMembers({ teamId, numMembers }: { teamId: string; num
             <button
               onClick={handleAddMembers}
               className="rounded-lg bg-hackomania-red px-4 py-2 font-semibold text-white transition duration-200 ease-in-out hover:bg-red-700 focus:ring-2 focus:ring-red-300 disabled:cursor-not-allowed disabled:opacity-50"
-              aria-label="Add members"
+              aria-label="Save"
               disabled={isPending}
             >
               {isPending ? (
@@ -135,7 +135,7 @@ export default function AddMembers({ teamId, numMembers }: { teamId: string; num
                   <span>Adding...</span>
                 </div>
               ) : (
-                "Add Members"
+                "Save"
               )}
             </button>
           </div>
