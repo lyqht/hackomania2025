@@ -32,7 +32,7 @@ export default async function TeamManagementSection({
 
       <div className="mt-2">
         <Suspense key={`management-${teamKey}`} fallback={<SuspenseLoadingSpinner />}>
-          <TeamManagement users={userTeam.users} teamId={userTeam.id} />
+          <TeamManagement userTeam={userTeam} />
         </Suspense>
       </div>
 
