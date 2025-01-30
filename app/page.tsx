@@ -17,7 +17,8 @@ export default async function Index() {
       <div className="w-full max-w-full">
         <div className="z-30 m-2 rounded-lg border-2 border-hackomania-red p-4 text-lg font-medium text-hackomania-red md:mx-20">
           <p className="mb-4">
-            We are still actively updating the website! Please check back for more information! :)
+            Sign in now to register and manage your team for HackOMania 2025! We&apos;re excited to
+            have your team join us!
           </p>
           {process.env.NEXT_PUBLIC_SHOW_GITHUB_SIGN_IN === "true" && <GitHubSignInButton />}
         </div>
