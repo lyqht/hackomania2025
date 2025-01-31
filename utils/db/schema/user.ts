@@ -1,12 +1,12 @@
 import { sql } from "drizzle-orm";
-import { pgTable, uuid, text, timestamp, check } from "drizzle-orm/pg-core";
+import { check, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const user = pgTable(
   "user",
   {
     id: uuid().defaultRandom().primaryKey(),
     email: text().notNull().unique(),
-    githubUsername: text().notNull(),
+    githubUsername: text().notNull().unique(),
     createdAt: timestamp().notNull().defaultNow(),
     role: text().default("participant"),
   },

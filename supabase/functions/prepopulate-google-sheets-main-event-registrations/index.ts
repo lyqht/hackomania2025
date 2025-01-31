@@ -13,12 +13,11 @@ interface CSVRow extends Record<string, string> {
   "Email Address": string;
   "First Name": string;
   "Last Name": string;
-  Email: string; // this column is redundant; we use Email Address instead
   "Your Github Profile Link": string;
   "Your LinkedIn Profile Link": string;
   "Do you already have a team?": string;
   "What is your team name? (Also ask your team members to put the same name)": string;
-  "Email to send ticket to": string;
+  "Your Eventbrite Email": string;
   "Please join the waitlist on the eventbrite page also": string;
   "Approved By": string;
   Remarks: string;
@@ -47,11 +46,22 @@ async function createMainEventRegistrations(
         first_name: row["First Name"],
         last_name: row["Last Name"],
         email: row["Email Address"],
-        github_profile_url: row["Your Github Profile Link"],
+        github_profile_url: (() => {
+          const url = row["Your Github Profile Link"];
+          const githubRegex =
+            /^https?:\/\/(?:www\.)?github\.com\/[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/;
+          if (githubRegex.test(url)) {
+            return url;
+          }
+          if (!url || ["NA", "Nil", "N/A", "-", ""].includes(url.trim())) {
+            return "";
+          }
+          return `https://github.com/${url}`;
+        })(),
         linkedin_profile_url: row["Your LinkedIn Profile Link"],
         has_team: row["Do you already have a team?"].toLowerCase() === "yes",
         team_name: row["What is your team name? (Also ask your team members to put the same name)"],
-        ticket_email: row["Email to send ticket to"],
+        ticket_email: row["Your Eventbrite Email"],
         approved_by: row["Approved By"],
       })),
       { onConflict: "email" },
@@ -73,7 +83,7 @@ async function createOrGetUsers(supabaseClient: SupabaseClient<Database>, rows: 
         email: row["Email Address"].trim() || row["Email to send ticket to"].trim(),
         githubUsername: extractGithubUsername(row["Your Github Profile Link"]),
       })),
-      { onConflict: "email" },
+      { onConflict: "githubUsername" },
     )
     .select();
 
@@ -188,20 +198,19 @@ serve(async (req) => {
         "Email Address",
         "First Name",
         "Last Name",
-        "Email",
         "Your Github Profile Link",
         "Your LinkedIn Profile Link",
         "Do you already have a team?",
         "What is your team name? (Also ask your team members to put the same name)",
-        "Email to send ticket to",
+        "Your Eventbrite Email",
         "Please join the waitlist on the eventbrite page also",
         "Approved By",
         "Remarks",
       ],
     }) as CSVRow[];
 
-    const approvers = new Set(["Thu Ya Kyaw", "Tyu Ke Wei"]);
-    const approvedRows = rows.filter((row) => approvers.has(row["Approved By"]));
+    const nonApprovedValues = ["Need help considering", "Reject", ""];
+    const approvedRows = rows.filter((row) => !nonApprovedValues.includes(row["Approved By"]));
 
     const stats: ProcessingStats = {
       registrations: 0,
