@@ -50,6 +50,13 @@
       "when": 1737707121700,
       "tag": "0006_unique-indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1738304463352,
+      "tag": "0007_unique-githubusername",
+      "breakpoints": true
     }
   ]
 }

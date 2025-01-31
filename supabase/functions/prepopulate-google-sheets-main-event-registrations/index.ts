@@ -83,7 +83,7 @@ async function createOrGetUsers(supabaseClient: SupabaseClient<Database>, rows: 
         email: row["Email Address"].trim() || row["Email to send ticket to"].trim(),
         githubUsername: extractGithubUsername(row["Your Github Profile Link"]),
       })),
-      { onConflict: "email" },
+      { onConflict: "githubUsername" },
     )
     .select();
 
