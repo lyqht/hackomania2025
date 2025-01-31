@@ -1,11 +1,15 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.48.0";
+import {
+  createClient,
+  SupabaseClient,
+} from "https://esm.sh/@supabase/supabase-js@2.48.0";
 import { parse } from "jsr:@std/csv";
 import type { Database } from "../../../types/database.types.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
 interface CSVRow extends Record<string, string> {
@@ -13,12 +17,12 @@ interface CSVRow extends Record<string, string> {
   "Email Address": string;
   "First Name": string;
   "Last Name": string;
-  Email: string; // this column is redundant; we use Email Address instead
   "Your Github Profile Link": string;
   "Your LinkedIn Profile Link": string;
   "Do you already have a team?": string;
-  "What is your team name? (Also ask your team members to put the same name)": string;
-  "Email to send ticket to": string;
+  "What is your team name? (Also ask your team members to put the same name)":
+    string;
+  "Your Eventbrite Email": string;
   "Please join the waitlist on the eventbrite page also": string;
   "Approved By": string;
   Remarks: string;
@@ -50,8 +54,10 @@ async function createMainEventRegistrations(
         github_profile_url: row["Your Github Profile Link"],
         linkedin_profile_url: row["Your LinkedIn Profile Link"],
         has_team: row["Do you already have a team?"].toLowerCase() === "yes",
-        team_name: row["What is your team name? (Also ask your team members to put the same name)"],
-        ticket_email: row["Email to send ticket to"],
+        team_name: row[
+          "What is your team name? (Also ask your team members to put the same name)"
+        ],
+        ticket_email: row["Your Eventbrite Email"],
         approved_by: row["Approved By"],
       })),
       { onConflict: "email" },
@@ -65,12 +71,16 @@ async function createMainEventRegistrations(
   return data?.length ?? 0;
 }
 
-async function createOrGetUsers(supabaseClient: SupabaseClient<Database>, rows: CSVRow[]) {
+async function createOrGetUsers(
+  supabaseClient: SupabaseClient<Database>,
+  rows: CSVRow[],
+) {
   const { data: userData, error: userError } = await supabaseClient
     .from("user")
     .upsert(
       rows.map((row) => ({
-        email: row["Email Address"].trim() || row["Email to send ticket to"].trim(),
+        email: row["Email Address"].trim() ||
+          row["Email to send ticket to"].trim(),
         githubUsername: extractGithubUsername(row["Your Github Profile Link"]),
       })),
       { onConflict: "email" },
@@ -84,14 +94,22 @@ async function createOrGetUsers(supabaseClient: SupabaseClient<Database>, rows: 
   return userData;
 }
 
-async function createOrGetTeams(supabaseClient: SupabaseClient<Database>, rows: CSVRow[]) {
+async function createOrGetTeams(
+  supabaseClient: SupabaseClient<Database>,
+  rows: CSVRow[],
+) {
   // Get unique team names
   const teamNames = [
     ...new Set(
       rows
-        .filter((row) => row["Do you already have a team?"].toLowerCase() === "yes")
+        .filter((row) =>
+          row["Do you already have a team?"].toLowerCase() === "yes"
+        )
         .map(
-          (row) => row["What is your team name? (Also ask your team members to put the same name)"],
+          (row) =>
+            row[
+              "What is your team name? (Also ask your team members to put the same name)"
+            ],
         )
         .filter(Boolean),
     ),
@@ -145,7 +163,8 @@ serve(async (req) => {
   if (req.method !== "POST") {
     return new Response(
       JSON.stringify({
-        error: "This endpoint only accepts POST requests with form data containing a CSV file",
+        error:
+          "This endpoint only accepts POST requests with form data containing a CSV file",
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -176,7 +195,9 @@ serve(async (req) => {
       throw new Error("Only CSV files are allowed");
     }
 
-    if (file.type && !["text/csv", "application/vnd.ms-excel"].includes(file.type)) {
+    if (
+      file.type && !["text/csv", "application/vnd.ms-excel"].includes(file.type)
+    ) {
       throw new Error("Invalid file type. Please upload a CSV file");
     }
 
@@ -188,20 +209,21 @@ serve(async (req) => {
         "Email Address",
         "First Name",
         "Last Name",
-        "Email",
         "Your Github Profile Link",
         "Your LinkedIn Profile Link",
         "Do you already have a team?",
         "What is your team name? (Also ask your team members to put the same name)",
-        "Email to send ticket to",
+        "Your Eventbrite Email",
         "Please join the waitlist on the eventbrite page also",
         "Approved By",
         "Remarks",
       ],
     }) as CSVRow[];
 
-    const approvers = new Set(["Thu Ya Kyaw", "Tyu Ke Wei"]);
-    const approvedRows = rows.filter((row) => approvers.has(row["Approved By"]));
+    const nonApprovedValues = ["Need help considering", "Reject", ""];
+    const approvedRows = rows.filter(
+      (row) => !nonApprovedValues.includes(row["Approved By"]),
+    );
 
     const stats: ProcessingStats = {
       registrations: 0,
@@ -211,13 +233,18 @@ serve(async (req) => {
     };
 
     // Bulk create registrations
-    stats.registrations = await createMainEventRegistrations(supabaseClient, approvedRows);
+    stats.registrations = await createMainEventRegistrations(
+      supabaseClient,
+      approvedRows,
+    );
 
     // Get rows with teams
     const rowsWithTeams = approvedRows.filter(
       (row) =>
         row["Do you already have a team?"].toLowerCase() === "yes" &&
-        row["What is your team name? (Also ask your team members to put the same name)"],
+        row[
+          "What is your team name? (Also ask your team members to put the same name)"
+        ],
     );
 
     if (rowsWithTeams.length > 0) {
@@ -233,20 +260,28 @@ serve(async (req) => {
       const teamMemberships = rowsWithTeams
         .map((row) => {
           const user = users.find(
-            (u) => u.email === (row["Email Address"] || row["Email to send ticket to"]),
+            (u) =>
+              u.email ===
+                (row["Email Address"] || row["Email to send ticket to"]),
           );
           const team = teams.find(
             (t) =>
               t.name ===
-              row["What is your team name? (Also ask your team members to put the same name)"],
+                row[
+                  "What is your team name? (Also ask your team members to put the same name)"
+                ],
           );
           return user && team ? { teamId: team.id, userId: user.id } : null;
         })
         .filter(
-          (membership): membership is { teamId: string; userId: string } => membership !== null,
+          (membership): membership is { teamId: string; userId: string } =>
+            membership !== null,
         );
 
-      stats.teamMembers = await createTeamMembers(supabaseClient, teamMemberships);
+      stats.teamMembers = await createTeamMembers(
+        supabaseClient,
+        teamMemberships,
+      );
     }
 
     return new Response(
