@@ -20,6 +20,10 @@ export type UserInfo = {
   preEventRegistered: boolean;
 };
 
+export type UserUpdateData = Partial<UserInfo> & {
+  newTeamName?: string;
+};
+
 export async function getAllUsersWithoutPagination(): Promise<UserInfo[]> {
   try {
     const users = await db

@@ -1,6 +1,12 @@
 "use client";
 
-import { syncEventbrite, uploadFile } from "@/app/services/admin";
+import {
+  editUser,
+  removeUser,
+  setTeamLeader,
+  syncEventbrite,
+  uploadFile,
+} from "@/app/services/admin";
 import { getAllUsersWithoutPagination, UserInfo } from "@/app/services/user";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,14 +35,19 @@ import {
 } from "@/components/ui/table";
 import { Check, ChevronsUpDown, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { UserActions } from "./UserActions";
+import { toast, Toaster } from "sonner";
 
 const ITEMS_PER_PAGE = 10;
 
 interface UserTableProps {
   users: UserInfo[];
+  onSetTeamLeader: (userId: string) => Promise<void>;
+  onRemoveUser: (userId: string) => Promise<void>;
+  onEditUser: (userId: string, data: Partial<UserInfo>) => Promise<void>;
 }
 
-function UserTable({ users }: UserTableProps) {
+function UserTable({ users, onSetTeamLeader, onRemoveUser, onEditUser }: UserTableProps) {
   return (
     <Table>
       <TableHeader>
@@ -44,8 +55,10 @@ function UserTable({ users }: UserTableProps) {
           <TableHead>GitHub Username</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Team</TableHead>
+          <TableHead>Team Role</TableHead>
           <TableHead>Role</TableHead>
           <TableHead>Pre-event</TableHead>
+          <TableHead className="w-[50px]">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -54,9 +67,26 @@ function UserTable({ users }: UserTableProps) {
             <TableCell>{user.githubUsername}</TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>{user.teamName || "No team"}</TableCell>
+            <TableCell>
+              {user.teamRole ? (
+                <span className={user.teamRole === "leader" ? "font-medium text-blue-600" : ""}>
+                  {user.teamRole.charAt(0).toUpperCase() + user.teamRole.slice(1)}
+                </span>
+              ) : (
+                "-"
+              )}
+            </TableCell>
             <TableCell>{user.role}</TableCell>
             <TableCell className={user.preEventRegistered ? "text-green-600" : "text-red-600"}>
               {user.preEventRegistered ? "✓" : "✗"}
+            </TableCell>
+            <TableCell>
+              <UserActions
+                user={user}
+                onSetTeamLeader={onSetTeamLeader}
+                onRemoveUser={onRemoveUser}
+                onEditUser={onEditUser}
+              />
             </TableCell>
           </TableRow>
         ))}
@@ -110,19 +140,20 @@ export default function AdminClient() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    async function fetchUsers() {
-      setIsLoading(true);
-      try {
-        const result = await getAllUsersWithoutPagination();
-        setAllUsers(result || []);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        setAllUsers([]);
-      }
-      setIsLoading(false);
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    try {
+      const result = await getAllUsersWithoutPagination();
+      setAllUsers(result || []);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      setAllUsers([]);
+      toast.error("Failed to fetch users");
     }
+    setIsLoading(false);
+  };
 
+  useEffect(() => {
     fetchUsers();
   }, []);
 
@@ -165,8 +196,64 @@ export default function AdminClient() {
     window.scrollTo(0, 0);
   };
 
+  const handleSetTeamLeader = async (userId: string) => {
+    try {
+      const result = await setTeamLeader(userId);
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      // Update the user in the state
+      setAllUsers((prevUsers) =>
+        prevUsers.map((user) => {
+          if (user.id === userId) {
+            return { ...user, teamRole: "leader" };
+          }
+          if (user.teamId === user.teamId) {
+            // Reset other users in the same team to member
+            return user.teamRole === "leader" ? { ...user, teamRole: "member" } : user;
+          }
+          return user;
+        }),
+      );
+    } catch {
+      toast.error("Failed to update team leader");
+    }
+  };
+
+  const handleRemoveUser = async (userId: string) => {
+    try {
+      const result = await removeUser(userId);
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      // Remove user from the state
+      setAllUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+    } catch {
+      toast.error("Failed to remove user");
+    }
+  };
+
+  const handleEditUser = async (userId: string, data: Partial<UserInfo>) => {
+    try {
+      const result = await editUser(userId, data);
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      // Update user in the state
+      setAllUsers((prevUsers) =>
+        prevUsers.map((user) => (user.id === userId ? { ...user, ...data } : user)),
+      );
+    } catch {
+      toast.error("Failed to update user");
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8 p-5 md:p-20">
+      <Toaster />
       <div>
         <h1 className="mb-4 text-2xl font-bold md:text-4xl">HackOMania 2025 Admin Portal</h1>
         <div className="flex flex-col gap-4">
@@ -299,7 +386,12 @@ export default function AdminClient() {
           <div>Loading users...</div>
         ) : (
           <>
-            <UserTable users={displayedUsers} />
+            <UserTable
+              users={displayedUsers}
+              onSetTeamLeader={handleSetTeamLeader}
+              onRemoveUser={handleRemoveUser}
+              onEditUser={handleEditUser}
+            />
             <div className="mt-4">
               <Pagination
                 totalPages={totalPages}
