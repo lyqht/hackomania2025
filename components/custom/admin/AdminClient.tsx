@@ -3,7 +3,22 @@
 import { syncEventbrite, uploadFile } from "@/app/services/admin";
 import { getAllUsersWithoutPagination, UserInfo } from "@/app/services/user";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -12,7 +27,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEffect, useState } from "react";
+import { Check, ChevronsUpDown, Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -79,19 +95,30 @@ function Pagination({ totalPages, currentPage, onPageChange }: PaginationProps) 
   );
 }
 
+type SearchType = "username" | "email" | "team";
+const SEARCH_TYPE_LABELS: Record<SearchType, string> = {
+  username: "GitHub Username",
+  email: "Email",
+  team: "Team",
+};
+
 export default function AdminClient() {
   const [currentPage, setCurrentPage] = useState(1);
   const [allUsers, setAllUsers] = useState<UserInfo[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchType, setSearchType] = useState<SearchType>("username");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     async function fetchUsers() {
       setIsLoading(true);
       try {
         const result = await getAllUsersWithoutPagination();
-        setAllUsers(result);
+        setAllUsers(result || []);
       } catch (error) {
         console.error("Error fetching users:", error);
+        setAllUsers([]);
       }
       setIsLoading(false);
     }
@@ -99,10 +126,39 @@ export default function AdminClient() {
     fetchUsers();
   }, []);
 
-  const totalPages = Math.ceil(allUsers.length / ITEMS_PER_PAGE);
+  const uniqueTeams = useMemo(() => {
+    if (!allUsers?.length) return [];
+
+    const teams = new Set<string>();
+    allUsers.forEach((user) => {
+      if (user.teamName) teams.add(user.teamName);
+    });
+    return Array.from(teams).sort();
+  }, [allUsers]);
+
+  // Filter users based on search
+  const filteredUsers = useMemo(() => {
+    if (!searchQuery) return allUsers;
+
+    return allUsers.filter((user) => {
+      const query = searchQuery.toLowerCase();
+      switch (searchType) {
+        case "username":
+          return user.githubUsername.toLowerCase().includes(query);
+        case "email":
+          return user.email.toLowerCase().includes(query);
+        case "team":
+          return user.teamName?.toLowerCase().includes(query);
+        default:
+          return true;
+      }
+    });
+  }, [allUsers, searchQuery, searchType]);
+
+  const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const displayedUsers = allUsers.slice(startIndex, endIndex);
+  const displayedUsers = filteredUsers.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -135,7 +191,110 @@ export default function AdminClient() {
       </div>
 
       <div className="rounded-lg border border-neutral-400 p-4">
-        <h2 className="mb-4 text-xl font-semibold">Users ({allUsers.length} total)</h2>
+        <div className="mb-4">
+          <h2 className="mb-4 text-xl font-semibold">Users</h2>
+          {!isLoading && (
+            <div className="flex items-center gap-2">
+              <label htmlFor="search-type">Search by:</label>
+              {/* Search type dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="w-[180px] justify-between">
+                    {SEARCH_TYPE_LABELS[searchType]}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {Object.entries(SEARCH_TYPE_LABELS).map(([type, label]) => (
+                    <DropdownMenuItem
+                      key={type}
+                      onSelect={() => {
+                        setSearchType(type as SearchType);
+                        setSearchQuery("");
+                      }}
+                    >
+                      <Check
+                        className={`mr-2 h-4 w-4 ${
+                          type === searchType ? "opacity-100" : "opacity-0"
+                        }`}
+                      />
+                      {label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Search input */}
+              <Popover open={searchOpen} onOpenChange={setSearchOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={searchOpen}
+                    className="w-[300px] justify-between"
+                  >
+                    {searchQuery || `Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
+                    <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[300px] p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder={`Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
+                      value={searchQuery}
+                      onValueChange={setSearchQuery}
+                    />
+                    <CommandList>
+                      <CommandEmpty>No results found.</CommandEmpty>
+                      <CommandGroup>
+                        {searchType === "team" &&
+                          uniqueTeams.map((team) => (
+                            <CommandItem
+                              key={`team-${team}`}
+                              value={team}
+                              onSelect={(value) => {
+                                setSearchQuery(value);
+                                setSearchOpen(false);
+                              }}
+                            >
+                              {team}
+                            </CommandItem>
+                          ))}
+                        {searchType === "username" &&
+                          allUsers.map((user) => (
+                            <CommandItem
+                              key={`username-${user.id}`}
+                              value={user.githubUsername}
+                              onSelect={(value) => {
+                                setSearchQuery(value);
+                                setSearchOpen(false);
+                              }}
+                            >
+                              {user.githubUsername}
+                            </CommandItem>
+                          ))}
+                        {searchType === "email" &&
+                          allUsers.map((user) => (
+                            <CommandItem
+                              key={`email-${user.id}`}
+                              value={user.email}
+                              onSelect={(value) => {
+                                setSearchQuery(value);
+                                setSearchOpen(false);
+                              }}
+                            >
+                              {user.email}
+                            </CommandItem>
+                          ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
+        </div>
+
         {isLoading ? (
           <div>Loading users...</div>
         ) : (
