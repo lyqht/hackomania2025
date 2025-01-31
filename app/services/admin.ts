@@ -1,6 +1,6 @@
 "use server";
 
-import { uploadMainEventRegistrations } from "@/app/services/eventbrite";
+import { syncPreEventRegistrations, uploadMainEventRegistrations } from "@/app/services/eventbrite";
 import { revalidatePath } from "next/cache";
 
 export async function uploadFile(formData: FormData) {
@@ -16,5 +16,16 @@ export async function uploadFile(formData: FormData) {
   } catch (error) {
     console.error("Error uploading file:", error);
     return { error: "Failed to upload file" };
+  }
+}
+
+export async function syncEventbrite() {
+  try {
+    await syncPreEventRegistrations();
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error) {
+    console.error("Error syncing registrations:", error);
+    return { error: "Failed to sync registrations" };
   }
 }
