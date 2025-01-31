@@ -33,7 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Check, ChevronsUpDown, Search } from "lucide-react";
+import { Check, ChevronsUpDown, Search, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { UserActions } from "./UserActions";
 import { toast, Toaster } from "sonner";
@@ -136,6 +136,8 @@ export default function AdminClient() {
   const [currentPage, setCurrentPage] = useState(1);
   const [allUsers, setAllUsers] = useState<UserInfo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [searchType, setSearchType] = useState<SearchType>("username");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -257,20 +259,78 @@ export default function AdminClient() {
       <div>
         <h1 className="mb-4 text-2xl font-bold md:text-4xl">HackOMania 2025 Admin Portal</h1>
         <div className="flex flex-col gap-4">
-          <form action={uploadFile}>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              setIsUploading(true);
+              try {
+                const result = await uploadFile(formData);
+                if (result.error) {
+                  toast.error(result.error);
+                } else {
+                  toast.success("CSV uploaded successfully");
+                  await fetchUsers(); // Refresh the user list after upload
+                }
+              } catch (error) {
+                toast.error(`Failed to upload CSV: ${error}`);
+              } finally {
+                setIsUploading(false);
+              }
+            }}
+          >
             <div className="flex items-center gap-2">
               <span>Main Event Registrations</span>
-              <Input type="file" name="file" accept=".xlsx,.xls,.csv" className="max-w-xs" />
-              <Button type="submit" variant="outline">
-                Upload CSV
+              <Input
+                type="file"
+                name="file"
+                accept=".xlsx,.xls,.csv"
+                className="max-w-xs"
+                disabled={isUploading}
+                required
+              />
+              <Button type="submit" variant="outline" disabled={isUploading}>
+                {isUploading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Uploading...
+                  </>
+                ) : (
+                  "Upload CSV"
+                )}
               </Button>
             </div>
           </form>
-          <form action={syncEventbrite}>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setIsSyncing(true);
+              try {
+                const result = await syncEventbrite();
+                if (result.error) {
+                  toast.error(result.error);
+                } else {
+                  toast.success("Synced with Eventbrite successfully");
+                  await fetchUsers();
+                }
+              } catch (error) {
+                toast.error(`Failed to sync with Eventbrite: ${error}`);
+              } finally {
+                setIsSyncing(false);
+              }
+            }}
+          >
             <div className="flex items-center gap-2">
               <span>Pre-event Registrations</span>
-              <Button type="submit" variant="outline">
-                Sync from Eventbrite
+              <Button type="submit" variant="outline" disabled={isSyncing}>
+                {isSyncing ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Syncing...
+                  </>
+                ) : (
+                  "Sync from Eventbrite"
+                )}
               </Button>
             </div>
           </form>
@@ -279,7 +339,12 @@ export default function AdminClient() {
 
       <div className="rounded-lg border border-neutral-400 p-4">
         <div className="mb-4">
-          <h2 className="mb-4 text-xl font-semibold">Users</h2>
+          <h2 className="mb-4 text-xl font-semibold">
+            Users{" "}
+            {filteredUsers.length > 0 && (
+              <span className="text-sm text-neutral-500">({filteredUsers.length})</span>
+            )}
+          </h2>
           {!isLoading && (
             <div className="flex items-center gap-2">
               <label htmlFor="search-type">Search by:</label>
