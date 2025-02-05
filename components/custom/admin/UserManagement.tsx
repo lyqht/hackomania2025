@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/table";
 import { Check, ChevronsUpDown, Search, Loader2, X } from "lucide-react";
 import { UserActions } from "./UserActions";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -63,8 +64,6 @@ function UserTable({
           <TableHead>GitHub Username</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Team</TableHead>
-          <TableHead>Team Role</TableHead>
-          <TableHead>Role</TableHead>
           <TableHead>Pre-event</TableHead>
           <TableHead className="w-[50px]">Actions</TableHead>
         </TableRow>
@@ -79,6 +78,9 @@ function UserTable({
               >
                 {user.githubUsername}
               </button>
+              {user.role === "admin" && (
+                <span className="ml-1 text-sm font-medium text-blue-600">• Admin</span>
+              )}
             </TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>
@@ -93,16 +95,6 @@ function UserTable({
                 "No team"
               )}
             </TableCell>
-            <TableCell>
-              {user.teamRole ? (
-                <span className={user.teamRole === "leader" ? "font-medium text-blue-600" : ""}>
-                  {user.teamRole.charAt(0).toUpperCase() + user.teamRole.slice(1)}
-                </span>
-              ) : (
-                "-"
-              )}
-            </TableCell>
-            <TableCell>{user.role}</TableCell>
             <TableCell className={user.preEventRegistered ? "text-green-600" : "text-red-600"}>
               {user.preEventRegistered ? "✓" : "✗"}
             </TableCell>
@@ -188,12 +180,21 @@ export default function UserManagement({
 }: UserManagementProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [hideAdminUsers, setHideAdminUsers] = useState(true);
 
   // Filter users based on search
   const filteredUsers = useMemo(() => {
-    if (!searchQuery) return users;
+    if (!searchQuery && !hideAdminUsers) return users;
 
     return users.filter((user) => {
+      // Apply admin filter
+      if (hideAdminUsers && user.role === "admin") {
+        return false;
+      }
+
+      // Apply search filter
+      if (!searchQuery) return true;
+
       const query = searchQuery.toLowerCase();
       switch (searchType) {
         case "username":
@@ -206,12 +207,7 @@ export default function UserManagement({
           return true;
       }
     });
-  }, [users, searchQuery, searchType]);
-
-  // Count non-admin users
-  const nonAdminUsersCount = useMemo(() => {
-    return filteredUsers.filter((user) => user.role !== "admin").length;
-  }, [filteredUsers]);
+  }, [users, searchQuery, searchType, hideAdminUsers]);
 
   const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -238,7 +234,7 @@ export default function UserManagement({
         <h2 className="mb-4 text-xl font-semibold">
           Users{" "}
           {filteredUsers.length > 0 && (
-            <span className="text-sm text-neutral-500">({nonAdminUsersCount})</span>
+            <span className="text-sm text-neutral-500">({filteredUsers.length})</span>
           )}
         </h2>
 
@@ -250,7 +246,7 @@ export default function UserManagement({
               await onUploadFile(formData);
             }}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <span>Main Event Registrations</span>
               <Input
                 type="file"
@@ -279,7 +275,7 @@ export default function UserManagement({
               await onSyncEventbrite();
             }}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <span>Pre-event Registrations</span>
               <Button type="submit" variant="outline" disabled={isSyncing}>
                 {isSyncing ? (
@@ -297,126 +293,142 @@ export default function UserManagement({
         </div>
 
         {!isLoading && (
-          <div className="flex items-center gap-2">
-            <label htmlFor="search-type">Search by:</label>
-            {/* Search type dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-[180px] justify-between">
-                  {SEARCH_TYPE_LABELS[searchType]}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {Object.entries(SEARCH_TYPE_LABELS).map(([type, label]) => (
-                  <DropdownMenuItem
-                    key={type}
-                    onSelect={() => {
-                      onSearchTypeChange(type as SearchType);
-                      onSearchQueryChange("");
-                    }}
-                  >
-                    <Check
-                      className={`mr-2 h-4 w-4 ${
-                        type === searchType ? "opacity-100" : "opacity-0"
-                      }`}
-                    />
-                    {label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="flex flex-wrap items-center gap-2">
+              <label htmlFor="search-type">Search by:</label>
+              {/* Search type dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="w-[180px] justify-between">
+                    {SEARCH_TYPE_LABELS[searchType]}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {Object.entries(SEARCH_TYPE_LABELS).map(([type, label]) => (
+                    <DropdownMenuItem
+                      key={type}
+                      onSelect={() => {
+                        onSearchTypeChange(type as SearchType);
+                        onSearchQueryChange("");
+                      }}
+                    >
+                      <Check
+                        className={`mr-2 h-4 w-4 ${
+                          type === searchType ? "opacity-100" : "opacity-0"
+                        }`}
+                      />
+                      {label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            {/* Search input */}
-            <Popover open={searchOpen} onOpenChange={setSearchOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={searchOpen}
-                  className="w-[300px] justify-between"
-                >
-                  {searchQuery || `Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
-                  <div className="flex items-center">
-                    {searchQuery && (
-                      <div
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSearchQueryChange("");
-                        }}
-                        className="mr-2 cursor-pointer text-neutral-500 hover:text-neutral-700"
-                      >
-                        <X className="h-4 w-4" />
-                      </div>
-                    )}
-                    <Search className="h-4 w-4 shrink-0 opacity-50" />
-                  </div>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[300px] p-0">
-                <Command>
-                  <div className="relative">
-                    <CommandInput
-                      placeholder={`Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
-                      value={searchQuery}
-                      onValueChange={onSearchQueryChange}
-                    />
-                    {searchQuery && (
-                      <div
-                        onClick={() => onSearchQueryChange("")}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-neutral-500 hover:text-neutral-700"
-                      >
-                        <X className="h-4 w-4" />
-                      </div>
-                    )}
-                  </div>
-                  <CommandList>
-                    <CommandEmpty>No results found.</CommandEmpty>
-                    <CommandGroup>
-                      {searchType === "team" &&
-                        uniqueTeams.map((team) => (
-                          <CommandItem
-                            key={`team-${team}`}
-                            value={team}
-                            onSelect={(value) => {
-                              onSearchQueryChange(value);
-                              setSearchOpen(false);
-                            }}
-                          >
-                            {team}
-                          </CommandItem>
-                        ))}
-                      {searchType === "username" &&
-                        users.map((user) => (
-                          <CommandItem
-                            key={`username-${user.id}`}
-                            value={user.githubUsername}
-                            onSelect={(value) => {
-                              onSearchQueryChange(value);
-                              setSearchOpen(false);
-                            }}
-                          >
-                            {user.githubUsername}
-                          </CommandItem>
-                        ))}
-                      {searchType === "email" &&
-                        users.map((user) => (
-                          <CommandItem
-                            key={`email-${user.id}`}
-                            value={user.email}
-                            onSelect={(value) => {
-                              onSearchQueryChange(value);
-                              setSearchOpen(false);
-                            }}
-                          >
-                            {user.email}
-                          </CommandItem>
-                        ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+              {/* Search input */}
+              <Popover open={searchOpen} onOpenChange={setSearchOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={searchOpen}
+                    className="w-full justify-between sm:w-[300px]"
+                  >
+                    {searchQuery || `Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
+                    <div className="flex items-center">
+                      {searchQuery && (
+                        <div
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSearchQueryChange("");
+                          }}
+                          className="mr-2 cursor-pointer text-neutral-500 hover:text-neutral-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </div>
+                      )}
+                      <Search className="h-4 w-4 shrink-0 opacity-50" />
+                    </div>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[300px] p-0">
+                  <Command>
+                    <div className="relative">
+                      <CommandInput
+                        placeholder={`Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
+                        value={searchQuery}
+                        onValueChange={onSearchQueryChange}
+                      />
+                      {searchQuery && (
+                        <div
+                          onClick={() => onSearchQueryChange("")}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-neutral-500 hover:text-neutral-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </div>
+                      )}
+                    </div>
+                    <CommandList>
+                      <CommandEmpty>No results found.</CommandEmpty>
+                      <CommandGroup>
+                        {searchType === "team" &&
+                          uniqueTeams.map((team) => (
+                            <CommandItem
+                              key={`team-${team}`}
+                              value={team}
+                              onSelect={(value) => {
+                                onSearchQueryChange(value);
+                                setSearchOpen(false);
+                              }}
+                            >
+                              {team}
+                            </CommandItem>
+                          ))}
+                        {searchType === "username" &&
+                          users.map((user) => (
+                            <CommandItem
+                              key={`username-${user.id}`}
+                              value={user.githubUsername}
+                              onSelect={(value) => {
+                                onSearchQueryChange(value);
+                                setSearchOpen(false);
+                              }}
+                            >
+                              {user.githubUsername}
+                            </CommandItem>
+                          ))}
+                        {searchType === "email" &&
+                          users.map((user) => (
+                            <CommandItem
+                              key={`email-${user.id}`}
+                              value={user.email}
+                              onSelect={(value) => {
+                                onSearchQueryChange(value);
+                                setSearchOpen(false);
+                              }}
+                            >
+                              {user.email}
+                            </CommandItem>
+                          ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="hideAdminUsers"
+                checked={hideAdminUsers}
+                onCheckedChange={(checked) => setHideAdminUsers(checked as boolean)}
+              />
+              <label
+                htmlFor="hideAdminUsers"
+                className="text-sm text-neutral-500 hover:text-neutral-700"
+              >
+                Hide admin users
+              </label>
+            </div>
           </div>
         )}
       </div>
