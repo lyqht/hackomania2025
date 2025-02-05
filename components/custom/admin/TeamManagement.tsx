@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Search, X } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const MAX_TEAM_SIZE = 5;
 
@@ -51,6 +52,7 @@ export default function TeamManagement({
   const [isLoading, setIsLoading] = useState(true);
   const [internalSearchQuery, setInternalSearchQuery] = useState("");
   const [teamFilter, setTeamFilter] = useState<TeamFilter>("all");
+  const [hideAdminTeams, setHideAdminTeams] = useState(true);
 
   // Use external search query if provided, otherwise use internal state
   const searchQuery = externalSearchQuery ?? internalSearchQuery;
@@ -146,21 +148,26 @@ export default function TeamManagement({
       if (!matchesSearch) return false;
 
       // Apply team size filter
-      switch (teamFilter) {
-        case "full":
-          return team.users.length >= MAX_TEAM_SIZE;
-        case "not-full":
-          return team.users.length < MAX_TEAM_SIZE;
-        default:
-          return true;
-      }
-    });
-  }, [teams, searchQuery, teamFilter]);
+      const matchesTeamSize = (() => {
+        switch (teamFilter) {
+          case "full":
+            return team.users.length >= MAX_TEAM_SIZE;
+          case "not-full":
+            return team.users.length < MAX_TEAM_SIZE;
+          default:
+            return true;
+        }
+      })();
+      if (!matchesTeamSize) return false;
 
-  // Filter out admin teams from count
-  const nonAdminTeamsCount = filteredTeams.filter(
-    (team) => !team.users.some((user) => user.role === "admin"),
-  ).length;
+      // Apply admin filter
+      if (hideAdminTeams && team.users.some((user) => user.role === "admin")) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [teams, searchQuery, teamFilter, hideAdminTeams]);
 
   return (
     <div className="rounded-lg border border-neutral-400 p-4">
@@ -168,7 +175,7 @@ export default function TeamManagement({
         <h2 className="mb-4 text-xl font-semibold">
           Teams{" "}
           {teams.length > 0 && (
-            <span className="text-sm text-neutral-500">({nonAdminTeamsCount})</span>
+            <span className="text-sm text-neutral-500">({filteredTeams.length})</span>
           )}
         </h2>
 
@@ -203,6 +210,20 @@ export default function TeamManagement({
               <SelectItem value="not-full">Teams with Space</SelectItem>
             </SelectContent>
           </Select>
+
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="hideAdminTeams"
+              checked={hideAdminTeams}
+              onCheckedChange={(checked) => setHideAdminTeams(checked as boolean)}
+            />
+            <label
+              htmlFor="hideAdminTeams"
+              className="text-sm text-neutral-500 hover:text-neutral-700"
+            >
+              Hide teams with admin users
+            </label>
+          </div>
         </div>
       </div>
 

@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/table";
 import { Check, ChevronsUpDown, Search, Loader2, X } from "lucide-react";
 import { UserActions } from "./UserActions";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -63,8 +64,6 @@ function UserTable({
           <TableHead>GitHub Username</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Team</TableHead>
-          <TableHead>Team Role</TableHead>
-          <TableHead>Role</TableHead>
           <TableHead>Pre-event</TableHead>
           <TableHead className="w-[50px]">Actions</TableHead>
         </TableRow>
@@ -79,6 +78,9 @@ function UserTable({
               >
                 {user.githubUsername}
               </button>
+              {user.role === "admin" && (
+                <span className="ml-1 text-sm font-medium text-blue-600">• Admin</span>
+              )}
             </TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>
@@ -93,16 +95,6 @@ function UserTable({
                 "No team"
               )}
             </TableCell>
-            <TableCell>
-              {user.teamRole ? (
-                <span className={user.teamRole === "leader" ? "font-medium text-blue-600" : ""}>
-                  {user.teamRole.charAt(0).toUpperCase() + user.teamRole.slice(1)}
-                </span>
-              ) : (
-                "-"
-              )}
-            </TableCell>
-            <TableCell>{user.role}</TableCell>
             <TableCell className={user.preEventRegistered ? "text-green-600" : "text-red-600"}>
               {user.preEventRegistered ? "✓" : "✗"}
             </TableCell>
@@ -188,12 +180,21 @@ export default function UserManagement({
 }: UserManagementProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [hideAdminUsers, setHideAdminUsers] = useState(true);
 
   // Filter users based on search
   const filteredUsers = useMemo(() => {
-    if (!searchQuery) return users;
+    if (!searchQuery && !hideAdminUsers) return users;
 
     return users.filter((user) => {
+      // Apply admin filter
+      if (hideAdminUsers && user.role === "admin") {
+        return false;
+      }
+
+      // Apply search filter
+      if (!searchQuery) return true;
+
       const query = searchQuery.toLowerCase();
       switch (searchType) {
         case "username":
@@ -206,12 +207,7 @@ export default function UserManagement({
           return true;
       }
     });
-  }, [users, searchQuery, searchType]);
-
-  // Count non-admin users
-  const nonAdminUsersCount = useMemo(() => {
-    return filteredUsers.filter((user) => user.role !== "admin").length;
-  }, [filteredUsers]);
+  }, [users, searchQuery, searchType, hideAdminUsers]);
 
   const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -238,7 +234,7 @@ export default function UserManagement({
         <h2 className="mb-4 text-xl font-semibold">
           Users{" "}
           {filteredUsers.length > 0 && (
-            <span className="text-sm text-neutral-500">({nonAdminUsersCount})</span>
+            <span className="text-sm text-neutral-500">({filteredUsers.length})</span>
           )}
         </h2>
 
@@ -417,6 +413,19 @@ export default function UserManagement({
                 </Command>
               </PopoverContent>
             </Popover>
+            <div className="ml-4 flex items-center gap-2">
+              <Checkbox
+                id="hideAdminUsers"
+                checked={hideAdminUsers}
+                onCheckedChange={(checked) => setHideAdminUsers(checked as boolean)}
+              />
+              <label
+                htmlFor="hideAdminUsers"
+                className="text-sm text-neutral-500 hover:text-neutral-700"
+              >
+                Hide admin users
+              </label>
+            </div>
           </div>
         )}
       </div>
