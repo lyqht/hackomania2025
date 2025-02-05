@@ -38,6 +38,7 @@ import { useEffect, useMemo, useState } from "react";
 import { UserActions } from "./UserActions";
 import { toast, Toaster } from "sonner";
 import ChallengeManagement from "./ChallengeManagement";
+import TeamManagement from "./TeamManagement";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -193,6 +194,11 @@ export default function AdminClient() {
     });
   }, [allUsers, searchQuery, searchType]);
 
+  // Count non-admin users
+  const nonAdminUsersCount = useMemo(() => {
+    return filteredUsers.filter((user) => user.role !== "admin").length;
+  }, [filteredUsers]);
+
   const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -267,12 +273,14 @@ export default function AdminClient() {
 
       <ChallengeManagement />
 
+      <TeamManagement />
+
       <div className="rounded-lg border border-neutral-400 p-4">
         <div className="mb-4">
           <h2 className="mb-4 text-xl font-semibold">
             Users{" "}
             {filteredUsers.length > 0 && (
-              <span className="text-sm text-neutral-500">({filteredUsers.length})</span>
+              <span className="text-sm text-neutral-500">({nonAdminUsersCount})</span>
             )}
           </h2>
 
