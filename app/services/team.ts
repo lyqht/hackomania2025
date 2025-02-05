@@ -1,48 +1,42 @@
+import { Team as DbTeam } from "@/utils/db/schema/team";
+import { UserInfo } from "./user";
 import { db } from "@/utils/db";
 import { team, teamMembers } from "@/utils/db/schema/team";
-import { user } from "@/utils/db/schema/user";
 import { eq } from "drizzle-orm";
+import { getUserById } from "./user";
 
-export type Team = {
-    id: string;
-    name: string;
-    createdAt: Date;
-    leaderId: string;
-    users: {
-        id: string;
-        githubUsername: string;
-        role: string;
-    }[];
-};
+export interface Team extends Omit<DbTeam, "challengeId"> {
+  users: UserInfo[];
+  challengeId: string | null;
+}
 
 export async function getTeamById(teamId: string): Promise<Team | null> {
-    try {
-        const userTeam = await db
-            .select()
-            .from(teamMembers)
-            .leftJoin(team, eq(team.id, teamMembers.teamId))
-            .leftJoin(user, eq(user.id, teamMembers.userId))
-            .where(eq(teamMembers.teamId, teamId));
+  try {
+    const [firstTeam] = await db.select().from(team).where(eq(team.id, teamId)).limit(1);
 
-        if (userTeam.length === 0) {
-            return null;
-        }
-
-        const firstTeam = userTeam[0].team!;
-
-        return {
-            id: firstTeam.id,
-            name: firstTeam.name,
-            createdAt: firstTeam.createdAt,
-            leaderId: firstTeam.leaderId as string,
-            users: userTeam.map((teamMember) => ({
-                id: teamMember.user!.id,
-                githubUsername: teamMember.user!.githubUsername,
-                role: teamMember.team_members.role,
-            })),
-        };
-    } catch (err) {
-        console.error(err);
-        return null;
+    if (!firstTeam) {
+      return null;
     }
+
+    const members = await db.select().from(teamMembers).where(eq(teamMembers.teamId, teamId));
+
+    const userPromises = members.map(async (member) => {
+      const user = await getUserById(member.userId);
+      if (!user) throw new Error(`User ${member.userId} not found`);
+      return {
+        ...user,
+        teamRole: member.role,
+      };
+    });
+
+    const users = await Promise.all(userPromises);
+
+    return {
+      ...firstTeam,
+      users,
+    };
+  } catch (err) {
+    console.error("Error getting team:", err);
+    return null;
+  }
 }
