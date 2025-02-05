@@ -33,11 +33,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const ITEMS_PER_PAGE = 10;
 
-type SearchType = "username" | "email" | "team";
+export type SearchType = "username" | "email" | "team" | "name";
 const SEARCH_TYPE_LABELS: Record<SearchType, string> = {
   username: "GitHub Username",
   email: "Email",
   team: "Team",
+  name: "Name",
 };
 
 interface UserTableProps {
@@ -46,7 +47,6 @@ interface UserTableProps {
   onRemoveUser: (userId: string) => Promise<void>;
   onEditUser: (userId: string, data: Partial<UserInfo>) => Promise<void>;
   onNavigateToTeam: (teamName: string) => void;
-  onNavigateToUser: (username: string) => void;
 }
 
 function UserTable({
@@ -55,12 +55,12 @@ function UserTable({
   onRemoveUser,
   onEditUser,
   onNavigateToTeam,
-  onNavigateToUser,
 }: UserTableProps) {
   return (
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead>Name</TableHead>
           <TableHead>GitHub Username</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Team</TableHead>
@@ -70,18 +70,13 @@ function UserTable({
       </TableHeader>
       <TableBody>
         {users.map((user) => (
-          <TableRow key={user.id}>
+          <TableRow key={`${user.id}-${user.teamId || "no-team"}`}>
             <TableCell>
-              <button
-                onClick={() => onNavigateToUser(user.githubUsername)}
-                className="text-blue-600 hover:underline"
-              >
-                {user.githubUsername}
-              </button>
-              {user.role === "admin" && (
-                <span className="ml-1 text-sm font-medium text-blue-600">• Admin</span>
-              )}
+              {user.firstName && user.lastName
+                ? `${user.firstName} ${user.lastName}`
+                : "Not provided"}
             </TableCell>
+            <TableCell>{user.githubUsername}</TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>
               {user.teamName ? (
@@ -158,7 +153,6 @@ interface UserManagementProps {
   onRemoveUser: (userId: string) => Promise<void>;
   onEditUser: (userId: string, data: Partial<UserInfo>) => Promise<void>;
   onNavigateToTeam: (teamName: string) => void;
-  onNavigateToUser: (username: string) => void;
 }
 
 export default function UserManagement({
@@ -176,7 +170,6 @@ export default function UserManagement({
   onRemoveUser,
   onEditUser,
   onNavigateToTeam,
-  onNavigateToUser,
 }: UserManagementProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -196,6 +189,8 @@ export default function UserManagement({
       if (!searchQuery) return true;
 
       const query = searchQuery.toLowerCase();
+      const fullName = `${user.firstName || ""} ${user.lastName || ""}`.toLowerCase();
+
       switch (searchType) {
         case "username":
           return user.githubUsername.toLowerCase().includes(query);
@@ -203,6 +198,12 @@ export default function UserManagement({
           return user.email.toLowerCase().includes(query);
         case "team":
           return user.teamName?.toLowerCase().includes(query);
+        case "name":
+          return (
+            fullName.includes(query) ||
+            (user.firstName?.toLowerCase() || "").includes(query) ||
+            (user.lastName?.toLowerCase() || "").includes(query)
+          );
         default:
           return true;
       }
@@ -384,31 +385,65 @@ export default function UserManagement({
                             </CommandItem>
                           ))}
                         {searchType === "username" &&
-                          users.map((user) => (
-                            <CommandItem
-                              key={`username-${user.id}`}
-                              value={user.githubUsername}
-                              onSelect={(value) => {
-                                onSearchQueryChange(value);
-                                setSearchOpen(false);
-                              }}
-                            >
-                              {user.githubUsername}
-                            </CommandItem>
-                          ))}
+                          Array.from(new Set(users.map((u) => u.githubUsername))).map(
+                            (username) => {
+                              const user = users.find((u) => u.githubUsername === username);
+                              if (!user) return null;
+                              return (
+                                <CommandItem
+                                  key={`username-${user.id}`}
+                                  value={user.githubUsername}
+                                  onSelect={(value) => {
+                                    onSearchQueryChange(value);
+                                    setSearchOpen(false);
+                                  }}
+                                >
+                                  {user.githubUsername}
+                                </CommandItem>
+                              );
+                            },
+                          )}
                         {searchType === "email" &&
-                          users.map((user) => (
-                            <CommandItem
-                              key={`email-${user.id}`}
-                              value={user.email}
-                              onSelect={(value) => {
-                                onSearchQueryChange(value);
-                                setSearchOpen(false);
-                              }}
-                            >
-                              {user.email}
-                            </CommandItem>
-                          ))}
+                          Array.from(new Set(users.map((u) => u.email))).map((email) => {
+                            const user = users.find((u) => u.email === email);
+                            if (!user) return null;
+                            return (
+                              <CommandItem
+                                key={`email-${user.id}`}
+                                value={user.email}
+                                onSelect={(value) => {
+                                  onSearchQueryChange(value);
+                                  setSearchOpen(false);
+                                }}
+                              >
+                                {user.email}
+                              </CommandItem>
+                            );
+                          })}
+                        {searchType === "name" &&
+                          Array.from(
+                            new Set(
+                              users.map((u) => `${u.firstName || ""} ${u.lastName || ""}`.trim()),
+                            ),
+                          ).map((name) => {
+                            if (!name) return null;
+                            const user = users.find(
+                              (u) => `${u.firstName || ""} ${u.lastName || ""}`.trim() === name,
+                            );
+                            if (!user) return null;
+                            return (
+                              <CommandItem
+                                key={`name-${user.id}`}
+                                value={name}
+                                onSelect={(value) => {
+                                  onSearchQueryChange(value);
+                                  setSearchOpen(false);
+                                }}
+                              >
+                                {name}
+                              </CommandItem>
+                            );
+                          })}
                       </CommandGroup>
                     </CommandList>
                   </Command>
@@ -443,7 +478,6 @@ export default function UserManagement({
             onRemoveUser={onRemoveUser}
             onEditUser={onEditUser}
             onNavigateToTeam={onNavigateToTeam}
-            onNavigateToUser={onNavigateToUser}
           />
           <div className="mt-4">
             <Pagination

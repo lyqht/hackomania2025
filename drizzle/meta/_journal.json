@@ -64,6 +64,13 @@
       "when": 1738731358006,
       "tag": "0008_challenges",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1738742449346,
+      "tag": "0009_add-name-to-user",
+      "breakpoints": true
     }
   ]
 }

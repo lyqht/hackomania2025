@@ -7,6 +7,8 @@ export const user = pgTable(
     id: uuid().defaultRandom().primaryKey(),
     email: text().notNull().unique(),
     githubUsername: text().notNull().unique(),
+    firstName: text(),
+    lastName: text(),
     createdAt: timestamp().notNull().defaultNow(),
     role: text().default("participant"),
   },

@@ -3,6 +3,33 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      challenges: {
+        Row: {
+          created_at: string;
+          description: string;
+          id: string;
+          metadata: Json | null;
+          name: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          description: string;
+          id?: string;
+          metadata?: Json | null;
+          name: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string;
+          id?: string;
+          metadata?: Json | null;
+          name?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       main_event_registrations: {
         Row: {
           approved_by: string | null;
@@ -98,6 +125,7 @@ export type Database = {
       };
       team: {
         Row: {
+          challengeId: string | null;
           createdAt: string;
           id: string;
           leaderId: string | null;
@@ -105,6 +133,7 @@ export type Database = {
           updatedAt: string;
         };
         Insert: {
+          challengeId?: string | null;
           createdAt?: string;
           id?: string;
           leaderId?: string | null;
@@ -112,6 +141,7 @@ export type Database = {
           updatedAt?: string;
         };
         Update: {
+          challengeId?: string | null;
           createdAt?: string;
           id?: string;
           leaderId?: string | null;
@@ -119,6 +149,13 @@ export type Database = {
           updatedAt?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "team_challengeId_challenges_id_fk";
+            columns: ["challengeId"];
+            isOneToOne: false;
+            referencedRelation: "challenges";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "team_leaderId_user_id_fk";
             columns: ["leaderId"];
@@ -165,22 +202,28 @@ export type Database = {
         Row: {
           createdAt: string;
           email: string;
+          firstName: string | null;
           githubUsername: string;
           id: string;
+          lastName: string | null;
           role: string | null;
         };
         Insert: {
           createdAt?: string;
           email: string;
+          firstName?: string | null;
           githubUsername: string;
           id?: string;
+          lastName?: string | null;
           role?: string | null;
         };
         Update: {
           createdAt?: string;
           email?: string;
+          firstName?: string | null;
           githubUsername?: string;
           id?: string;
+          lastName?: string | null;
           role?: string | null;
         };
         Relationships: [];
