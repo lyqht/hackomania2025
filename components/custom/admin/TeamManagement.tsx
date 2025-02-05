@@ -29,18 +29,38 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 const MAX_TEAM_SIZE = 5;
 
 type TeamFilter = "all" | "full" | "not-full";
 
-export default function TeamManagement() {
+interface TeamManagementProps {
+  onNavigateToUser: (username: string) => void;
+  searchQuery?: string;
+  onSearchQueryChange?: (query: string) => void;
+}
+
+export default function TeamManagement({
+  onNavigateToUser,
+  searchQuery: externalSearchQuery,
+  onSearchQueryChange,
+}: TeamManagementProps) {
   const [teams, setTeams] = useState<(Team & { challenge?: Challenge })[]>([]);
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [internalSearchQuery, setInternalSearchQuery] = useState("");
   const [teamFilter, setTeamFilter] = useState<TeamFilter>("all");
+
+  // Use external search query if provided, otherwise use internal state
+  const searchQuery = externalSearchQuery ?? internalSearchQuery;
+  const handleSearchQueryChange = (query: string) => {
+    if (onSearchQueryChange) {
+      onSearchQueryChange(query);
+    } else {
+      setInternalSearchQuery(query);
+    }
+  };
 
   const fetchChallenges = async () => {
     try {
@@ -155,12 +175,22 @@ export default function TeamManagement() {
         <div className="mb-4 flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Search className="h-4 w-4 text-neutral-500" />
-            <Input
-              placeholder="Search teams..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-[200px]"
-            />
+            <div className="relative">
+              <Input
+                placeholder="Search teams..."
+                value={searchQuery}
+                onChange={(e) => handleSearchQueryChange(e.target.value)}
+                className="w-[200px] pr-8"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => handleSearchQueryChange("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-700"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
           </div>
 
           <Select value={teamFilter} onValueChange={(value) => setTeamFilter(value as TeamFilter)}>
@@ -203,7 +233,12 @@ export default function TeamManagement() {
                     <ul className="list-inside list-disc">
                       {team.users.map((user) => (
                         <li key={user.id} className="text-sm">
-                          {user.githubUsername}{" "}
+                          <button
+                            onClick={() => onNavigateToUser(user.githubUsername)}
+                            className="text-blue-600 hover:underline"
+                          >
+                            {user.githubUsername}
+                          </button>{" "}
                           <span
                             className={`text-neutral-500 ${user.role === "admin" ? "font-medium text-blue-600" : ""}`}
                           >
