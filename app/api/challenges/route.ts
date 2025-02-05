@@ -24,14 +24,24 @@ export async function POST(request: Request) {
   try {
     const { teamId, challengeId } = await request.json();
     if (!teamId || !challengeId) {
-      return NextResponse.json({ error: "Team ID and Challenge ID are required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Team ID and Challenge ID are required" },
+        {
+          status: 400,
+        },
+      );
     }
 
     const result = await assignTeamToChallenge(teamId, challengeId);
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Error assigning team to challenge:", error);
-    return NextResponse.json({ error: "Failed to assign team to challenge" }, { status: 500 });
+    console.error("Error assigning challenge to team:", error);
+    return NextResponse.json(
+      { error: "Failed to assign challenge to team" },
+      {
+        status: 500,
+      },
+    );
   }
 }
 
@@ -51,6 +61,11 @@ export async function DELETE(request: Request) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error removing team from challenge:", error);
-    return NextResponse.json({ error: "Failed to remove team from challenge" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to remove team from challenge" },
+      {
+        status: 500,
+      },
+    );
   }
 }

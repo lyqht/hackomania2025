@@ -14,13 +14,6 @@ export const team = pgTable("team", {
   challengeId: uuid().references(() => challenges.id),
 });
 
-export const teamRelations = relations(team, ({ one }) => ({
-  challenge: one(challenges, {
-    fields: [team.challengeId],
-    references: [challenges.id],
-  }),
-}));
-
 export const teamMembers = pgTable(
   "team_members",
   {
@@ -37,6 +30,29 @@ export const teamMembers = pgTable(
     checkRole: check("check_member_role", sql`${table.role} IN ('leader', 'member')`),
   }),
 );
+
+export const teamRelations = relations(team, ({ one, many }) => ({
+  challenge: one(challenges, {
+    fields: [team.challengeId],
+    references: [challenges.id],
+  }),
+  teamMembers: many(teamMembers),
+  leader: one(user, {
+    fields: [team.leaderId],
+    references: [user.id],
+  }),
+}));
+
+export const teamMembersRelations = relations(teamMembers, ({ one }) => ({
+  team: one(team, {
+    fields: [teamMembers.teamId],
+    references: [team.id],
+  }),
+  user: one(user, {
+    fields: [teamMembers.userId],
+    references: [user.id],
+  }),
+}));
 
 export type InsertTeam = typeof team.$inferInsert;
 export type Team = typeof team.$inferSelect;
