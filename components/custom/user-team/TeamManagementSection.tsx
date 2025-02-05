@@ -5,6 +5,7 @@ import TeamManagement from "./TeamManagement";
 import { Team } from "@/app/services/team";
 import { Suspense } from "react";
 import SuspenseLoadingSpinner from "../SuspenseLoadingSpinner";
+import ChallengeSelection from "./ChallengeSelection";
 
 export default async function TeamManagementSection({
   userTeam,
@@ -39,6 +40,12 @@ export default async function TeamManagementSection({
       <div className="mt-2">
         <Suspense key={`members-${teamKey}`} fallback={<SuspenseLoadingSpinner />}>
           <AddMembers teamId={userTeam.id} numMembers={userTeam.users.length} />
+        </Suspense>
+      </div>
+
+      <div className="mt-4">
+        <Suspense key={`challenge-${teamKey}`} fallback={<SuspenseLoadingSpinner />}>
+          <ChallengeSelection teamId={userTeam.id} currentChallengeId={userTeam.challengeId} />
         </Suspense>
       </div>
     </div>
