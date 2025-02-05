@@ -57,6 +57,13 @@
       "when": 1738304463352,
       "tag": "0007_unique-githubusername",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1738731358006,
+      "tag": "0008_challenges",
+      "breakpoints": true
     }
   ]
 }
