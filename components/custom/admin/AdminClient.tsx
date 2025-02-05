@@ -8,145 +8,76 @@ import {
   uploadFile,
 } from "@/app/services/admin";
 import { getAllUsersWithoutPagination, UserInfo } from "@/app/services/user";
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Check, ChevronsUpDown, Search, Loader2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { UserActions } from "./UserActions";
 import { toast, Toaster } from "sonner";
 import ChallengeManagement from "./ChallengeManagement";
 import TeamManagement from "./TeamManagement";
-
-const ITEMS_PER_PAGE = 10;
-
-// #region UserTable
-
-interface UserTableProps {
-  users: UserInfo[];
-  onSetTeamLeader: (userId: string) => Promise<void>;
-  onRemoveUser: (userId: string) => Promise<void>;
-  onEditUser: (userId: string, data: Partial<UserInfo>) => Promise<void>;
-}
-
-function UserTable({ users, onSetTeamLeader, onRemoveUser, onEditUser }: UserTableProps) {
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>GitHub Username</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Team</TableHead>
-          <TableHead>Team Role</TableHead>
-          <TableHead>Role</TableHead>
-          <TableHead>Pre-event</TableHead>
-          <TableHead className="w-[50px]">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {users.map((user) => (
-          <TableRow key={user.id}>
-            <TableCell>{user.githubUsername}</TableCell>
-            <TableCell>{user.email}</TableCell>
-            <TableCell>{user.teamName || "No team"}</TableCell>
-            <TableCell>
-              {user.teamRole ? (
-                <span className={user.teamRole === "leader" ? "font-medium text-blue-600" : ""}>
-                  {user.teamRole.charAt(0).toUpperCase() + user.teamRole.slice(1)}
-                </span>
-              ) : (
-                "-"
-              )}
-            </TableCell>
-            <TableCell>{user.role}</TableCell>
-            <TableCell className={user.preEventRegistered ? "text-green-600" : "text-red-600"}>
-              {user.preEventRegistered ? "✓" : "✗"}
-            </TableCell>
-            <TableCell>
-              <UserActions
-                user={user}
-                onSetTeamLeader={onSetTeamLeader}
-                onRemoveUser={onRemoveUser}
-                onEditUser={onEditUser}
-              />
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-}
-
-interface PaginationProps {
-  totalPages: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-}
-
-function Pagination({ totalPages, currentPage, onPageChange }: PaginationProps) {
-  return (
-    <div className="flex items-center justify-center gap-2">
-      <Button
-        variant="outline"
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-      >
-        Previous
-      </Button>
-      <span>
-        Page {currentPage} of {totalPages}
-      </span>
-      <Button
-        variant="outline"
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-      >
-        Next
-      </Button>
-    </div>
-  );
-}
-
-// #endregion
+import UserManagement from "./UserManagement";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type SearchType = "username" | "email" | "team";
-const SEARCH_TYPE_LABELS: Record<SearchType, string> = {
-  username: "GitHub Username",
-  email: "Email",
-  team: "Team",
-};
 
 export default function AdminClient() {
-  const [currentPage, setCurrentPage] = useState(1);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const [allUsers, setAllUsers] = useState<UserInfo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [searchType, setSearchType] = useState<SearchType>("username");
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchType, setSearchType] = useState<SearchType>(
+    (searchParams.get("searchType") as SearchType) || "username",
+  );
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("searchQuery") || "");
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "challenges");
+
+  // Update URL when tab changes
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    // Clear search state
+    setSearchQuery("");
+    setSearchType("username");
+
+    // Update URL with only the tab parameter
+    const params = new URLSearchParams();
+    params.set("tab", value);
+    router.push(`/admin?${params.toString()}`);
+  };
+
+  // Update URL when search changes
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (searchQuery) {
+      params.set("searchQuery", searchQuery);
+      params.set("searchType", searchType);
+    } else {
+      params.delete("searchQuery");
+      params.delete("searchType");
+    }
+    router.push(`/admin?${params.toString()}`);
+  }, [searchQuery, searchType]);
+
+  // Add navigation functions
+  const navigateToTeam = (teamName: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", "teams");
+    params.set("searchQuery", teamName);
+    router.push(`/admin?${params.toString()}`);
+    setActiveTab("teams");
+    setSearchQuery(teamName);
+  };
+
+  const navigateToUser = (username: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", "users");
+    params.set("searchType", "username");
+    params.set("searchQuery", username);
+    router.push(`/admin?${params.toString()}`);
+    setActiveTab("users");
+    setSearchType("username");
+    setSearchQuery(username);
+  };
 
   const fetchUsers = async () => {
     setIsLoading(true);
@@ -164,50 +95,6 @@ export default function AdminClient() {
   useEffect(() => {
     fetchUsers();
   }, []);
-
-  const uniqueTeams = useMemo(() => {
-    if (!allUsers?.length) return [];
-
-    const teams = new Set<string>();
-    allUsers.forEach((user) => {
-      if (user.teamName) teams.add(user.teamName);
-    });
-    return Array.from(teams).sort();
-  }, [allUsers]);
-
-  // Filter users based on search
-  const filteredUsers = useMemo(() => {
-    if (!searchQuery) return allUsers;
-
-    return allUsers.filter((user) => {
-      const query = searchQuery.toLowerCase();
-      switch (searchType) {
-        case "username":
-          return user.githubUsername.toLowerCase().includes(query);
-        case "email":
-          return user.email.toLowerCase().includes(query);
-        case "team":
-          return user.teamName?.toLowerCase().includes(query);
-        default:
-          return true;
-      }
-    });
-  }, [allUsers, searchQuery, searchType]);
-
-  // Count non-admin users
-  const nonAdminUsersCount = useMemo(() => {
-    return filteredUsers.filter((user) => user.role !== "admin").length;
-  }, [filteredUsers]);
-
-  const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const displayedUsers = filteredUsers.slice(startIndex, endIndex);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo(0, 0);
-  };
 
   const handleSetTeamLeader = async (userId: string) => {
     try {
@@ -264,6 +151,40 @@ export default function AdminClient() {
     }
   };
 
+  const handleUploadFile = async (formData: FormData) => {
+    setIsUploading(true);
+    try {
+      const result = await uploadFile(formData);
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success("CSV uploaded successfully");
+        await fetchUsers(); // Refresh the user list after upload
+      }
+    } catch (error) {
+      toast.error(`Failed to upload CSV: ${error}`);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleSyncEventbrite = async () => {
+    setIsSyncing(true);
+    try {
+      const result = await syncEventbrite();
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success("Synced with Eventbrite successfully");
+        await fetchUsers();
+      }
+    } catch (error) {
+      toast.error(`Failed to sync with Eventbrite: ${error}`);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8 p-5 md:p-20">
       <Toaster />
@@ -271,221 +192,45 @@ export default function AdminClient() {
         <h1 className="mb-4 text-2xl font-bold md:text-4xl">HackOMania 2025 Admin Portal</h1>
       </div>
 
-      <ChallengeManagement />
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="challenges">Challenges</TabsTrigger>
+          <TabsTrigger value="teams">Teams</TabsTrigger>
+          <TabsTrigger value="users">Users</TabsTrigger>
+        </TabsList>
 
-      <TeamManagement />
+        <TabsContent value="challenges">
+          <ChallengeManagement />
+        </TabsContent>
 
-      <div className="rounded-lg border border-neutral-400 p-4">
-        <div className="mb-4">
-          <h2 className="mb-4 text-xl font-semibold">
-            Users{" "}
-            {filteredUsers.length > 0 && (
-              <span className="text-sm text-neutral-500">({nonAdminUsersCount})</span>
-            )}
-          </h2>
+        <TabsContent value="teams">
+          <TeamManagement
+            onNavigateToUser={navigateToUser}
+            searchQuery={activeTab === "teams" ? searchQuery : undefined}
+            onSearchQueryChange={setSearchQuery}
+          />
+        </TabsContent>
 
-          <div className="mb-6 space-y-4">
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.currentTarget);
-                setIsUploading(true);
-                try {
-                  const result = await uploadFile(formData);
-                  if (result.error) {
-                    toast.error(result.error);
-                  } else {
-                    toast.success("CSV uploaded successfully");
-                    await fetchUsers(); // Refresh the user list after upload
-                  }
-                } catch (error) {
-                  toast.error(`Failed to upload CSV: ${error}`);
-                } finally {
-                  setIsUploading(false);
-                }
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <span>Main Event Registrations</span>
-                <Input
-                  type="file"
-                  name="file"
-                  accept=".xlsx,.xls,.csv"
-                  className="max-w-xs"
-                  disabled={isUploading}
-                  required
-                />
-                <Button type="submit" variant="outline" disabled={isUploading}>
-                  {isUploading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Uploading...
-                    </>
-                  ) : (
-                    "Upload CSV"
-                  )}
-                </Button>
-              </div>
-            </form>
-
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                setIsSyncing(true);
-                try {
-                  const result = await syncEventbrite();
-                  if (result.error) {
-                    toast.error(result.error);
-                  } else {
-                    toast.success("Synced with Eventbrite successfully");
-                    await fetchUsers();
-                  }
-                } catch (error) {
-                  toast.error(`Failed to sync with Eventbrite: ${error}`);
-                } finally {
-                  setIsSyncing(false);
-                }
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <span>Pre-event Registrations</span>
-                <Button type="submit" variant="outline" disabled={isSyncing}>
-                  {isSyncing ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Syncing...
-                    </>
-                  ) : (
-                    "Sync from Eventbrite"
-                  )}
-                </Button>
-              </div>
-            </form>
-            <hr className="w-full" />
-          </div>
-
-          {!isLoading && (
-            <div className="flex items-center gap-2">
-              <label htmlFor="search-type">Search by:</label>
-              {/* Search type dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-[180px] justify-between">
-                    {SEARCH_TYPE_LABELS[searchType]}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {Object.entries(SEARCH_TYPE_LABELS).map(([type, label]) => (
-                    <DropdownMenuItem
-                      key={type}
-                      onSelect={() => {
-                        setSearchType(type as SearchType);
-                        setSearchQuery("");
-                      }}
-                    >
-                      <Check
-                        className={`mr-2 h-4 w-4 ${
-                          type === searchType ? "opacity-100" : "opacity-0"
-                        }`}
-                      />
-                      {label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Search input */}
-              <Popover open={searchOpen} onOpenChange={setSearchOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={searchOpen}
-                    className="w-[300px] justify-between"
-                  >
-                    {searchQuery || `Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
-                    <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[300px] p-0">
-                  <Command>
-                    <CommandInput
-                      placeholder={`Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
-                      value={searchQuery}
-                      onValueChange={setSearchQuery}
-                    />
-                    <CommandList>
-                      <CommandEmpty>No results found.</CommandEmpty>
-                      <CommandGroup>
-                        {searchType === "team" &&
-                          uniqueTeams.map((team) => (
-                            <CommandItem
-                              key={`team-${team}`}
-                              value={team}
-                              onSelect={(value) => {
-                                setSearchQuery(value);
-                                setSearchOpen(false);
-                              }}
-                            >
-                              {team}
-                            </CommandItem>
-                          ))}
-                        {searchType === "username" &&
-                          allUsers.map((user) => (
-                            <CommandItem
-                              key={`username-${user.id}`}
-                              value={user.githubUsername}
-                              onSelect={(value) => {
-                                setSearchQuery(value);
-                                setSearchOpen(false);
-                              }}
-                            >
-                              {user.githubUsername}
-                            </CommandItem>
-                          ))}
-                        {searchType === "email" &&
-                          allUsers.map((user) => (
-                            <CommandItem
-                              key={`email-${user.id}`}
-                              value={user.email}
-                              onSelect={(value) => {
-                                setSearchQuery(value);
-                                setSearchOpen(false);
-                              }}
-                            >
-                              {user.email}
-                            </CommandItem>
-                          ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </div>
-          )}
-        </div>
-
-        {isLoading ? (
-          <div>Loading users...</div>
-        ) : (
-          <>
-            <UserTable
-              users={displayedUsers}
-              onSetTeamLeader={handleSetTeamLeader}
-              onRemoveUser={handleRemoveUser}
-              onEditUser={handleEditUser}
-            />
-            <div className="mt-4">
-              <Pagination
-                totalPages={totalPages}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-              />
-            </div>
-          </>
-        )}
-      </div>
+        <TabsContent value="users">
+          <UserManagement
+            users={allUsers}
+            isLoading={isLoading}
+            isUploading={isUploading}
+            isSyncing={isSyncing}
+            searchType={searchType}
+            searchQuery={searchQuery}
+            onSearchTypeChange={setSearchType}
+            onSearchQueryChange={setSearchQuery}
+            onUploadFile={handleUploadFile}
+            onSyncEventbrite={handleSyncEventbrite}
+            onSetTeamLeader={handleSetTeamLeader}
+            onRemoveUser={handleRemoveUser}
+            onEditUser={handleEditUser}
+            onNavigateToTeam={navigateToTeam}
+            onNavigateToUser={navigateToUser}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
