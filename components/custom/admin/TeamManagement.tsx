@@ -179,37 +179,42 @@ export default function TeamManagement({
           )}
         </h2>
 
-        <div className="mb-4 flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Search className="h-4 w-4 text-neutral-500" />
-            <div className="relative">
-              <Input
-                placeholder="Search teams..."
-                value={searchQuery}
-                onChange={(e) => handleSearchQueryChange(e.target.value)}
-                className="w-[200px] pr-8"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => handleSearchQueryChange("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-700"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
+        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2">
+              <Search className="h-4 w-4 text-neutral-500" />
+              <div className="relative w-full sm:w-auto">
+                <Input
+                  placeholder="Search teams..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearchQueryChange(e.target.value)}
+                  className="w-full pr-8 sm:w-[200px]"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => handleSearchQueryChange("")}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-700"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
 
-          <Select value={teamFilter} onValueChange={(value) => setTeamFilter(value as TeamFilter)}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Filter teams" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Teams</SelectItem>
-              <SelectItem value="full">Full Teams</SelectItem>
-              <SelectItem value="not-full">Teams with Space</SelectItem>
-            </SelectContent>
-          </Select>
+            <Select
+              value={teamFilter}
+              onValueChange={(value) => setTeamFilter(value as TeamFilter)}
+            >
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="Filter teams" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Teams</SelectItem>
+                <SelectItem value="full">Full Teams</SelectItem>
+                <SelectItem value="not-full">Teams with Space</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           <div className="flex items-center gap-2">
             <Checkbox

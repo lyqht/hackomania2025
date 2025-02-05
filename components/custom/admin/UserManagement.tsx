@@ -246,7 +246,7 @@ export default function UserManagement({
               await onUploadFile(formData);
             }}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <span>Main Event Registrations</span>
               <Input
                 type="file"
@@ -275,7 +275,7 @@ export default function UserManagement({
               await onSyncEventbrite();
             }}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <span>Pre-event Registrations</span>
               <Button type="submit" variant="outline" disabled={isSyncing}>
                 {isSyncing ? (
@@ -293,127 +293,130 @@ export default function UserManagement({
         </div>
 
         {!isLoading && (
-          <div className="flex items-center gap-2">
-            <label htmlFor="search-type">Search by:</label>
-            {/* Search type dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-[180px] justify-between">
-                  {SEARCH_TYPE_LABELS[searchType]}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {Object.entries(SEARCH_TYPE_LABELS).map(([type, label]) => (
-                  <DropdownMenuItem
-                    key={type}
-                    onSelect={() => {
-                      onSearchTypeChange(type as SearchType);
-                      onSearchQueryChange("");
-                    }}
-                  >
-                    <Check
-                      className={`mr-2 h-4 w-4 ${
-                        type === searchType ? "opacity-100" : "opacity-0"
-                      }`}
-                    />
-                    {label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="flex flex-wrap items-center gap-2">
+              <label htmlFor="search-type">Search by:</label>
+              {/* Search type dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="w-[180px] justify-between">
+                    {SEARCH_TYPE_LABELS[searchType]}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {Object.entries(SEARCH_TYPE_LABELS).map(([type, label]) => (
+                    <DropdownMenuItem
+                      key={type}
+                      onSelect={() => {
+                        onSearchTypeChange(type as SearchType);
+                        onSearchQueryChange("");
+                      }}
+                    >
+                      <Check
+                        className={`mr-2 h-4 w-4 ${
+                          type === searchType ? "opacity-100" : "opacity-0"
+                        }`}
+                      />
+                      {label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            {/* Search input */}
-            <Popover open={searchOpen} onOpenChange={setSearchOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={searchOpen}
-                  className="w-[300px] justify-between"
-                >
-                  {searchQuery || `Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
-                  <div className="flex items-center">
-                    {searchQuery && (
-                      <div
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSearchQueryChange("");
-                        }}
-                        className="mr-2 cursor-pointer text-neutral-500 hover:text-neutral-700"
-                      >
-                        <X className="h-4 w-4" />
-                      </div>
-                    )}
-                    <Search className="h-4 w-4 shrink-0 opacity-50" />
-                  </div>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[300px] p-0">
-                <Command>
-                  <div className="relative">
-                    <CommandInput
-                      placeholder={`Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
-                      value={searchQuery}
-                      onValueChange={onSearchQueryChange}
-                    />
-                    {searchQuery && (
-                      <div
-                        onClick={() => onSearchQueryChange("")}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-neutral-500 hover:text-neutral-700"
-                      >
-                        <X className="h-4 w-4" />
-                      </div>
-                    )}
-                  </div>
-                  <CommandList>
-                    <CommandEmpty>No results found.</CommandEmpty>
-                    <CommandGroup>
-                      {searchType === "team" &&
-                        uniqueTeams.map((team) => (
-                          <CommandItem
-                            key={`team-${team}`}
-                            value={team}
-                            onSelect={(value) => {
-                              onSearchQueryChange(value);
-                              setSearchOpen(false);
-                            }}
-                          >
-                            {team}
-                          </CommandItem>
-                        ))}
-                      {searchType === "username" &&
-                        users.map((user) => (
-                          <CommandItem
-                            key={`username-${user.id}`}
-                            value={user.githubUsername}
-                            onSelect={(value) => {
-                              onSearchQueryChange(value);
-                              setSearchOpen(false);
-                            }}
-                          >
-                            {user.githubUsername}
-                          </CommandItem>
-                        ))}
-                      {searchType === "email" &&
-                        users.map((user) => (
-                          <CommandItem
-                            key={`email-${user.id}`}
-                            value={user.email}
-                            onSelect={(value) => {
-                              onSearchQueryChange(value);
-                              setSearchOpen(false);
-                            }}
-                          >
-                            {user.email}
-                          </CommandItem>
-                        ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-            <div className="ml-4 flex items-center gap-2">
+              {/* Search input */}
+              <Popover open={searchOpen} onOpenChange={setSearchOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={searchOpen}
+                    className="w-full justify-between sm:w-[300px]"
+                  >
+                    {searchQuery || `Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
+                    <div className="flex items-center">
+                      {searchQuery && (
+                        <div
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSearchQueryChange("");
+                          }}
+                          className="mr-2 cursor-pointer text-neutral-500 hover:text-neutral-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </div>
+                      )}
+                      <Search className="h-4 w-4 shrink-0 opacity-50" />
+                    </div>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[300px] p-0">
+                  <Command>
+                    <div className="relative">
+                      <CommandInput
+                        placeholder={`Search by ${SEARCH_TYPE_LABELS[searchType].toLowerCase()}...`}
+                        value={searchQuery}
+                        onValueChange={onSearchQueryChange}
+                      />
+                      {searchQuery && (
+                        <div
+                          onClick={() => onSearchQueryChange("")}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-neutral-500 hover:text-neutral-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </div>
+                      )}
+                    </div>
+                    <CommandList>
+                      <CommandEmpty>No results found.</CommandEmpty>
+                      <CommandGroup>
+                        {searchType === "team" &&
+                          uniqueTeams.map((team) => (
+                            <CommandItem
+                              key={`team-${team}`}
+                              value={team}
+                              onSelect={(value) => {
+                                onSearchQueryChange(value);
+                                setSearchOpen(false);
+                              }}
+                            >
+                              {team}
+                            </CommandItem>
+                          ))}
+                        {searchType === "username" &&
+                          users.map((user) => (
+                            <CommandItem
+                              key={`username-${user.id}`}
+                              value={user.githubUsername}
+                              onSelect={(value) => {
+                                onSearchQueryChange(value);
+                                setSearchOpen(false);
+                              }}
+                            >
+                              {user.githubUsername}
+                            </CommandItem>
+                          ))}
+                        {searchType === "email" &&
+                          users.map((user) => (
+                            <CommandItem
+                              key={`email-${user.id}`}
+                              value={user.email}
+                              onSelect={(value) => {
+                                onSearchQueryChange(value);
+                                setSearchOpen(false);
+                              }}
+                            >
+                              {user.email}
+                            </CommandItem>
+                          ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div className="flex items-center gap-2">
               <Checkbox
                 id="hideAdminUsers"
                 checked={hideAdminUsers}
