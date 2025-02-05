@@ -24,6 +24,16 @@ interface CSVRow extends Record<string, string> {
 }
 
 function extractGithubUsername(githubUrl: string): string {
+  if (!githubUrl || ["NA", "Nil", "N/A", "-", ""].includes(githubUrl.trim())) {
+    return "";
+  }
+
+  // If it's already just a username without URL
+  if (!githubUrl.includes("github.com")) {
+    return githubUrl.trim();
+  }
+
+  // Extract from full URL
   const usernameMatch = githubUrl.match(/github.com[/]([^/\s]+)/);
   return usernameMatch ? usernameMatch[1] : "";
 }
@@ -33,6 +43,21 @@ interface ProcessingStats {
   users: number;
   teams: number;
   teamMembers: number;
+}
+
+interface User {
+  id: string;
+  email: string;
+  githubUsername: string;
+  firstName: string | null;
+  lastName: string | null;
+  role: string | null;
+  createdAt: string;
+}
+
+interface Team {
+  id: string;
+  name: string;
 }
 
 async function createMainEventRegistrations(
@@ -48,15 +73,17 @@ async function createMainEventRegistrations(
         email: row["Email Address"],
         github_profile_url: (() => {
           const url = row["Your Github Profile Link"];
+          if (!url || ["NA", "Nil", "N/A", "-", ""].includes(url.trim())) {
+            return "";
+          }
+          // If it's already a valid GitHub URL, use it as is
           const githubRegex =
             /^https?:\/\/(?:www\.)?github\.com\/[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/;
           if (githubRegex.test(url)) {
             return url;
           }
-          if (!url || ["NA", "Nil", "N/A", "-", ""].includes(url.trim())) {
-            return "";
-          }
-          return `https://github.com/${url}`;
+          // If it's just a username, construct the URL
+          return `https://github.com/${url.trim()}`;
         })(),
         linkedin_profile_url: row["Your LinkedIn Profile Link"],
         has_team: row["Do you already have a team?"].toLowerCase() === "yes",
@@ -76,56 +103,139 @@ async function createMainEventRegistrations(
 }
 
 async function createOrGetUsers(supabaseClient: SupabaseClient<Database>, rows: CSVRow[]) {
+  // Create a map of unique users by GitHub username
+  const uniqueUsers = new Map();
+  rows.forEach((row) => {
+    const githubUsername = extractGithubUsername(row["Your Github Profile Link"]);
+    if (githubUsername) {
+      uniqueUsers.set(githubUsername, {
+        email: row["Email Address"].trim() || row["Email to send ticket to"].trim(),
+        githubUsername,
+        firstName: row["First Name"].trim(),
+        lastName: row["Last Name"].trim(),
+      });
+    }
+  });
+
+  // First, upsert unique users
   const { data: userData, error: userError } = await supabaseClient
     .from("user")
-    .upsert(
-      rows.map((row) => ({
-        email: row["Email Address"].trim() || row["Email to send ticket to"].trim(),
-        githubUsername: extractGithubUsername(row["Your Github Profile Link"]),
-      })),
-      { onConflict: "githubUsername" },
-    )
+    .upsert(Array.from(uniqueUsers.values()), {
+      onConflict: "githubUsername",
+    })
     .select();
 
   if (userError || !userData) {
     console.error("Error creating users:", userError);
     return [];
   }
+
+  // Then, update first and last names for existing users where these fields are null
+  const updatePromises = Array.from(uniqueUsers.values()).map(async (user) => {
+    const { error: updateError } = await supabaseClient
+      .from("user")
+      .update({
+        firstName: user.firstName,
+        lastName: user.lastName,
+      })
+      .eq("githubUsername", user.githubUsername)
+      .is("firstName", null);
+
+    if (updateError) {
+      console.error(`Error updating user ${user.githubUsername}:`, updateError);
+    }
+  });
+
+  await Promise.all(updatePromises);
   return userData;
 }
 
 async function createOrGetTeams(supabaseClient: SupabaseClient<Database>, rows: CSVRow[]) {
-  // Get unique team names
+  // Get unique team names, filtering out empty or whitespace-only names
+  // Normalize team names by trimming and converting to lowercase for comparison
   const teamNames = [
     ...new Set(
       rows
         .filter((row) => row["Do you already have a team?"].toLowerCase() === "yes")
-        .map(
-          (row) => row["What is your team name? (Also ask your team members to put the same name)"],
+        .map((row) =>
+          row["What is your team name? (Also ask your team members to put the same name)"]?.trim(),
         )
-        .filter(Boolean),
+        .filter((name) => name && name.length > 0),
     ),
   ];
 
-  const { data: teamData, error: teamError } = await supabaseClient
+  // First try to get existing teams using case-insensitive search
+  const { data: existingTeams, error: fetchError } = await supabaseClient
     .from("team")
-    .upsert(
-      teamNames.map((name) => ({ name })),
-      { onConflict: "name" },
-    )
-    .select();
+    .select()
+    .in("name", teamNames)
+    .or(teamNames.map((name) => `name.ilike.${name}`).join(","));
 
-  if (teamError || !teamData) {
-    console.error("Error creating teams:", teamError);
+  if (fetchError) {
+    console.error("Error fetching existing teams:", fetchError);
     return [];
   }
-  return teamData;
+
+  // Find team names that don't exist yet (case-insensitive comparison)
+  const existingTeamNamesLower = new Set(
+    (existingTeams || []).map((team) => team.name.toLowerCase()),
+  );
+  const newTeamNames = teamNames.filter((name) => !existingTeamNamesLower.has(name.toLowerCase()));
+
+  // Create only the new teams
+  if (newTeamNames.length > 0) {
+    const { data: newTeams, error: createError } = await supabaseClient
+      .from("team")
+      .upsert(
+        newTeamNames.map((name) => ({ name: name.trim() })),
+        { onConflict: "name" },
+      )
+      .select();
+
+    if (createError || !newTeams) {
+      console.error("Error creating new teams:", createError);
+      return existingTeams || [];
+    }
+
+    // Return both existing and new teams
+    return [...(existingTeams || []), ...newTeams];
+  }
+
+  // If no new teams to create, return existing teams
+  return existingTeams || [];
 }
 
 async function createTeamMembers(
   supabaseClient: SupabaseClient<Database>,
-  teamMemberships: { teamId: string; userId: string }[],
+  rowsWithTeams: CSVRow[],
+  users: User[],
+  teams: Team[],
 ) {
+  // Create a map of team names (lowercase) to team IDs for easier lookup
+  const teamNameToId = new Map(teams.map((team) => [team.name.toLowerCase(), team.id]));
+
+  // Create team memberships
+  const teamMemberships = rowsWithTeams
+    .map((row) => {
+      const user = users.find(
+        (u) => u.email === (row["Email Address"] || row["Email to send ticket to"]).trim(),
+      );
+
+      const teamName =
+        row["What is your team name? (Also ask your team members to put the same name)"]?.trim();
+
+      if (!teamName) return null;
+
+      const teamId = teamNameToId.get(teamName.toLowerCase());
+
+      return user && teamId ? { teamId, userId: user.id } : null;
+    })
+    .filter((membership): membership is { teamId: string; userId: string } => membership !== null);
+
+  if (teamMemberships.length === 0) {
+    return 0;
+  }
+
   const { data, error: memberError } = await supabaseClient
     .from("team_members")
     .upsert(
@@ -238,24 +348,8 @@ serve(async (req) => {
       const teams = await createOrGetTeams(supabaseClient, rowsWithTeams);
       stats.teams = teams.length;
 
-      // Create team memberships
-      const teamMemberships = rowsWithTeams
-        .map((row) => {
-          const user = users.find(
-            (u) => u.email === (row["Email Address"] || row["Email to send ticket to"]),
-          );
-          const team = teams.find(
-            (t) =>
-              t.name ===
-              row["What is your team name? (Also ask your team members to put the same name)"],
-          );
-          return user && team ? { teamId: team.id, userId: user.id } : null;
-        })
-        .filter(
-          (membership): membership is { teamId: string; userId: string } => membership !== null,
-        );
-
-      stats.teamMembers = await createTeamMembers(supabaseClient, teamMemberships);
+      // Create team memberships with the updated function signature
+      stats.teamMembers = await createTeamMembers(supabaseClient, rowsWithTeams, users, teams);
     }
 
     return new Response(

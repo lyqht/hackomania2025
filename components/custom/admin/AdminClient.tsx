@@ -15,8 +15,7 @@ import UserManagement from "./UserManagement";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-type SearchType = "username" | "email" | "team";
+import type { SearchType } from "./UserManagement";
 
 export default function AdminClient() {
   const searchParams = useSearchParams();
@@ -56,6 +55,7 @@ export default function AdminClient() {
       params.delete("searchType");
     }
     router.push(`/admin?${params.toString()}`);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, searchType]);
 
   // Add navigation functions
@@ -185,6 +185,10 @@ export default function AdminClient() {
     }
   };
 
+  const handleSearchTypeChange = (type: SearchType) => {
+    setSearchType(type);
+  };
+
   return (
     <div className="flex flex-col gap-8 p-5 md:p-20">
       <Toaster />
@@ -219,7 +223,7 @@ export default function AdminClient() {
             isSyncing={isSyncing}
             searchType={searchType}
             searchQuery={searchQuery}
-            onSearchTypeChange={setSearchType}
+            onSearchTypeChange={handleSearchTypeChange}
             onSearchQueryChange={setSearchQuery}
             onUploadFile={handleUploadFile}
             onSyncEventbrite={handleSyncEventbrite}
@@ -227,7 +231,6 @@ export default function AdminClient() {
             onRemoveUser={handleRemoveUser}
             onEditUser={handleEditUser}
             onNavigateToTeam={navigateToTeam}
-            onNavigateToUser={navigateToUser}
           />
         </TabsContent>
       </Tabs>

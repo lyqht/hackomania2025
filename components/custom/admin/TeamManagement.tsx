@@ -263,12 +263,15 @@ export default function TeamManagement({
                             onClick={() => onNavigateToUser(user.githubUsername)}
                             className="text-blue-600 hover:underline"
                           >
-                            {user.githubUsername}
-                          </button>{" "}
-                          <span
-                            className={`text-neutral-500 ${user.role === "admin" ? "font-medium text-blue-600" : ""}`}
-                          >
-                            ({user.teamRole}){user.role === "admin" && " • Admin"}
+                            {user.firstName && user.lastName
+                              ? `${user.firstName} ${user.lastName} (${user.githubUsername})`
+                              : user.githubUsername}
+                          </button>
+                          {user.role === "admin" && (
+                            <span className="ml-1 text-sm font-medium text-blue-600">• Admin</span>
+                          )}
+                          <span className="ml-1 text-sm text-neutral-500">
+                            • {user.teamRole === "leader" ? "Leader" : "Member"}
                           </span>
                         </li>
                       ))}

@@ -11,6 +11,8 @@ export type UserInfo = {
   id: string;
   email: string;
   githubUsername: string;
+  firstName: string | null;
+  lastName: string | null;
   teamId: string | null;
   teamName: string | null;
   teamRole: string | null;
@@ -31,6 +33,8 @@ export async function getAllUsersWithoutPagination(): Promise<UserInfo[]> {
         id: user.id,
         email: user.email,
         githubUsername: user.githubUsername,
+        firstName: user.firstName,
+        lastName: user.lastName,
         role: user.role,
         createdAt: user.createdAt,
         teamId: teamMembers.teamId,
@@ -50,6 +54,8 @@ export async function getAllUsersWithoutPagination(): Promise<UserInfo[]> {
       id: user.id,
       email: user.email,
       githubUsername: user.githubUsername,
+      firstName: user.firstName || null,
+      lastName: user.lastName || null,
       teamId: user.teamId || null,
       teamName: user.teamName || null,
       teamRole: user.teamRole || null,
@@ -85,6 +91,8 @@ export async function getUserById(userId: string): Promise<UserInfo | null> {
         id: user.id,
         githubUsername: user.githubUsername,
         email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
         teamId: team.id,
         teamName: team.name,
         teamRole: teamMembers.role,
@@ -103,6 +111,8 @@ export async function getUserById(userId: string): Promise<UserInfo | null> {
         user.id,
         user.githubUsername,
         user.email,
+        user.firstName,
+        user.lastName,
         team.name,
         teamMembers.role,
         team.id,
@@ -117,6 +127,8 @@ export async function getUserById(userId: string): Promise<UserInfo | null> {
     const foundUser = searchedUser[0];
     return {
       ...foundUser,
+      firstName: foundUser.firstName || null,
+      lastName: foundUser.lastName || null,
       teamId: foundUser.teamId || null,
       teamName: foundUser.teamName || null,
       teamRole: foundUser.teamRole || null,
@@ -143,6 +155,8 @@ export async function getAllUsers(page = 1, pageSize = 10): Promise<PaginatedUse
       id: user.id,
       email: user.email,
       githubUsername: user.githubUsername,
+      firstName: user.firstName,
+      lastName: user.lastName,
       role: user.role,
       createdAt: user.createdAt,
       teamId: teamMembers.teamId,
@@ -165,6 +179,8 @@ export async function getAllUsers(page = 1, pageSize = 10): Promise<PaginatedUse
       id: user.id,
       email: user.email,
       githubUsername: user.githubUsername,
+      firstName: user.firstName || null,
+      lastName: user.lastName || null,
       teamId: user.teamId || null,
       teamName: user.teamName || null,
       teamRole: user.teamRole || null,
