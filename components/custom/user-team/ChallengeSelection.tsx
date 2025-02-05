@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Challenge } from "@/utils/db/schema/challenge";
+import { Challenge } from "@/types/challenge";
 import { Button } from "@/components/ui/button";
 import {
   Select,

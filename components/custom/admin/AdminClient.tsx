@@ -37,8 +37,11 @@ import { Check, ChevronsUpDown, Search, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { UserActions } from "./UserActions";
 import { toast, Toaster } from "sonner";
+import ChallengeManagement from "./ChallengeManagement";
 
 const ITEMS_PER_PAGE = 10;
+
+// #region UserTable
 
 interface UserTableProps {
   users: UserInfo[];
@@ -124,6 +127,8 @@ function Pagination({ totalPages, currentPage, onPageChange }: PaginationProps) 
     </div>
   );
 }
+
+// #endregion
 
 type SearchType = "username" | "email" | "team";
 const SEARCH_TYPE_LABELS: Record<SearchType, string> = {
@@ -258,84 +263,9 @@ export default function AdminClient() {
       <Toaster />
       <div>
         <h1 className="mb-4 text-2xl font-bold md:text-4xl">HackOMania 2025 Admin Portal</h1>
-        <div className="flex flex-col gap-4">
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              setIsUploading(true);
-              try {
-                const result = await uploadFile(formData);
-                if (result.error) {
-                  toast.error(result.error);
-                } else {
-                  toast.success("CSV uploaded successfully");
-                  await fetchUsers(); // Refresh the user list after upload
-                }
-              } catch (error) {
-                toast.error(`Failed to upload CSV: ${error}`);
-              } finally {
-                setIsUploading(false);
-              }
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <span>Main Event Registrations</span>
-              <Input
-                type="file"
-                name="file"
-                accept=".xlsx,.xls,.csv"
-                className="max-w-xs"
-                disabled={isUploading}
-                required
-              />
-              <Button type="submit" variant="outline" disabled={isUploading}>
-                {isUploading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Uploading...
-                  </>
-                ) : (
-                  "Upload CSV"
-                )}
-              </Button>
-            </div>
-          </form>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              setIsSyncing(true);
-              try {
-                const result = await syncEventbrite();
-                if (result.error) {
-                  toast.error(result.error);
-                } else {
-                  toast.success("Synced with Eventbrite successfully");
-                  await fetchUsers();
-                }
-              } catch (error) {
-                toast.error(`Failed to sync with Eventbrite: ${error}`);
-              } finally {
-                setIsSyncing(false);
-              }
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <span>Pre-event Registrations</span>
-              <Button type="submit" variant="outline" disabled={isSyncing}>
-                {isSyncing ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Syncing...
-                  </>
-                ) : (
-                  "Sync from Eventbrite"
-                )}
-              </Button>
-            </div>
-          </form>
-        </div>
       </div>
+
+      <ChallengeManagement />
 
       <div className="rounded-lg border border-neutral-400 p-4">
         <div className="mb-4">
@@ -345,6 +275,87 @@ export default function AdminClient() {
               <span className="text-sm text-neutral-500">({filteredUsers.length})</span>
             )}
           </h2>
+
+          <div className="mb-6 space-y-4">
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                setIsUploading(true);
+                try {
+                  const result = await uploadFile(formData);
+                  if (result.error) {
+                    toast.error(result.error);
+                  } else {
+                    toast.success("CSV uploaded successfully");
+                    await fetchUsers(); // Refresh the user list after upload
+                  }
+                } catch (error) {
+                  toast.error(`Failed to upload CSV: ${error}`);
+                } finally {
+                  setIsUploading(false);
+                }
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <span>Main Event Registrations</span>
+                <Input
+                  type="file"
+                  name="file"
+                  accept=".xlsx,.xls,.csv"
+                  className="max-w-xs"
+                  disabled={isUploading}
+                  required
+                />
+                <Button type="submit" variant="outline" disabled={isUploading}>
+                  {isUploading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    "Upload CSV"
+                  )}
+                </Button>
+              </div>
+            </form>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setIsSyncing(true);
+                try {
+                  const result = await syncEventbrite();
+                  if (result.error) {
+                    toast.error(result.error);
+                  } else {
+                    toast.success("Synced with Eventbrite successfully");
+                    await fetchUsers();
+                  }
+                } catch (error) {
+                  toast.error(`Failed to sync with Eventbrite: ${error}`);
+                } finally {
+                  setIsSyncing(false);
+                }
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <span>Pre-event Registrations</span>
+                <Button type="submit" variant="outline" disabled={isSyncing}>
+                  {isSyncing ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Syncing...
+                    </>
+                  ) : (
+                    "Sync from Eventbrite"
+                  )}
+                </Button>
+              </div>
+            </form>
+            <hr className="w-full" />
+          </div>
+
           {!isLoading && (
             <div className="flex items-center gap-2">
               <label htmlFor="search-type">Search by:</label>
