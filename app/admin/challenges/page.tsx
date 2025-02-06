@@ -78,7 +78,7 @@ export default function ChallengeDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto min-h-screen p-8 md:p-20">
       <h1 className="mb-8 text-3xl font-bold">Challenge Statistics</h1>
 
       <div className="grid gap-4 md:grid-cols-3">
