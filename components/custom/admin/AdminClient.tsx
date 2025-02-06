@@ -17,6 +17,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { SearchType } from "./UserManagement";
 import SignOutButton from "@/components/custom/SignOutButton";
+import { Button } from "@/components/ui/button";
+import { Presentation } from "lucide-react";
 
 export default function AdminClient() {
   const searchParams = useSearchParams();
@@ -196,7 +198,13 @@ export default function AdminClient() {
       <div>
         <div className="flex items-center justify-between">
           <h1 className="mb-4 text-2xl font-bold md:text-4xl">HackOMania 2025 Admin Portal</h1>
-          <SignOutButton />
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => router.push("/admin/challenges")}>
+              <Presentation className="mr-2 h-4 w-4" />
+              Present
+            </Button>
+            <SignOutButton />
+          </div>
         </div>
       </div>
 
