@@ -2,7 +2,7 @@ import EventbriteCheckoutWidgetButton from "@/components/custom/EventbriteChecko
 import GitHubSignInButton from "@/components/custom/GitHubSignInButton";
 import GoldenRules from "@/components/custom/GoldenRules";
 import ImageCarousel from "@/components/custom/ImageCarousel";
-import NavigationBar from "@/components/custom/NavigationBar/NavigationBar";
+import NavigationBar from "@/components/custom/NavigationBar";
 import Organizers from "@/components/custom/Organizers";
 import Prizes from "@/components/custom/Prizes";
 import Sponsors from "@/components/custom/Sponsors";

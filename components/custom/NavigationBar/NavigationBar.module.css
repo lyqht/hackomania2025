@@ -1,6 +1,0 @@
-.grid {
-  background-image: 
-    linear-gradient(to right, rgba(76, 149, 108, 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(76, 149, 108, 0.1) 1px, transparent 1px);
-  background-size: calc(100vw / 24) calc(100vw / 24);
-}
