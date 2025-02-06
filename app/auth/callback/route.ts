@@ -1,5 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
+import { db } from "@/utils/db";
+import { user } from "@/utils/db/schema/user";
+import { eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
   // The `/auth/callback` route is required for the server-side auth flow implemented
@@ -12,7 +15,22 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    await supabase.auth.exchangeCodeForSession(code);
+    const {
+      data: { session },
+    } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (session?.user?.email) {
+      // Check if user is admin
+      const [userRecord] = await db
+        .select()
+        .from(user)
+        .where(eq(user.email, session.user.email))
+        .limit(1);
+
+      if (userRecord?.role === "admin") {
+        return NextResponse.redirect(`${origin}/admin`);
+      }
+    }
   }
 
   if (redirectTo) {
