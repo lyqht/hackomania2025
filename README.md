@@ -19,15 +19,89 @@ This repo is created using the [Next.js and Supabase Starter Kit](https://github
 
 ## Local Development
 
-1. Populate `.env` with the environment variables based on `.env.example`.
-2. Install dependencies using [pnpm](https://pnpm.io/).
-3. You can now start the Next.js local development server:
+### Required Environment Variables
+
+Copy `.env.example` to `.env` and fill in the following required environment variables:
+
+```bash
+POSTGRES_URL=           # Your Supabase PostgreSQL URL
+SUPABASE_URL=          # Your Supabase project URL
+NEXT_PUBLIC_SUPABASE_URL= # Same as SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY= # Your Supabase anonymous key
+SUPABASE_SERVICE_ROLE_KEY= # Your Supabase service role key
+GITHUB_CLIENT_ID=      # Your GitHub OAuth app client ID
+GITHUB_CLIENT_SECRET=  # Your GitHub OAuth app client secret
+```
+
+### Optional Environment Variables
+
+```bash
+# Comma-separated list of GitHub usernames that should be granted admin access
+# Example: ADMIN_USERS=user1,user2,user3
+ADMIN_USERS=           # List of GitHub usernames for admin access
+
+# Pre-event registration settings
+NEXT_PUBLIC_EVENTBRITE_PREEVENT_EVENT_ID= # Eventbrite event ID for pre-event
+EVENTBRITE_PRIVATE_TOKEN=                  # Eventbrite API token
+```
+
+### Admin Access
+
+The `ADMIN_USERS` environment variable controls which users get admin access in the application. When a user signs in with GitHub:
+
+1. Their GitHub username is checked against the `ADMIN_USERS` list
+2. If their username is in the list, they are automatically granted admin role
+3. Admin users are redirected to `/admin` after signing in
+4. Admin users have access to additional features like:
+   - User management
+   - Team management
+   - Challenge management
+
+To add or remove admin users:
+
+1. Update the `ADMIN_USERS` environment variable with a comma-separated list of GitHub usernames
+2. No spaces between usernames, just commas
+3. Example: `ADMIN_USERS=username1,username2,username3`
+
+### Starting the app
+
+1. Install dependencies using [pnpm](https://pnpm.io/).
+2. You can now start the Next.js local development server:
 
    ```bash
    pnpm dev
    ```
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+   The app should now be running on [localhost:3000](http://localhost:3000/).
+
+### Creating a user
+
+When you sign in with GitHub, you will be redirected to the authorization page. You have to approve the app to access your GitHub account as following.
+
+![](./public/Github_oauth.png)
+
+### User Redirection
+
+After successful GitHub authentication, users are redirected based on their role:
+
+1. **Admin Users**
+
+   - Users listed in the `ADMIN_USERS` environment variable are automatically assigned the admin role
+   - They are redirected to `/admin` after signing in
+   - The admin dashboard provides access to:
+     - User management (view, edit, remove users)
+     - Team management (create, edit, delete teams)
+     - Challenge management (create, edit challenges)
+     - Registration statistics and data
+
+2. **Participants**
+   - Regular users (not in `ADMIN_USERS` list) are assigned the participant role
+   - They are redirected to `/user/home` after signing in
+   - The participant dashboard provides access to:
+     - Personal profile management
+     - Team creation or joining
+     - Challenge selection and participation
+     - Event information and updates
 
 ### Supabase
 
