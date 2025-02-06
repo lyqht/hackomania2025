@@ -2,6 +2,7 @@ import { checkMainEventRegistration, checkPreEventRegistration } from "@/app/ser
 import { getTeamById, Team } from "@/app/services/team";
 import { getUserById, UserInfo } from "@/app/services/user";
 import EventbriteCheckoutWidgetButton from "@/components/custom/EventbriteCheckoutWidgetButton";
+import SignOutButton from "@/components/custom/SignOutButton";
 import SuspenseLoadingSpinner from "@/components/custom/SuspenseLoadingSpinner";
 import EditTeamButtons from "@/components/custom/user-team/EditTeamButtons";
 import TeamManagementSection from "@/components/custom/user-team/TeamManagementSection";
@@ -109,10 +110,15 @@ export default async function UserHome() {
   return (
     <div className="flex flex-col gap-5 p-5 md:p-20">
       <div>
-        <h1 className="mb-1 text-2xl font-bold md:text-4xl">HackOMania 2025 User Portal</h1>
-        <p className="text-xl text-neutral-600 md:text-2xl">
-          <span className="font-medium">Hello 👋,</span> {user.githubUsername}
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="mb-1 text-2xl font-bold md:text-4xl">HackOMania 2025 User Portal</h1>
+            <p className="text-xl text-neutral-600 md:text-2xl">
+              <span className="font-medium">Hello 👋,</span> {user.githubUsername}
+            </p>
+          </div>
+          <SignOutButton />
+        </div>
       </div>
 
       <div className="rounded-lg border border-neutral-400">
