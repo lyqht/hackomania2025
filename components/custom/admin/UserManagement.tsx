@@ -65,6 +65,7 @@ function UserTable({
           <TableHead>Email</TableHead>
           <TableHead>Team</TableHead>
           <TableHead>Pre-event</TableHead>
+          <TableHead>Main Event</TableHead>
           <TableHead className="w-[50px]">Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -92,6 +93,9 @@ function UserTable({
             </TableCell>
             <TableCell className={user.preEventRegistered ? "text-green-600" : "text-red-600"}>
               {user.preEventRegistered ? "✓" : "✗"}
+            </TableCell>
+            <TableCell className={user.mainEventRegistered ? "text-green-600" : "text-red-600"}>
+              {user.mainEventRegistered ? "✓" : "✗"}
             </TableCell>
             <TableCell>
               <UserActions
@@ -173,15 +177,15 @@ export default function UserManagement({
 }: UserManagementProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [hideAdminUsers, setHideAdminUsers] = useState(true);
+  const [hideUnregisteredUsers, setHideUnregisteredUsers] = useState(true);
 
   // Filter users based on search
   const filteredUsers = useMemo(() => {
-    if (!searchQuery && !hideAdminUsers) return users;
+    if (!searchQuery && !hideUnregisteredUsers) return users;
 
     return users.filter((user) => {
-      // Apply admin filter
-      if (hideAdminUsers && user.role === "admin") {
+      // Apply main event registration filter
+      if (hideUnregisteredUsers && !user.mainEventRegistered) {
         return false;
       }
 
@@ -208,7 +212,7 @@ export default function UserManagement({
           return true;
       }
     });
-  }, [users, searchQuery, searchType, hideAdminUsers]);
+  }, [users, searchQuery, searchType, hideUnregisteredUsers]);
 
   const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -453,15 +457,15 @@ export default function UserManagement({
 
             <div className="flex items-center gap-2">
               <Checkbox
-                id="hideAdminUsers"
-                checked={hideAdminUsers}
-                onCheckedChange={(checked) => setHideAdminUsers(checked as boolean)}
+                id="hideUnregisteredUsers"
+                checked={hideUnregisteredUsers}
+                onCheckedChange={(checked) => setHideUnregisteredUsers(checked as boolean)}
               />
               <label
-                htmlFor="hideAdminUsers"
+                htmlFor="hideUnregisteredUsers"
                 className="text-sm text-neutral-500 hover:text-neutral-700"
               >
-                Hide admin users
+                Hide users not registered for main event
               </label>
             </div>
           </div>

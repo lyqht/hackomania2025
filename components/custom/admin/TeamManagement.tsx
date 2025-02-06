@@ -52,7 +52,7 @@ export default function TeamManagement({
   const [isLoading, setIsLoading] = useState(true);
   const [internalSearchQuery, setInternalSearchQuery] = useState("");
   const [teamFilter, setTeamFilter] = useState<TeamFilter>("all");
-  const [hideAdminTeams, setHideAdminTeams] = useState(true);
+  const [hideUnregisteredTeams, setHideUnregisteredTeams] = useState(true);
 
   // Use external search query if provided, otherwise use internal state
   const searchQuery = externalSearchQuery ?? internalSearchQuery;
@@ -105,7 +105,7 @@ export default function TeamManagement({
     if (challenges.length > 0) {
       fetchTeams();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [challenges]);
 
   const handleAssignChallenge = async (teamId: string, challengeId: string | null) => {
@@ -160,14 +160,14 @@ export default function TeamManagement({
       })();
       if (!matchesTeamSize) return false;
 
-      // Apply admin filter
-      if (hideAdminTeams && team.users.some((user) => user.role === "admin")) {
+      // Apply main event registration filter
+      if (hideUnregisteredTeams && team.users.some((user) => !user.mainEventRegistered)) {
         return false;
       }
 
       return true;
     });
-  }, [teams, searchQuery, teamFilter, hideAdminTeams]);
+  }, [teams, searchQuery, teamFilter, hideUnregisteredTeams]);
 
   return (
     <div className="rounded-lg border border-neutral-400 p-4">
@@ -218,15 +218,15 @@ export default function TeamManagement({
 
           <div className="flex items-center gap-2">
             <Checkbox
-              id="hideAdminTeams"
-              checked={hideAdminTeams}
-              onCheckedChange={(checked) => setHideAdminTeams(checked as boolean)}
+              id="hideUnregisteredTeams"
+              checked={hideUnregisteredTeams}
+              onCheckedChange={(checked) => setHideUnregisteredTeams(checked as boolean)}
             />
             <label
-              htmlFor="hideAdminTeams"
+              htmlFor="hideUnregisteredTeams"
               className="text-sm text-neutral-500 hover:text-neutral-700"
             >
-              Hide teams with admin users
+              Hide teams with unregistered members
             </label>
           </div>
         </div>
