@@ -1,25 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { Challenge } from "@/types/challenge";
 import { Team } from "@/app/services/team";
+import { ExportTeamsAsExcelButton } from "@/components/custom/admin/ExportTeamsAsExcelButton";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -29,8 +13,25 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Challenge } from "@/types/challenge";
 import { Search, X } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 const MAX_TEAM_SIZE = 5;
 
@@ -181,12 +182,15 @@ export default function TeamManagement({
   return (
     <div className="rounded-lg border border-neutral-400 p-4">
       <div className="mb-4">
-        <h2 className="mb-4 text-xl font-semibold">
-          Teams{" "}
-          {teams.length > 0 && (
-            <span className="text-sm text-neutral-500">({filteredTeams.length})</span>
-          )}
-        </h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold">
+            Teams{" "}
+            {teams.length > 0 && (
+              <span className="text-sm text-neutral-500">({filteredTeams.length})</span>
+            )}
+          </h2>
+          <ExportTeamsAsExcelButton teams={filteredTeams} />
+        </div>
 
         <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="flex flex-wrap items-center gap-2">
