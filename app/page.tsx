@@ -15,7 +15,7 @@ export default async function Index() {
     <>
       <NavigationBar />
       <Link
-        className="group fixed bottom-8 right-8 z-50 flex items-center justify-center rounded-full border-4 border-hackomania-red bg-white p-3 text-base font-bold text-hackomania-red transition-all md:hover:bg-hackomania-red md:hover:text-white md:text-xl"
+        className="group fixed bottom-8 right-8 z-50 flex items-center justify-center rounded-full border-4 border-hackomania-red bg-white p-3 text-base font-bold text-hackomania-red transition-all md:text-xl md:hover:bg-hackomania-red md:hover:text-white"
         href="https://linktr.ee/hackomania2025"
         target="_blank"
         rel="noopener noreferrer"
@@ -32,7 +32,7 @@ export default async function Index() {
             d="m13.736 5.853l4.005-4.117l2.325 2.38l-4.2 4.005h5.908v3.305h-5.937l4.229 4.108l-2.325 2.334l-5.74-5.769l-5.741 5.769l-2.325-2.325l4.229-4.108H2.226V8.121h5.909l-4.2-4.004l2.324-2.381l4.005 4.117V0h3.472zm-3.472 10.306h3.472V24h-3.472z"
           />
         </svg>
-        <span className="min-w-0 max-w-0 overflow-hidden whitespace-nowrap transition-all duration-300 md:group-hover:max-w-[100px] md:group-hover:mx-2">
+        <span className="min-w-0 max-w-0 overflow-hidden whitespace-nowrap transition-all duration-300 md:group-hover:mx-2 md:group-hover:max-w-[100px]">
           LINKTREE
         </span>
       </Link>
@@ -44,8 +44,9 @@ export default async function Index() {
         </div>
       </div>
       <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
-        <header className="flex min-h-[calc(100vh-120px)] w-full flex-col items-center justify-center md:min-h-[calc(100vh-180px)]">
+        <div className="relative flex min-h-[calc(100vh-120px)] w-full flex-col items-center justify-center md:min-h-[calc(100vh-180px)]">
           <h1 className="sr-only">HackOMania 2025</h1>
+          <div className={`grid-bg pointer-events-none absolute top-0 h-96 w-full md:h-60`}></div>
           <div className="flex w-full max-w-[90vw] flex-col items-center justify-center gap-8 md:max-w-[80vw]">
             {/* HackOMania Logo */}
             <Image
@@ -101,12 +102,11 @@ export default async function Index() {
                     PRE-REGISTER
                   </a>
                 </div>
-
               </div>
-                <GitHubSignInButton />
+              <GitHubSignInButton />
             </div>
           </div>
-        </header>
+        </div>
 
         {/* HackOMania Theme Banner */}
 

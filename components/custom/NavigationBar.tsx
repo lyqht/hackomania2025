@@ -99,7 +99,6 @@ export default function NavigtionBar() {
             )}
           </AnimatePresence>
         </div>
-        <div className={`grid-bg pointer-events-none absolute h-96 w-full md:h-60`}></div>
       </motion.div>
       {/* Spacer div to prevent content from being hidden under fixed navbar */}
       <div className="h-[80px] md:h-[120px]"></div>
