@@ -7,8 +7,7 @@ import SuspenseLoadingSpinner from "@/components/custom/SuspenseLoadingSpinner";
 import ChallengeSelection from "@/components/custom/user-team/ChallengeSelection";
 import TeamManagementSection from "@/components/custom/user-team/TeamManagementSection";
 import TeamSubmissionForm from "@/components/custom/user-team/TeamSubmissionForm";
-import { getUser } from "@/utils/supabase/user";
-import { User } from "@supabase/supabase-js";
+import { createClient } from "@/utils/supabase/server";
 import { Suspense } from "react";
 
 async function EventRegistrationStatus({ user }: { user: UserInfo }) {
@@ -145,49 +144,78 @@ function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSe
 }
 
 export default async function UserHome() {
-  const supabaseUser = (await getUser()) as User;
-  const user = await getUserById(supabaseUser.id);
+  const supabase = await createClient();
 
-  if (!user) {
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session?.user) {
+      return (
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="rounded-xl border border-gray-500 p-5">
+            <p>Error: Not authenticated</p>
+            <p>
+              Please sign in again from the <a href="/">landing page</a>. Otherwise, please contact
+              us at <a href="mailto:contact@geekshacking.com">contact@geekshacking.com</a>.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    const user = await getUserById(session.user.id);
+    if (!user) {
+      return (
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="rounded-xl border border-gray-500 p-5">
+            <p>Error: Failed to retrieve User Data</p>
+            <p>If this issue persists, please reach out to us!</p>
+          </div>
+        </div>
+      );
+    }
+
+    const userTeam = user.teamId ? await getTeamById(user.teamId) : null;
+    // Generate a unique key based on team state and timestamp to force remount
+    const teamKey = userTeam
+      ? `team-${userTeam.id}-${userTeam.name}-${Date.now()}`
+      : `no-team-${Date.now()}`;
+
+    return (
+      <div className="flex flex-col gap-5 p-5 md:p-20">
+        <div>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="mb-1 text-2xl font-bold md:text-4xl">HackOMania 2025 User Portal</h1>
+              <p className="text-xl text-neutral-600 md:text-2xl">
+                <span className="font-medium">Hello 👋,</span> {user.githubUsername}
+              </p>
+            </div>
+            <SignOutButton />
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-neutral-400">
+          <Suspense fallback={<SuspenseLoadingSpinner />}>
+            <UserInfoSection user={user} />
+          </Suspense>
+
+          <Suspense key={teamKey} fallback={<SuspenseLoadingSpinner />}>
+            {<ChallengeAndTeamInfoSections key={teamKey} user={user} userTeam={userTeam} />}
+          </Suspense>
+        </div>
+      </div>
+    );
+  } catch (error) {
+    console.error("Error in UserHome:", error);
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="rounded-xl border border-gray-500 p-5">
-          <p>Error: Failed to retrieve User Data</p>
+          <p>Error: Something went wrong</p>
           <p>If this issue persists, please reach out to us!</p>
         </div>
       </div>
     );
   }
-
-  const userTeam = user.teamId ? await getTeamById(user.teamId) : null;
-  // Generate a unique key based on team state and timestamp to force remount
-  const teamKey = userTeam
-    ? `team-${userTeam.id}-${userTeam.name}-${Date.now()}`
-    : `no-team-${Date.now()}`;
-
-  return (
-    <div className="flex flex-col gap-5 p-5 md:p-20">
-      <div>
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="mb-1 text-2xl font-bold md:text-4xl">HackOMania 2025 User Portal</h1>
-            <p className="text-xl text-neutral-600 md:text-2xl">
-              <span className="font-medium">Hello 👋,</span> {user.githubUsername}
-            </p>
-          </div>
-          <SignOutButton />
-        </div>
-      </div>
-
-      <div className="rounded-lg border border-neutral-400">
-        <Suspense fallback={<SuspenseLoadingSpinner />}>
-          <UserInfoSection user={user} />
-        </Suspense>
-
-        <Suspense key={teamKey} fallback={<SuspenseLoadingSpinner />}>
-          {<ChallengeAndTeamInfoSections key={teamKey} user={user} userTeam={userTeam} />}
-        </Suspense>
-      </div>
-    </div>
-  );
 }
