@@ -129,12 +129,13 @@ export default function ChallengeSelection({
                 <span className="font-medium">Team Quota: </span>
                 {(selectedChallenge.metadata as { teamQuota?: number })?.teamQuota || "No quota"}
               </p>
-              {(selectedChallenge.metadata as { judges?: string[] })?.judges && (
+              {/* TODO: add judges when confirmed on 2nd day */}
+              {/* {(selectedChallenge.metadata as { judges?: string[] })?.judges && (
                 <p>
                   <span className="font-medium">Judges: </span>
                   {(selectedChallenge.metadata as { judges?: string[] }).judges?.join(", ")}
                 </p>
-              )}
+              )} */}
             </div>
           )}
         </div>
