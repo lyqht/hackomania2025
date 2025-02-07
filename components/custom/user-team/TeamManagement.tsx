@@ -38,13 +38,15 @@ export default function TeamManagement({ users, teamId }: { users: ITeamUser[]; 
             <div className="flex flex-row items-center gap-2">
               <p>{member.githubUsername}</p>
               {member.role === "leader" && <FaCrown />}
-              <button
-                className={`ml-auto text-xl ${loading && "cursor-not-allowed"} ${member.role === "leader" && "hidden"}`}
-                onClick={() => handleRemoveUser(member.id)}
-                disabled={loading}
-              >
-                <LuUserMinus />
-              </button>
+              {member.role === "leader" && (
+                <button
+                  className={`ml-auto text-xl ${loading && "cursor-not-allowed"} ${member.role === "leader" && "hidden"}`}
+                  onClick={() => handleRemoveUser(member.id)}
+                  disabled={loading}
+                >
+                  <LuUserMinus />
+                </button>
+              )}
             </div>
             <hr className="mt-2" />
           </div>
