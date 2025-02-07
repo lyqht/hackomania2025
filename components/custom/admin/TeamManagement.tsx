@@ -29,7 +29,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Challenge } from "@/types/challenge";
-import { Search, X } from "lucide-react";
+import { Search, X, AlertTriangle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -143,6 +143,21 @@ export default function TeamManagement({
     }
   };
 
+  const handleRemoveAllChallenges = async () => {
+    try {
+      const response = await fetch("/api/challenges/remove-all", {
+        method: "POST",
+      });
+
+      if (!response.ok) throw new Error("Failed to remove challenges from teams");
+      toast.success("Successfully removed challenges from all teams");
+      fetchTeams();
+    } catch (error) {
+      console.error("Error removing challenges:", error);
+      toast.error("Failed to remove challenges from teams");
+    }
+  };
+
   // Filter and search teams
   const filteredTeams = useMemo(() => {
     return teams.filter((team) => {
@@ -202,7 +217,37 @@ export default function TeamManagement({
               <span className="text-sm text-neutral-500">({filteredTeams.length})</span>
             )}
           </h2>
-          <ExportTeamsAsExcelButton teams={filteredTeams} />
+          <div className="flex items-center gap-2">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="destructive" size="sm" className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4" />
+                  Unassign challenges from all teams
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Unassign challenges from all teams</DialogTitle>
+                  <DialogDescription className="space-y-2">
+                    <span className="block font-medium text-red-600">
+                      ⚠️ Warning: This action cannot be undone!
+                    </span>
+                    This will remove the challenge that ALL teams have selected. Teams will need to
+                    select their challenges again. Are you sure you want to proceed?
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="flex justify-end gap-2">
+                  <DialogTrigger asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DialogTrigger>
+                  <Button variant="destructive" onClick={handleRemoveAllChallenges}>
+                    Remove All Challenges
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <ExportTeamsAsExcelButton teams={filteredTeams} />
+          </div>
         </div>
 
         <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center">
