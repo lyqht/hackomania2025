@@ -40,3 +40,21 @@ export async function getTeamById(teamId: string): Promise<Team | null> {
     return null;
   }
 }
+
+export async function updateTeam(teamId: string, data: Partial<Team>) {
+  try {
+    const [updatedTeam] = await db
+      .update(team)
+      .set({
+        ...data,
+        updatedAt: new Date(),
+      })
+      .where(eq(team.id, teamId))
+      .returning();
+
+    return updatedTeam;
+  } catch (error) {
+    console.error("Error updating team:", error);
+    throw error;
+  }
+}

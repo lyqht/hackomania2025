@@ -1,9 +1,15 @@
 import { pgTable } from "drizzle-orm/pg-core";
-import { check, primaryKey, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { check, json, primaryKey, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { user } from "./user";
 import { sql } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 import { challenges } from "./challenge";
+
+export type TeamSubmission = {
+  projectDescription?: string;
+  slidesUrl?: string;
+  repoUrl?: string;
+};
 
 export const team = pgTable("team", {
   id: uuid().defaultRandom().primaryKey(),
@@ -12,6 +18,7 @@ export const team = pgTable("team", {
   updatedAt: timestamp().notNull().defaultNow(),
   leaderId: uuid().references(() => user.id),
   challengeId: uuid().references(() => challenges.id),
+  submission: json("submission").$type<TeamSubmission>(),
 });
 
 export const teamMembers = pgTable(

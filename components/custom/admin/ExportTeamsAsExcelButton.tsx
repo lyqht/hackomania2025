@@ -32,6 +32,9 @@ export function ExportTeamsAsExcelButton({ teams }: ExportTeamsAsExcelButtonProp
         "All Members Registered": team.users.every((user) => user.mainEventRegistered)
           ? "Yes"
           : "No",
+        "Project Description": team.submission?.projectDescription || "",
+        "Slides URL": team.submission?.slidesUrl || "",
+        "Repository URL": team.submission?.repoUrl || "",
       }));
 
       // Create worksheet
@@ -49,6 +52,9 @@ export function ExportTeamsAsExcelButton({ teams }: ExportTeamsAsExcelButtonProp
         { wch: 25 }, // Challenge
         { wch: 100 }, // Members
         { wch: 15 }, // All Members Registered
+        { wch: 100 }, // Project Description
+        { wch: 50 }, // Slides URL
+        { wch: 50 }, // Repository URL
       ];
       ws["!cols"] = colWidths;
 

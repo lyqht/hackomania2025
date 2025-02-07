@@ -88,7 +88,7 @@ export default function ChallengeSelection({
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-lg font-medium">Challenge Selection</h3>
+        <h2 className="text-xl font-medium">Challenge Selection</h2>
         <p className="text-sm text-neutral-500">
           Select a challenge for your team to participate in.
         </p>

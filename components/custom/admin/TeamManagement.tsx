@@ -269,6 +269,7 @@ export default function TeamManagement({
               <TableHead>Team Name</TableHead>
               <TableHead>Members</TableHead>
               <TableHead>Current Challenge</TableHead>
+              <TableHead>Submission Status</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -324,6 +325,41 @@ export default function TeamManagement({
                         ))}
                       </SelectContent>
                     </Select>
+                  </TableCell>
+                  <TableCell>
+                    {team.challengeId ? (
+                      team.submission ? (
+                        <div className="text-sm">
+                          <p className="text-green-600">✓ Submitted</p>
+                          <div className="mt-1 space-y-1">
+                            {team.submission.repoUrl && (
+                              <a
+                                href={team.submission.repoUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block text-blue-600 hover:underline"
+                              >
+                                View Repository
+                              </a>
+                            )}
+                            {team.submission.slidesUrl && (
+                              <a
+                                href={team.submission.slidesUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block text-blue-600 hover:underline"
+                              >
+                                View Slides
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-yellow-600">Not submitted yet</p>
+                      )
+                    ) : (
+                      <p className="text-sm text-neutral-500">No challenge selected</p>
+                    )}
                   </TableCell>
                   <TableCell>
                     <Dialog>
