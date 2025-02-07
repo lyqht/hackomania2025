@@ -1,10 +1,10 @@
 # HackOMania 2025
 
-<div align="center" style="background:white;">
-  <img src="./public/hackomania.svg" alt="HackOMania 2025 Logo" />
-</div>
-
 ## Introduction
+
+<div align="center" style="background:white;">
+  <img src="./public/hackomania-long-logo.svg" alt="HackOMania 2025 Logo" />
+</div>
 
 HackOMania 2025 is a hackathon event organized by [GeeksHacking](https://geekshacking.com).
 This repository contains the web application for HackOMania 2025's landing page, user's team management portal, and the admin portal.
@@ -37,11 +37,31 @@ The web development team behind this project consists of:
 
 ## Tech stack
 
-- Next.js for frontend
-- Tailwind CSS for styling
-- shadcn/ui for components
-- Supabase for database, authentication and edge functions
-- Drizzle ORM for migrations and queries
+### Frontend
+
+- [Next.js 14](https://nextjs.org/) - React framework with App Router
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [shadcn/ui](https://ui.shadcn.com/) - Re-usable components built with Radix UI and Tailwind CSS
+- [React Hook Form](https://react-hook-form.com/) - Form handling
+
+### Backend & Database
+
+- [Supabase](https://supabase.com/) - Open source Firebase alternative
+  - PostgreSQL database
+  - Authentication with GitHub OAuth
+  - Edge Functions for serverless computing
+  - Row Level Security (RLS) policies
+- [Drizzle ORM](https://orm.drizzle.team/) - TypeScript ORM
+  - Database schema management
+  - Type-safe SQL queries
+  - Automated migrations
+
+### Development & Deployment
+
+- [TypeScript](https://www.typescriptlang.org/) - Static type checking
+- [ESLint](https://eslint.org/) - Code linting
+- [Prettier](https://prettier.io/) - Code formatting
+- [Vercel](https://vercel.com/) - Deployment platform
 
 ## Deployment
 
