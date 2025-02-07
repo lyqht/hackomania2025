@@ -1,25 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { Challenge } from "@/types/challenge";
 import { Team } from "@/app/services/team";
+import { ExportTeamsAsExcelButton } from "@/components/custom/admin/ExportTeamsAsExcelButton";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -29,8 +13,25 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Challenge } from "@/types/challenge";
 import { Search, X } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 const MAX_TEAM_SIZE = 5;
 
@@ -52,7 +53,9 @@ export default function TeamManagement({
   const [isLoading, setIsLoading] = useState(true);
   const [internalSearchQuery, setInternalSearchQuery] = useState("");
   const [teamFilter, setTeamFilter] = useState<TeamFilter>("all");
-  const [hideAdminTeams, setHideAdminTeams] = useState(true);
+  const [selectedChallengeId, setSelectedChallengeId] = useState<string>("all");
+  const [hideUnregisteredTeams, setHideUnregisteredTeams] = useState(true);
+  const [showSubmittedTeamsOnly, setShowSubmittedTeamsOnly] = useState(false);
 
   // Use external search query if provided, otherwise use internal state
   const searchQuery = externalSearchQuery ?? internalSearchQuery;
@@ -105,7 +108,7 @@ export default function TeamManagement({
     if (challenges.length > 0) {
       fetchTeams();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [challenges]);
 
   const handleAssignChallenge = async (teamId: string, challengeId: string | null) => {
@@ -160,24 +163,47 @@ export default function TeamManagement({
       })();
       if (!matchesTeamSize) return false;
 
-      // Apply admin filter
-      if (hideAdminTeams && team.users.some((user) => user.role === "admin")) {
+      // Apply challenge filter
+      const matchesChallenge =
+        selectedChallengeId === "all" ||
+        (selectedChallengeId === "none"
+          ? !team.challengeId
+          : team.challengeId === selectedChallengeId);
+      if (!matchesChallenge) return false;
+
+      // Apply main event registration filter
+      if (hideUnregisteredTeams && team.users.some((user) => !user.mainEventRegistered)) {
+        return false;
+      }
+
+      // Apply submission filter
+      if (showSubmittedTeamsOnly && !team.submission) {
         return false;
       }
 
       return true;
     });
-  }, [teams, searchQuery, teamFilter, hideAdminTeams]);
+  }, [
+    teams,
+    searchQuery,
+    teamFilter,
+    selectedChallengeId,
+    hideUnregisteredTeams,
+    showSubmittedTeamsOnly,
+  ]);
 
   return (
     <div className="rounded-lg border border-neutral-400 p-4">
       <div className="mb-4">
-        <h2 className="mb-4 text-xl font-semibold">
-          Teams{" "}
-          {teams.length > 0 && (
-            <span className="text-sm text-neutral-500">({filteredTeams.length})</span>
-          )}
-        </h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold">
+            Teams{" "}
+            {teams.length > 0 && (
+              <span className="text-sm text-neutral-500">({filteredTeams.length})</span>
+            )}
+          </h2>
+          <ExportTeamsAsExcelButton teams={filteredTeams} />
+        </div>
 
         <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="flex flex-wrap items-center gap-2">
@@ -214,20 +240,51 @@ export default function TeamManagement({
                 <SelectItem value="not-full">Teams with Space</SelectItem>
               </SelectContent>
             </Select>
+
+            <Select value={selectedChallengeId} onValueChange={setSelectedChallengeId}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Filter by Challenge" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Challenges</SelectItem>
+                <SelectItem value="none">No Challenge</SelectItem>
+                {challenges.map((challenge) => (
+                  <SelectItem key={challenge.id} value={challenge.id}>
+                    {challenge.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="hideAdminTeams"
-              checked={hideAdminTeams}
-              onCheckedChange={(checked) => setHideAdminTeams(checked as boolean)}
-            />
-            <label
-              htmlFor="hideAdminTeams"
-              className="text-sm text-neutral-500 hover:text-neutral-700"
-            >
-              Hide teams with admin users
-            </label>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="hideUnregisteredTeams"
+                checked={hideUnregisteredTeams}
+                onCheckedChange={(checked) => setHideUnregisteredTeams(checked as boolean)}
+              />
+              <label
+                htmlFor="hideUnregisteredTeams"
+                className="text-sm text-neutral-500 hover:text-neutral-700"
+              >
+                Hide teams with unregistered members
+              </label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="showSubmittedTeamsOnly"
+                checked={showSubmittedTeamsOnly}
+                onCheckedChange={(checked) => setShowSubmittedTeamsOnly(checked as boolean)}
+              />
+              <label
+                htmlFor="showSubmittedTeamsOnly"
+                className="text-sm text-neutral-500 hover:text-neutral-700"
+              >
+                Show only teams with project submissions
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -241,6 +298,7 @@ export default function TeamManagement({
               <TableHead>Team Name</TableHead>
               <TableHead>Members</TableHead>
               <TableHead>Current Challenge</TableHead>
+              <TableHead>Submission Status</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -296,6 +354,41 @@ export default function TeamManagement({
                         ))}
                       </SelectContent>
                     </Select>
+                  </TableCell>
+                  <TableCell>
+                    {team.challengeId ? (
+                      team.submission ? (
+                        <div className="text-sm">
+                          <p className="text-green-600">✓ Submitted</p>
+                          <div className="mt-1 space-y-1">
+                            {team.submission.repoUrl && (
+                              <a
+                                href={team.submission.repoUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block text-blue-600 hover:underline"
+                              >
+                                View Repository
+                              </a>
+                            )}
+                            {team.submission.slidesUrl && (
+                              <a
+                                href={team.submission.slidesUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block text-blue-600 hover:underline"
+                              >
+                                View Slides
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-yellow-600">Not submitted yet</p>
+                      )
+                    ) : (
+                      <p className="text-sm text-neutral-500">No challenge selected</p>
+                    )}
                   </TableCell>
                   <TableCell>
                     <Dialog>

@@ -13,7 +13,7 @@ export default function ImageCarousel() {
       src="/hackomania24/photo.jpg"
       alt="HackOMania 2024 Image"
       key="1"
-      className="w-full object-cover"
+      className="h-auto w-full object-cover"
       unoptimized={true}
     />,
     <Image
@@ -22,7 +22,7 @@ export default function ImageCarousel() {
       src="/hackomania24/photo1.jpg"
       alt="HackOMania 2024 Image"
       key="2"
-      className="w-full object-cover"
+      className="h-auto w-full object-cover"
       unoptimized={true}
     />,
     <Image
@@ -31,7 +31,7 @@ export default function ImageCarousel() {
       src="/hackomania24/photo2.jpg"
       alt="HackOMania 2024 Image"
       key="3"
-      className="w-full object-cover"
+      className="h-auto w-full object-cover"
       unoptimized={true}
     />,
     <Image
@@ -40,7 +40,7 @@ export default function ImageCarousel() {
       src="/hackomania24/photo3.jpg"
       alt="HackOMania 2024 Image"
       key="4"
-      className="w-full object-cover"
+      className="h-auto w-full object-cover"
       unoptimized={true}
     />,
     <Image
@@ -49,7 +49,7 @@ export default function ImageCarousel() {
       src="/hackomania24/photo4.jpg"
       alt="HackOMania 2024 Image"
       key="5"
-      className="w-full object-cover"
+      className="h-auto w-full object-cover"
       unoptimized={true}
     />,
   ];
@@ -62,6 +62,9 @@ export default function ImageCarousel() {
       autoPlayInterval={1000}
       infinite
       items={imageLinks}
+      responsive={{
+        0: { items: 1 },
+      }}
     />
   );
 }

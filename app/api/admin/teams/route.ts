@@ -1,5 +1,6 @@
 import { db } from "@/utils/db";
 import { NextResponse } from "next/server";
+import { sql } from "drizzle-orm";
 
 export async function GET() {
   try {
@@ -16,12 +17,20 @@ export async function GET() {
       },
     });
 
+    // Get all registered emails in one query
+    const registeredEmails = await db
+      .select({ email: sql<string>`email` })
+      .from(sql`main_event_registrations`);
+
+    const registeredEmailSet = new Set(registeredEmails.map((r) => r.email));
+
     // Transform the response to match the expected format
     const transformedTeams = teams.map((team) => ({
       ...team,
       users: team.teamMembers.map((member) => ({
         ...member.user,
         teamRole: member.role,
+        mainEventRegistered: registeredEmailSet.has(member.user.email),
       })),
     }));
 

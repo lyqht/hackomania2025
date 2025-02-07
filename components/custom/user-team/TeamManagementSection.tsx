@@ -1,13 +1,14 @@
-import { UserInfo } from "@/app/services/user";
-import AddMembers from "./AddMembers";
-import NoTeamManagement from "./NoTeamManagement";
-import TeamManagement from "./TeamManagement";
 import { Team } from "@/app/services/team";
+import { UserInfo } from "@/app/services/user";
 import { Suspense } from "react";
 import SuspenseLoadingSpinner from "../SuspenseLoadingSpinner";
-import ChallengeSelection from "./ChallengeSelection";
+import AddMembers from "./AddMembers";
+import EditTeamButtons from "./EditTeamButtons";
+import NoTeamManagement from "./NoTeamManagement";
+import TeamManagement from "./TeamManagement";
 
 export default async function TeamManagementSection({
+  user,
   userTeam,
 }: {
   user: UserInfo;
@@ -21,6 +22,7 @@ export default async function TeamManagementSection({
   return userTeam ? (
     <div id="team-details" className="flex flex-col justify-center gap-2">
       <div>
+        {userTeam.leaderId === user.id && <EditTeamButtons teamID={userTeam.id} />}
         <p className="text-neutral-500">
           <span className="font-medium">Team ID: </span>
           {userTeam.id}
@@ -40,12 +42,6 @@ export default async function TeamManagementSection({
       <div className="mt-2">
         <Suspense key={`members-${teamKey}`} fallback={<SuspenseLoadingSpinner />}>
           <AddMembers teamId={userTeam.id} numMembers={userTeam.users.length} />
-        </Suspense>
-      </div>
-
-      <div className="mt-4">
-        <Suspense key={`challenge-${teamKey}`} fallback={<SuspenseLoadingSpinner />}>
-          <ChallengeSelection teamId={userTeam.id} currentChallengeId={userTeam.challengeId} />
         </Suspense>
       </div>
     </div>

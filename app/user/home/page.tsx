@@ -2,9 +2,11 @@ import { checkMainEventRegistration, checkPreEventRegistration } from "@/app/ser
 import { getTeamById, Team } from "@/app/services/team";
 import { getUserById, UserInfo } from "@/app/services/user";
 import EventbriteCheckoutWidgetButton from "@/components/custom/EventbriteCheckoutWidgetButton";
+import SignOutButton from "@/components/custom/SignOutButton";
 import SuspenseLoadingSpinner from "@/components/custom/SuspenseLoadingSpinner";
-import EditTeamButtons from "@/components/custom/user-team/EditTeamButtons";
+import ChallengeSelection from "@/components/custom/user-team/ChallengeSelection";
 import TeamManagementSection from "@/components/custom/user-team/TeamManagementSection";
+import TeamSubmissionForm from "@/components/custom/user-team/TeamSubmissionForm";
 import { getUser } from "@/utils/supabase/user";
 import { User } from "@supabase/supabase-js";
 import { Suspense } from "react";
@@ -57,31 +59,51 @@ interface UserInfoSectionProps {
 
 function UserInfoSection({ user }: UserInfoSectionProps) {
   return (
-    <section className="p-5">
-      <h2 className="mb-3 text-2xl font-semibold">Your Information</h2>
+    <section className="p-8">
+      <h2 className="mb-3 text-2xl font-semibold">Eventbrite</h2>
       <EventRegistrationStatus user={user} />
     </section>
   );
 }
 
-interface TeamInfoSectionProps {
+interface ChallengeAndTeamInfoSectionsProps {
   user: UserInfo;
   userTeam: Team | null;
 }
 
-function TeamInfoSection({ user, userTeam }: TeamInfoSectionProps) {
+function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSectionsProps) {
   return (
-    <section className="p-5" id="team-management">
+    <div className="p-8">
       {userTeam && (
-        <div className="flex flex-col gap-3 md:flex-row md:items-center">
-          <h2 className="text-2xl font-semibold">
-            Your Team {user.teamName && <span className="font-normal">: {user.teamName}</span>}
-          </h2>
-          {userTeam.leaderId === user.id && <EditTeamButtons teamID={userTeam.id} />}
-        </div>
+        <>
+          <div className="space-y-8">
+            {/* Challenge Selection Section */}
+            <div>
+              <ChallengeSelection teamId={userTeam.id} currentChallengeId={userTeam.challengeId} />
+            </div>
+
+            {/* Project Submission Section - Only visible if team has a challenge */}
+            {userTeam.challengeId && (
+              <div>
+                <div className="-mx-8 my-3 border border-neutral-400"></div>
+                <h3 className="mb-4 text-xl font-semibold">Project Submission</h3>
+                <TeamSubmissionForm
+                  teamId={userTeam.id}
+                  initialSubmission={userTeam.submission ?? undefined}
+                />
+              </div>
+            )}
+
+            {/* Team Details Section */}
+            <div className="-mx-8 my-3 border border-neutral-400"></div>
+            <div>
+              <h3 className="mb-4 text-xl font-semibold">Team Details</h3>
+              <TeamManagementSection user={user} userTeam={userTeam} />
+            </div>
+          </div>
+        </>
       )}
-      <TeamManagementSection user={user} userTeam={userTeam} />
-    </section>
+    </div>
   );
 }
 
@@ -109,10 +131,15 @@ export default async function UserHome() {
   return (
     <div className="flex flex-col gap-5 p-5 md:p-20">
       <div>
-        <h1 className="mb-1 text-2xl font-bold md:text-4xl">HackOMania 2025 User Portal</h1>
-        <p className="text-xl text-neutral-600 md:text-2xl">
-          <span className="font-medium">Hello 👋,</span> {user.githubUsername}
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="mb-1 text-2xl font-bold md:text-4xl">HackOMania 2025 User Portal</h1>
+            <p className="text-xl text-neutral-600 md:text-2xl">
+              <span className="font-medium">Hello 👋,</span> {user.githubUsername}
+            </p>
+          </div>
+          <SignOutButton />
+        </div>
       </div>
 
       <div className="rounded-lg border border-neutral-400">
@@ -123,7 +150,7 @@ export default async function UserHome() {
         <div className="my-3 border border-neutral-400"></div>
 
         <Suspense key={teamKey} fallback={<SuspenseLoadingSpinner />}>
-          {<TeamInfoSection key={teamKey} user={user} userTeam={userTeam} />}
+          {<ChallengeAndTeamInfoSections key={teamKey} user={user} userTeam={userTeam} />}
         </Suspense>
       </div>
     </div>

@@ -88,7 +88,7 @@ export default function ChallengeSelection({
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-lg font-medium">Challenge Selection</h3>
+        <h2 className="text-xl font-medium">Challenge Selection</h2>
         <p className="text-sm text-neutral-500">
           Select a challenge for your team to participate in.
         </p>
@@ -129,12 +129,13 @@ export default function ChallengeSelection({
                 <span className="font-medium">Team Quota: </span>
                 {(selectedChallenge.metadata as { teamQuota?: number })?.teamQuota || "No quota"}
               </p>
-              {(selectedChallenge.metadata as { judges?: string[] })?.judges && (
+              {/* TODO: add judges when confirmed on 2nd day */}
+              {/* {(selectedChallenge.metadata as { judges?: string[] })?.judges && (
                 <p>
                   <span className="font-medium">Judges: </span>
                   {(selectedChallenge.metadata as { judges?: string[] }).judges?.join(", ")}
                 </p>
-              )}
+              )} */}
             </div>
           )}
         </div>

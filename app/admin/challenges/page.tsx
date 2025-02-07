@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
 
@@ -12,6 +21,15 @@ interface ChallengeStats {
   teamCount: number;
   teamQuota: number | null;
 }
+
+// Custom colors for each challenge
+const CHALLENGE_COLORS = {
+  "Health Education, Awareness & Healthy Habits": "#4CAF50", // Green
+  "Connecting to the Real World": "#2196F3", // Blue
+  "Quitting Addictions": "#9C27B0", // Purple
+} as const;
+
+type ChallengeName = keyof typeof CHALLENGE_COLORS;
 
 export default function ChallengeDashboard() {
   const [stats, setStats] = useState<ChallengeStats[]>([]);
@@ -60,7 +78,7 @@ export default function ChallengeDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto min-h-screen p-8 md:p-20">
       <h1 className="mb-8 text-3xl font-bold">Challenge Statistics</h1>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -91,7 +109,14 @@ export default function ChallengeDashboard() {
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="teamCount" fill="#3b82f6" name="Teams" />
+                <Bar dataKey="teamCount" name="Teams" radius={[4, 4, 0, 0]}>
+                  {stats.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={CHALLENGE_COLORS[entry.name as ChallengeName] || "#3b82f6"}
+                    />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>

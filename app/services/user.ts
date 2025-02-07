@@ -20,6 +20,7 @@ export type UserInfo = {
   createdAt: string;
   updatedAt: string;
   preEventRegistered: boolean;
+  mainEventRegistered: boolean;
 };
 
 export type UserUpdateData = Partial<UserInfo> & {
@@ -44,6 +45,10 @@ export async function getAllUsersWithoutPagination(): Promise<UserInfo[]> {
                     SELECT 1 FROM ${preEventRegistrations}
                     WHERE ${preEventRegistrations.email} = ${user.email}
                 )`,
+        mainEventRegistered: sql<boolean>`EXISTS (
+                    SELECT 1 FROM main_event_registrations
+                    WHERE main_event_registrations.email = ${user.email}
+                )`,
       })
       .from(user)
       .leftJoin(teamMembers, eq(user.id, teamMembers.userId))
@@ -63,6 +68,7 @@ export async function getAllUsersWithoutPagination(): Promise<UserInfo[]> {
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.createdAt.toISOString(),
       preEventRegistered: user.preEventRegistered,
+      mainEventRegistered: user.mainEventRegistered,
     }));
   } catch (error) {
     console.error("Error fetching all users:", error);
@@ -102,6 +108,10 @@ export async function getUserById(userId: string): Promise<UserInfo | null> {
                     SELECT 1 FROM ${preEventRegistrations}
                     WHERE ${preEventRegistrations.email} = ${user.email}
                 )`,
+        mainEventRegistered: sql<boolean>`EXISTS (
+                    SELECT 1 FROM main_event_registrations
+                    WHERE main_event_registrations.email = ${user.email}
+                )`,
       })
       .from(user)
       .leftJoin(teamMembers, eq(teamMembers.userId, user.id))
@@ -135,6 +145,8 @@ export async function getUserById(userId: string): Promise<UserInfo | null> {
       role: foundUser.role || "participant",
       createdAt: foundUser.createdAt.toISOString(),
       updatedAt: foundUser.createdAt.toISOString(),
+      preEventRegistered: foundUser.preEventRegistered,
+      mainEventRegistered: foundUser.mainEventRegistered,
     };
   } catch (err) {
     console.error("Error retrieving user:", err);
@@ -166,6 +178,10 @@ export async function getAllUsers(page = 1, pageSize = 10): Promise<PaginatedUse
                 SELECT 1 FROM ${preEventRegistrations}
                 WHERE ${preEventRegistrations.email} = ${user.email}
             )`,
+      mainEventRegistered: sql<boolean>`EXISTS (
+                SELECT 1 FROM main_event_registrations
+                WHERE main_event_registrations.email = ${user.email}
+            )`,
     })
     .from(user)
     .leftJoin(teamMembers, eq(user.id, teamMembers.userId))
@@ -188,6 +204,7 @@ export async function getAllUsers(page = 1, pageSize = 10): Promise<PaginatedUse
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.createdAt.toISOString(),
       preEventRegistered: user.preEventRegistered,
+      mainEventRegistered: user.mainEventRegistered,
     })),
     count: totalCount,
   };
