@@ -1,6 +1,6 @@
 import { db } from "@/utils/db";
 import { Challenge, challenges, NewChallenge } from "@/utils/db/schema/challenge";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { team } from "@/utils/db/schema/team";
 
 interface ChallengeMetadata {
@@ -75,14 +75,38 @@ export async function getTeamsByChallenge(challengeId: string) {
 export async function getChallengeStats() {
   const allChallenges = await db.query.challenges.findMany({
     with: {
-      teams: true,
+      teams: {
+        with: {
+          teamMembers: {
+            with: {
+              user: true,
+            },
+          },
+        },
+      },
     },
   });
 
-  return allChallenges.map((challenge) => ({
-    id: challenge.id,
-    name: challenge.name,
-    teamCount: challenge.teams.length,
-    teamQuota: (challenge.metadata as ChallengeMetadata)?.teamQuota || null,
-  }));
+  // Get all registered github usernames in one query for efficiency
+  const registeredUsers = await db
+    .select({ githubUserProfileUrl: sql<string>`github_profile_url` })
+    .from(sql`main_event_registrations`);
+
+  const registeredUsernameSet = new Set(
+    registeredUsers.map((r) => r.githubUserProfileUrl.split("https://github.com/").pop()),
+  );
+
+  return allChallenges.map((challenge) => {
+    // Only count teams where all members are registered
+    const validTeams = challenge.teams.filter((team) =>
+      team.teamMembers.every((member) => registeredUsernameSet.has(member.user.githubUsername)),
+    );
+
+    return {
+      id: challenge.id,
+      name: challenge.name,
+      teamCount: validTeams.length,
+      teamQuota: (challenge.metadata as ChallengeMetadata)?.teamQuota || null,
+    };
+  });
 }
