@@ -14,21 +14,42 @@ export default async function Index() {
   return (
     <>
       <NavigationBar />
+      <Link
+        className="group fixed bottom-8 right-8 z-50 flex items-center justify-center rounded-full border-4 border-hackomania-red bg-white p-3 text-base font-bold text-hackomania-red transition-all md:hover:bg-hackomania-red md:hover:text-white md:text-xl"
+        href="https://linktr.ee/hackomania2025"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          className="transition-colors"
+        >
+          <path
+            fill="currentColor"
+            d="m13.736 5.853l4.005-4.117l2.325 2.38l-4.2 4.005h5.908v3.305h-5.937l4.229 4.108l-2.325 2.334l-5.74-5.769l-5.741 5.769l-2.325-2.325l4.229-4.108H2.226V8.121h5.909l-4.2-4.004l2.324-2.381l4.005 4.117V0h3.472zm-3.472 10.306h3.472V24h-3.472z"
+          />
+        </svg>
+        <span className="min-w-0 max-w-0 overflow-hidden whitespace-nowrap transition-all duration-300 md:group-hover:max-w-[100px] md:group-hover:mx-2">
+          LINKTREE
+        </span>
+      </Link>
       <div className="w-full max-w-full">
         <div className="z-30 m-2 rounded-lg border-2 border-hackomania-red p-4 text-lg font-medium text-hackomania-red md:mx-20">
-          <p className="mb-4">
+          <p>
             We are still actively updating the website! Please check back for more information! :)
           </p>
-          <GitHubSignInButton />
         </div>
       </div>
       <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
-        <header className="flex w-full flex-col items-center justify-center py-0 md:py-20">
+        <header className="flex min-h-[calc(100vh-120px)] w-full flex-col items-center justify-center md:min-h-[calc(100vh-180px)]">
           <h1 className="sr-only">HackOMania 2025</h1>
-          <div className="flex w-full max-w-[90vw] flex-col items-start md:max-w-[60vw]">
+          <div className="flex w-full max-w-[90vw] flex-col items-center justify-center gap-8 md:max-w-[80vw]">
             {/* HackOMania Logo */}
             <Image
-              src="/hackomania.svg"
+              src="/hackomania-long-logo.svg"
               alt="HackOMania Logo"
               width={0}
               height={0}
@@ -46,7 +67,6 @@ export default async function Index() {
               priority
             />
             {/* HackOMania Mobile Theme Banner */}
-
             <div className="flex flex-row items-center pb-5 text-2xl font-bold text-hackomania-blue md:hidden md:py-9 md:text-6xl">
               <h2 className="whitespace-pre-line text-center leading-snug">
                 HEALTHY LIVING FOR A CONNECTED WORLD
@@ -54,40 +74,10 @@ export default async function Index() {
             </div>
 
             {/* Event Details */}
-            <div className="flex w-full flex-col gap-4 md:flex-row">
-              <div className="flex flex-col justify-between gap-4">
-                {/* Year Logo */}
-                <Image
-                  src="/2025.svg"
-                  alt="2025 Logo"
-                  width={0}
-                  height={0}
-                  className="hidden h-auto w-[15vw] md:block md:w-[10vw]"
-                />
-                <Link
-                  className="flex items-center gap-2 border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-xl"
-                  href="https://linktr.ee/hackomania2025"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="var(--hackomania-red)"
-                      d="m13.736 5.853l4.005-4.117l2.325 2.38l-4.2 4.005h5.908v3.305h-5.937l4.229 4.108l-2.325 2.334l-5.74-5.769l-5.741 5.769l-2.325-2.325l4.229-4.108H2.226V8.121h5.909l-4.2-4.004l2.324-2.381l4.005 4.117V0h3.472zm-3.472 10.306h3.472V24h-3.472z"
-                    />
-                  </svg>
-                  LINKTREE
-                </Link>
-              </div>
-
+            <div className="flex w-full max-w-2xl flex-col items-center gap-8 pt-0 md:pt-8">
               {/* Event Cards */}
-              <div className="flex grow flex-col gap-4">
-                {/* Pre-Event Card */}
+              <div className="flex w-full flex-col gap-4">
+                {/* Pre-Event registration */}
                 <div className="flex flex-row items-center justify-between gap-1 bg-hackomania-red p-4 text-white">
                   <div className="flex flex-col text-start">
                     <p className="text-nowrap text-xl font-bold md:text-3xl">PRE EVENT</p>
@@ -96,7 +86,7 @@ export default async function Index() {
                   <EventbriteCheckoutWidgetButton />
                 </div>
 
-                {/* Main Event Card */}
+                {/* Main Event registration */}
                 <div className="flex flex-row items-center justify-between gap-3 bg-hackomania-red p-4 text-white">
                   <div className="flex grow flex-col text-start">
                     <p className="text-nowrap text-xl font-bold md:text-3xl">MAIN EVENT</p>
@@ -111,7 +101,9 @@ export default async function Index() {
                     PRE-REGISTER
                   </a>
                 </div>
+
               </div>
+                <GitHubSignInButton />
             </div>
           </div>
         </header>
