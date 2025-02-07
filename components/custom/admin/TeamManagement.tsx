@@ -55,6 +55,7 @@ export default function TeamManagement({
   const [teamFilter, setTeamFilter] = useState<TeamFilter>("all");
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>("all");
   const [hideUnregisteredTeams, setHideUnregisteredTeams] = useState(true);
+  const [showSubmittedTeamsOnly, setShowSubmittedTeamsOnly] = useState(false);
 
   // Use external search query if provided, otherwise use internal state
   const searchQuery = externalSearchQuery ?? internalSearchQuery;
@@ -175,9 +176,21 @@ export default function TeamManagement({
         return false;
       }
 
+      // Apply submission filter
+      if (showSubmittedTeamsOnly && !team.submission) {
+        return false;
+      }
+
       return true;
     });
-  }, [teams, searchQuery, teamFilter, selectedChallengeId, hideUnregisteredTeams]);
+  }, [
+    teams,
+    searchQuery,
+    teamFilter,
+    selectedChallengeId,
+    hideUnregisteredTeams,
+    showSubmittedTeamsOnly,
+  ]);
 
   return (
     <div className="rounded-lg border border-neutral-400 p-4">
@@ -244,18 +257,34 @@ export default function TeamManagement({
             </Select>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="hideUnregisteredTeams"
-              checked={hideUnregisteredTeams}
-              onCheckedChange={(checked) => setHideUnregisteredTeams(checked as boolean)}
-            />
-            <label
-              htmlFor="hideUnregisteredTeams"
-              className="text-sm text-neutral-500 hover:text-neutral-700"
-            >
-              Hide teams with unregistered members
-            </label>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="hideUnregisteredTeams"
+                checked={hideUnregisteredTeams}
+                onCheckedChange={(checked) => setHideUnregisteredTeams(checked as boolean)}
+              />
+              <label
+                htmlFor="hideUnregisteredTeams"
+                className="text-sm text-neutral-500 hover:text-neutral-700"
+              >
+                Hide teams with unregistered members
+              </label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="showSubmittedTeamsOnly"
+                checked={showSubmittedTeamsOnly}
+                onCheckedChange={(checked) => setShowSubmittedTeamsOnly(checked as boolean)}
+              />
+              <label
+                htmlFor="showSubmittedTeamsOnly"
+                className="text-sm text-neutral-500 hover:text-neutral-700"
+              >
+                Show only teams with project submissions
+              </label>
+            </div>
           </div>
         </div>
       </div>
