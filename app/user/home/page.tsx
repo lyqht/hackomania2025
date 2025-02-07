@@ -76,15 +76,18 @@ function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSe
     return (
       <>
         <div className="my-3 border border-neutral-400"></div>
-        <div className="p-8 text-center text-neutral-600 space-y-4">
+        <div className="space-y-4 p-8 text-center text-neutral-600">
           <p>
-            Team management is only available after receiving an invitation for the main event. Please
-            check your spam folder if you expected to receive an invitation but haven&apos;t received
-            one yet.
+            Team management is only available after receiving an invitation for the main event.
+            Please check your spam folder if you expected to receive an invitation but haven&apos;t
+            received one yet.
           </p>
           <p>
             Otherwise, please contact us for help at{" "}
-            <a className="underline" href="mailto:contact@geekshacking.com">contact@geekshacking.com</a>.
+            <a className="underline" href="mailto:contact@geekshacking.com">
+              contact@geekshacking.com
+            </a>
+            .
           </p>
         </div>
       </>
@@ -93,7 +96,7 @@ function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSe
 
   return (
     <div className="p-8">
-      {userTeam && (
+      {userTeam ? (
         <>
           <div className="space-y-8">
             {/* Challenge Selection Section */}
@@ -126,6 +129,14 @@ function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSe
               <h3 className="mb-4 text-xl font-semibold">Team Details</h3>
               <TeamManagementSection user={user} userTeam={userTeam} />
             </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="-mx-8 my-3 border border-neutral-400"></div>
+          <div>
+            <h3 className="mb-4 text-xl font-semibold">Team Details</h3>
+            <TeamManagementSection user={user} userTeam={userTeam} />
           </div>
         </>
       )}
