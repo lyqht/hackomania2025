@@ -1,25 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { Challenge } from "@/types/challenge";
 import { Team } from "@/app/services/team";
+import { ExportTeamsAsExcelButton } from "@/components/custom/admin/ExportTeamsAsExcelButton";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -29,8 +13,25 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Challenge } from "@/types/challenge";
 import { Search, X } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 const MAX_TEAM_SIZE = 5;
 
@@ -52,6 +53,7 @@ export default function TeamManagement({
   const [isLoading, setIsLoading] = useState(true);
   const [internalSearchQuery, setInternalSearchQuery] = useState("");
   const [teamFilter, setTeamFilter] = useState<TeamFilter>("all");
+  const [selectedChallengeId, setSelectedChallengeId] = useState<string>("all");
   const [hideUnregisteredTeams, setHideUnregisteredTeams] = useState(true);
 
   // Use external search query if provided, otherwise use internal state
@@ -160,6 +162,14 @@ export default function TeamManagement({
       })();
       if (!matchesTeamSize) return false;
 
+      // Apply challenge filter
+      const matchesChallenge =
+        selectedChallengeId === "all" ||
+        (selectedChallengeId === "none"
+          ? !team.challengeId
+          : team.challengeId === selectedChallengeId);
+      if (!matchesChallenge) return false;
+
       // Apply main event registration filter
       if (hideUnregisteredTeams && team.users.some((user) => !user.mainEventRegistered)) {
         return false;
@@ -167,17 +177,20 @@ export default function TeamManagement({
 
       return true;
     });
-  }, [teams, searchQuery, teamFilter, hideUnregisteredTeams]);
+  }, [teams, searchQuery, teamFilter, selectedChallengeId, hideUnregisteredTeams]);
 
   return (
     <div className="rounded-lg border border-neutral-400 p-4">
       <div className="mb-4">
-        <h2 className="mb-4 text-xl font-semibold">
-          Teams{" "}
-          {teams.length > 0 && (
-            <span className="text-sm text-neutral-500">({filteredTeams.length})</span>
-          )}
-        </h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold">
+            Teams{" "}
+            {teams.length > 0 && (
+              <span className="text-sm text-neutral-500">({filteredTeams.length})</span>
+            )}
+          </h2>
+          <ExportTeamsAsExcelButton teams={filteredTeams} />
+        </div>
 
         <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="flex flex-wrap items-center gap-2">
@@ -212,6 +225,21 @@ export default function TeamManagement({
                 <SelectItem value="all">All Teams</SelectItem>
                 <SelectItem value="full">Full Teams</SelectItem>
                 <SelectItem value="not-full">Teams with Space</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedChallengeId} onValueChange={setSelectedChallengeId}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Filter by Challenge" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Challenges</SelectItem>
+                <SelectItem value="none">No Challenge</SelectItem>
+                {challenges.map((challenge) => (
+                  <SelectItem key={challenge.id} value={challenge.id}>
+                    {challenge.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
