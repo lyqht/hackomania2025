@@ -72,7 +72,7 @@ interface ChallengeAndTeamInfoSectionsProps {
 }
 
 function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSectionsProps) {
-  if (!user.mainEventRegistered) {
+  if (!user.mainEventRegistered && user.role != "admin") {
     return (
       <>
         <div className="my-3 border border-neutral-400"></div>
@@ -97,21 +97,28 @@ function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSe
         <>
           <div className="space-y-8">
             {/* Challenge Selection Section */}
-            <div>
-              <ChallengeSelection teamId={userTeam.id} currentChallengeId={userTeam.challengeId} />
-            </div>
-
-            {/* Project Submission Section - Only visible if team has a challenge */}
-            {userTeam.challengeId && (
+            {process.env.NEXT_PUBLIC_CHALLENGE_SELECTION_ENABLED === "true" && (
               <div>
                 <div className="-mx-8 my-3 border border-neutral-400"></div>
-                <h3 className="mb-4 text-xl font-semibold">Project Submission</h3>
-                <TeamSubmissionForm
+                <ChallengeSelection
                   teamId={userTeam.id}
-                  initialSubmission={userTeam.submission ?? undefined}
+                  currentChallengeId={userTeam.challengeId}
                 />
               </div>
             )}
+
+            {/* Project Submission Section - Only visible if team has a challenge */}
+            {process.env.NEXT_PUBLIC_PROJECT_SUBMISSION_ENABLED === "true" &&
+              userTeam.challengeId && (
+                <div>
+                  <div className="-mx-8 my-3 border border-neutral-400"></div>
+                  <h3 className="mb-4 text-xl font-semibold">Project Submission</h3>
+                  <TeamSubmissionForm
+                    teamId={userTeam.id}
+                    initialSubmission={userTeam.submission ?? undefined}
+                  />
+                </div>
+              )}
 
             {/* Team Details Section */}
             <div className="-mx-8 my-3 border border-neutral-400"></div>
@@ -165,8 +172,6 @@ export default async function UserHome() {
         <Suspense fallback={<SuspenseLoadingSpinner />}>
           <UserInfoSection user={user} />
         </Suspense>
-
-        <div className="my-3 border border-neutral-400"></div>
 
         <Suspense key={teamKey} fallback={<SuspenseLoadingSpinner />}>
           {<ChallengeAndTeamInfoSections key={teamKey} user={user} userTeam={userTeam} />}
