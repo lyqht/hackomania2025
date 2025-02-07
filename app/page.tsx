@@ -116,44 +116,43 @@ export default async function Index() {
           </div>
         </header>
 
-        {/* HackOMania Theme Banner */}
-
-        {/* <div className="md:flex mt-4 mb-24 flex flex-row items-center gap-1 text-6xl font-bold text-hackomania-blue hidden"> */}
-        <div className="my-28 flex hidden flex-row items-center gap-1 text-6xl font-bold text-hackomania-blue md:flex">
-          <Image src="/ThemeBlueScallop.svg" alt="" width={60} height={60} />
-          <h2 className="whitespace-pre-line text-center leading-snug">
-            HEALTHY LIVING FOR A CONNECTED WORLD
-          </h2>
-          <Image src="/ThemeBlueScallop.svg" alt="" width={60} height={60} />
-        </div>
-
         <section className="group py-10 intersect:animate-slide-in-from-left" id="about">
-          <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
+          <div className="mb-7 flex flex-row items-center gap-5 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
             <Image src="/RedStar.svg" alt="" width={60} height={60} />
-            <h2>About HACKOMANIA</h2>
+            <div>
+              <h2>HackOMania 2025:</h2>
+              <h2 className="text-2xl md:text-5xl">Healthy Living for a Connected World</h2>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-5 md:flex-row md:py-10">
+          <div className="flex flex-col items-start gap-10 md:flex-row md:py-8">
             <div className="w-full md:w-1/2">
               <ImageCarousel />
             </div>
             <div className="flex flex-col gap-3 md:gap-8">
-              <div className="flex flex-col gap-4 text-balance text-center text-base md:text-xl">
+              <div className="flex flex-col gap-4 text-balance text-left text-base md:text-xl">
                 <p>
                   HackOMania is GeeksHacking&apos;s annual hackathon. We bring together students,
                   tech enthusiasts, and tech professionals for 24 hours to tackle real world
                   challenges.
                 </p>
                 <p>
-                  Now in its 6th year, HackOMania 2025 challenges you to develop innovative
-                  solutions to break free from digital addictions, unhealthy habits, and reconnect
-                  with the real world. Let&apos;s build a{" "}
+                  Now in its 6th year, we&apos;re taking a look at how digital devices such as
+                  smartphones, laptops, and televisions have become an integral part of our daily
+                  lives in today&apos;s fast-paced and hyper-connected world. From work, social
+                  interactions, to entertainment-technology gives us convenience and connectivity
+                  but it can also take a toll on our mental and physical health.
+                </p>
+                <p>
+                  HackOMania 2025 challenges you to develop innovative solutions to break free from
+                  digital addictions, unhealthy habits, and reconnect with the real world.
+                  Let&apos;s build a{" "}
                   <span className="font-bold italic">
                     healthier, more connected world, together!
                   </span>
                 </p>
               </div>
-              <div className="mb-auto mt-6 flex flex-wrap justify-center gap-4">
+              <div className="mb-auto mt-3 flex flex-wrap justify-start gap-4">
                 <Link
                   href="https://hackomania2024.geekshacking.com/"
                   target="_blank"

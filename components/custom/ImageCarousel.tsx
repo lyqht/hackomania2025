@@ -53,10 +53,11 @@ export default function ImageCarousel() {
       unoptimized={true}
     />,
   ];
+
   return (
     <AliceCarousel
       disableButtonsControls
-      autoWidth
+      autoHeight
       autoPlay
       autoPlayInterval={1000}
       infinite
