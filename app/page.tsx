@@ -2,7 +2,7 @@ import EventbriteCheckoutWidgetButton from "@/components/custom/EventbriteChecko
 import GitHubSignInButton from "@/components/custom/GitHubSignInButton";
 import GoldenRules from "@/components/custom/GoldenRules";
 import ImageCarousel from "@/components/custom/ImageCarousel";
-import NavigationBar from "@/components/custom/NavigationBar/NavigationBar";
+import NavigationBar from "@/components/custom/NavigationBar";
 import Organizers from "@/components/custom/Organizers";
 import Prizes from "@/components/custom/Prizes";
 import Sponsors from "@/components/custom/Sponsors";
@@ -19,7 +19,7 @@ export default async function Index() {
           <p className="mb-4">
             We are still actively updating the website! Please check back for more information! :)
           </p>
-          {process.env.NEXT_PUBLIC_SHOW_GITHUB_SIGN_IN === "true" && <GitHubSignInButton />}
+          <GitHubSignInButton />
         </div>
       </div>
       <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">

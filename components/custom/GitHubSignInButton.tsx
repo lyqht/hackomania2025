@@ -17,7 +17,7 @@ export default function GitHubSignInButton() {
           <span>Signing in...</span>
         </>
       ) : (
-        "Already registered? Sign in with GitHub to manage your team"
+        "Received an invitation for the main event? Sign in with GitHub to manage your team"
       )}
     </a>
   );

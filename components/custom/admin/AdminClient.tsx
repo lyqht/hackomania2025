@@ -16,6 +16,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { SearchType } from "./UserManagement";
+import SignOutButton from "@/components/custom/SignOutButton";
+import { Button } from "@/components/ui/button";
+import { Presentation } from "lucide-react";
 
 export default function AdminClient() {
   const searchParams = useSearchParams();
@@ -55,7 +58,7 @@ export default function AdminClient() {
       params.delete("searchType");
     }
     router.push(`/admin?${params.toString()}`);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, searchType]);
 
   // Add navigation functions
@@ -193,7 +196,16 @@ export default function AdminClient() {
     <div className="flex flex-col gap-8 p-5 md:p-20">
       <Toaster />
       <div>
-        <h1 className="mb-4 text-2xl font-bold md:text-4xl">HackOMania 2025 Admin Portal</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="mb-4 text-2xl font-bold md:text-4xl">HackOMania 2025 Admin Portal</h1>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => router.push("/admin/challenges")}>
+              <Presentation className="mr-2 h-4 w-4" />
+              Present
+            </Button>
+            <SignOutButton />
+          </div>
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
