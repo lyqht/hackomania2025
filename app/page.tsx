@@ -14,6 +14,26 @@ export default async function Index() {
   return (
     <>
       <NavigationBar />
+      <Link
+        className="fixed left-0 top-1/2 z-50 flex -translate-y-1/2 items-center gap-2 rounded-r-full border-y-4 border-r-4 border-hackomania-red bg-white py-3 pl-2 pr-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:pl-4 hover:text-white md:text-xl"
+        href="https://linktr.ee/hackomania2025"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          className="transition-colors"
+        >
+          <path
+            fill="currentColor"
+            d="m13.736 5.853l4.005-4.117l2.325 2.38l-4.2 4.005h5.908v3.305h-5.937l4.229 4.108l-2.325 2.334l-5.74-5.769l-5.741 5.769l-2.325-2.325l4.229-4.108H2.226V8.121h5.909l-4.2-4.004l2.324-2.381l4.005 4.117V0h3.472zm-3.472 10.306h3.472V24h-3.472z"
+          />
+        </svg>
+        LINKTREE
+      </Link>
       <div className="w-full max-w-full">
         <div className="z-30 m-2 rounded-lg border-2 border-hackomania-red p-4 text-lg font-medium text-hackomania-red md:mx-20">
           <p className="mb-4">
@@ -64,25 +84,6 @@ export default async function Index() {
                   height={0}
                   className="hidden h-auto w-[15vw] md:block md:w-[10vw]"
                 />
-                <Link
-                  className="flex items-center gap-2 border-4 border-hackomania-red p-3 px-5 text-base font-bold text-hackomania-red transition-all hover:bg-hackomania-red hover:text-white md:text-xl"
-                  href="https://linktr.ee/hackomania2025"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="var(--hackomania-red)"
-                      d="m13.736 5.853l4.005-4.117l2.325 2.38l-4.2 4.005h5.908v3.305h-5.937l4.229 4.108l-2.325 2.334l-5.74-5.769l-5.741 5.769l-2.325-2.325l4.229-4.108H2.226V8.121h5.909l-4.2-4.004l2.324-2.381l4.005 4.117V0h3.472zm-3.472 10.306h3.472V24h-3.472z"
-                    />
-                  </svg>
-                  LINKTREE
-                </Link>
               </div>
 
               {/* Event Cards */}
