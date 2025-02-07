@@ -30,6 +30,7 @@ import {
 import { Check, ChevronsUpDown, Search, Loader2, X } from "lucide-react";
 import { UserActions } from "./UserActions";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ExportUsersAsExcelButton } from "./ExportUsersAsExcelButton";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -178,14 +179,20 @@ export default function UserManagement({
   const [currentPage, setCurrentPage] = useState(1);
   const [searchOpen, setSearchOpen] = useState(false);
   const [hideUnregisteredUsers, setHideUnregisteredUsers] = useState(true);
+  const [hideUsersWithTeams, setHideUsersWithTeams] = useState(false);
 
   // Filter users based on search
   const filteredUsers = useMemo(() => {
-    if (!searchQuery && !hideUnregisteredUsers) return users;
+    if (!searchQuery && !hideUnregisteredUsers && !hideUsersWithTeams) return users;
 
     return users.filter((user) => {
       // Apply main event registration filter
       if (hideUnregisteredUsers && !user.mainEventRegistered) {
+        return false;
+      }
+
+      // Apply team filter
+      if (hideUsersWithTeams && user.teamName) {
         return false;
       }
 
@@ -212,7 +219,7 @@ export default function UserManagement({
           return true;
       }
     });
-  }, [users, searchQuery, searchType, hideUnregisteredUsers]);
+  }, [users, searchQuery, searchType, hideUnregisteredUsers, hideUsersWithTeams]);
 
   const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -236,12 +243,15 @@ export default function UserManagement({
   return (
     <div className="rounded-lg border border-neutral-400 p-4">
       <div className="mb-4">
-        <h2 className="mb-4 text-xl font-semibold">
-          Users{" "}
-          {filteredUsers.length > 0 && (
-            <span className="text-sm text-neutral-500">({filteredUsers.length})</span>
-          )}
-        </h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold">
+            Users{" "}
+            {filteredUsers.length > 0 && (
+              <span className="text-sm text-neutral-500">({filteredUsers.length})</span>
+            )}
+          </h2>
+          <ExportUsersAsExcelButton users={filteredUsers} />
+        </div>
 
         <div className="mb-6 space-y-4">
           <form
@@ -455,18 +465,33 @@ export default function UserManagement({
               </Popover>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="hideUnregisteredUsers"
-                checked={hideUnregisteredUsers}
-                onCheckedChange={(checked) => setHideUnregisteredUsers(checked as boolean)}
-              />
-              <label
-                htmlFor="hideUnregisteredUsers"
-                className="text-sm text-neutral-500 hover:text-neutral-700"
-              >
-                Hide users not registered for main event
-              </label>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="hideUnregisteredUsers"
+                  checked={hideUnregisteredUsers}
+                  onCheckedChange={(checked) => setHideUnregisteredUsers(checked as boolean)}
+                />
+                <label
+                  htmlFor="hideUnregisteredUsers"
+                  className="text-sm text-neutral-500 hover:text-neutral-700"
+                >
+                  Hide users not registered for main event
+                </label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="hideUsersWithTeams"
+                  checked={hideUsersWithTeams}
+                  onCheckedChange={(checked) => setHideUsersWithTeams(checked as boolean)}
+                />
+                <label
+                  htmlFor="hideUsersWithTeams"
+                  className="text-sm text-neutral-500 hover:text-neutral-700"
+                >
+                  Hide users with teams
+                </label>
+              </div>
             </div>
           </div>
         )}
