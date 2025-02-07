@@ -1,8 +1,39 @@
 # HackOMania 2025
 
+<div align="center" style="background:white;">
+  <img src="./public/hackomania.svg" alt="HackOMania 2025 Logo" />
+</div>
+
 ## Introduction
 
-This repo is created using the [Next.js and Supabase Starter Kit](https://github.com/vercel/nextjs-with-supabase).
+HackOMania 2025 is a hackathon event organized by [GeeksHacking](https://geekshacking.com).
+This repository contains the web application for HackOMania 2025's landing page, user's team management portal, and the admin portal.
+
+The web development team behind this project consists of:
+
+- Estee Tey ([@lyqht](https://github.com/lyqht))
+- Ethan Chew ([@Ethan-Chew](https://github.com/Ethan-Chew))
+- Sam Tan ([@MisterDoobDoob](https://github.com/MisterDoobDoob))
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Tech Stack](#tech-stack)
+- [Deployment](#deployment)
+- [Local Development](#local-development)
+  - [Required Environment Variables](#required-environment-variables)
+  - [Optional Environment Variables](#optional-environment-variables)
+  - [Admin Access](#admin-access)
+  - [Starting the app](#starting-the-app)
+  - [Creating a user](#creating-a-user)
+  - [User Redirection](#user-redirection)
+- [Supabase](#supabase)
+  - [Edge Functions](#edge-functions)
+- [Drizzle](#drizzle)
+  - [Creating Schemas](#creating-schemas)
+  - [Generating Migrations](#generating-migrations)
+  - [Applying Migrations](#applying-migrations)
+  - [Best Practices](#best-practices)
 
 ## Tech stack
 
