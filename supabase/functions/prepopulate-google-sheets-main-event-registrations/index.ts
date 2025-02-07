@@ -332,6 +332,10 @@ serve(async (req) => {
     // Bulk create registrations
     stats.registrations = await createMainEventRegistrations(supabaseClient, approvedRows);
 
+    // Process all approved users first
+    const users = await createOrGetUsers(supabaseClient, approvedRows);
+    stats.users = users.length;
+
     // Get rows with teams
     const rowsWithTeams = approvedRows.filter(
       (row) =>
@@ -340,10 +344,6 @@ serve(async (req) => {
     );
 
     if (rowsWithTeams.length > 0) {
-      // Bulk create/get users
-      const users = await createOrGetUsers(supabaseClient, rowsWithTeams);
-      stats.users = users.length;
-
       // Bulk create/get teams
       const teams = await createOrGetTeams(supabaseClient, rowsWithTeams);
       stats.teams = teams.length;
