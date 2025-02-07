@@ -94,6 +94,10 @@ ADMIN_USERS=           # List of GitHub usernames for admin access
 # Pre-event registration settings
 NEXT_PUBLIC_EVENTBRITE_PREEVENT_EVENT_ID= # Eventbrite event ID for pre-event
 EVENTBRITE_PRIVATE_TOKEN=                  # Eventbrite API token
+
+# Testing environment
+NEXT_PUBLIC_TEST_DATETIME=   # Override current datetime for testing (format: YYYY-MM-DDTHH:mm:ss)
+                            # Example: 2025-02-15T11:20:00
 ```
 
 ### Admin Access

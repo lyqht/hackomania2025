@@ -5,9 +5,58 @@ import { motion } from "framer-motion";
 interface TimelineItemProps {
   time: string;
   event: string;
+  date: string;
 }
 
-export function TimelineItem({ time, event }: TimelineItemProps) {
+// Add this helper function at the top level
+const findNextEventTime = (
+  date: string,
+  time: string,
+  schedule: (ScheduleItem & { date: string })[],
+) => {
+  const currentEventDate = new Date(date + " " + time);
+  const sameDayEvents = schedule.filter((item) => item.date === date);
+  const nextEvent = sameDayEvents.find((item) => {
+    const itemDate = new Date(item.date + " " + item.time);
+    return itemDate > currentEventDate;
+  });
+  return nextEvent ? new Date(nextEvent.date + " " + nextEvent.time) : null;
+};
+
+// Add a helper function to check if it's the current day
+const isCurrentDay = (date: string) => {
+  const now = process.env.NEXT_PUBLIC_TEST_DATETIME
+    ? new Date(process.env.NEXT_PUBLIC_TEST_DATETIME)
+    : new Date();
+  const checkDate = new Date(date);
+  return now.toDateString() === checkDate.toDateString();
+};
+
+export function TimelineItem({ time, event, date }: TimelineItemProps) {
+  const isHappeningNow = () => {
+    const now = process.env.NEXT_PUBLIC_TEST_DATETIME
+      ? new Date(process.env.NEXT_PUBLIC_TEST_DATETIME)
+      : new Date();
+    const eventDate = new Date(date + " " + time);
+
+    const isSameDay = now.toDateString() === eventDate.toDateString();
+    if (!isSameDay) return false;
+
+    // Find the next event time
+    const nextEventTime = findNextEventTime(date, time, [
+      ...PREHACK_SCHEDULE,
+      ...DAY1_SCHEDULE,
+      ...DAY2_SCHEDULE,
+    ]);
+
+    // If there's a next event, use its start time as the end time
+    // Otherwise, use 1 hour duration
+    const endTime = nextEventTime || new Date(eventDate.getTime() + 60 * 60 * 1000);
+
+    // Check if current time is between event start and end time
+    return now >= eventDate && now < endTime;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -17,6 +66,11 @@ export function TimelineItem({ time, event }: TimelineItemProps) {
       transition={{ duration: 0.3 }}
       className="group relative z-10 flex flex-col rounded-md border border-neutral-300 bg-white p-4"
     >
+      {isHappeningNow() && (
+        <div className="absolute bottom-0 right-0 z-10 rounded-sm bg-hackomania-red px-2 py-0.5 text-xs font-bold text-white">
+          happening now
+        </div>
+      )}
       <div className="absolute bottom-0 right-0 h-0 w-0 border-b-[15px] border-r-[15px] border-b-transparent border-r-neutral-300 transition-colors duration-200 group-hover:border-r-red-600"></div>
       <span className="text-lg font-medium text-red-600">{time}</span>
       <span className="text-lg text-neutral-800">{event}</span>
@@ -30,36 +84,36 @@ interface ScheduleItem {
 }
 
 // Configure schedules here
-const PREHACK_SCHEDULE: ScheduleItem[] = [
-  { time: "09:30 AM", event: "Registration" },
-  { time: "10:00 AM", event: "Welcome and introduction" },
-  { time: "10:15 AM", event: "Ice breaker" },
-  { time: "10:30 AM", event: "Briefing" },
-  { time: "11:15 AM", event: "Q&A" },
-  { time: "11:30 AM", event: "Main Hall Workshop 1" },
-  { time: "12:30 PM", event: "Lunch" },
-  { time: "01:00 PM", event: "Main Hall Workshop 2" },
-  { time: "02:00 PM", event: "Break" },
-  { time: "02:15 PM", event: "Main Hall Workshop 3" },
-  { time: "03:15 PM", event: "Closing" },
-  { time: "03:45 PM", event: "Networking" },
+const PREHACK_SCHEDULE: (ScheduleItem & { date: string })[] = [
+  { time: "09:30 AM", event: "Registration", date: "2025-02-07" },
+  { time: "10:00 AM", event: "Welcome and introduction", date: "2025-02-07" },
+  { time: "10:15 AM", event: "Ice breaker", date: "2025-02-07" },
+  { time: "10:30 AM", event: "Briefing", date: "2025-02-07" },
+  { time: "11:15 AM", event: "Q&A", date: "2025-02-07" },
+  { time: "11:30 AM", event: "Main Hall Workshop 1", date: "2025-02-07" },
+  { time: "12:30 PM", event: "Lunch", date: "2025-02-07" },
+  { time: "01:00 PM", event: "Main Hall Workshop 2", date: "2025-02-07" },
+  { time: "02:00 PM", event: "Break", date: "2025-02-07" },
+  { time: "02:15 PM", event: "Main Hall Workshop 3", date: "2025-02-07" },
+  { time: "03:15 PM", event: "Closing", date: "2025-02-07" },
+  { time: "03:45 PM", event: "Networking", date: "2025-02-07" },
 ];
 
-const DAY1_SCHEDULE: ScheduleItem[] = [
-  { time: "10:30 AM", event: "Registration" },
-  { time: "11:15 AM", event: "Introduction" },
-  { time: "11:30 AM", event: "Rakuten intro" },
-  { time: "11:45 AM", event: "Safety briefing" },
-  { time: "12:00 PM", event: "Keynote" },
-  { time: "12:15 PM", event: "Hackathon briefing" },
-  { time: "12:30 PM", event: "Lunch" },
-  { time: "01:00 PM", event: "Hackathon kick off & team registration start" },
-  { time: "03:30 PM", event: "Team registration end" },
+const DAY1_SCHEDULE: (ScheduleItem & { date: string })[] = [
+  { time: "10:30 AM", event: "Registration", date: "2025-02-15" },
+  { time: "11:15 AM", event: "Introduction", date: "2025-02-15" },
+  { time: "11:30 AM", event: "Rakuten intro", date: "2025-02-15" },
+  { time: "11:45 AM", event: "Safety briefing", date: "2025-02-15" },
+  { time: "12:00 PM", event: "Keynote", date: "2025-02-15" },
+  { time: "12:15 PM", event: "Hackathon briefing", date: "2025-02-15" },
+  { time: "12:30 PM", event: "Lunch", date: "2025-02-15" },
+  { time: "01:00 PM", event: "Hackathon kick off & team registration start", date: "2025-02-15" },
+  { time: "03:30 PM", event: "Team registration end", date: "2025-02-15" },
 ];
 
-const DAY2_SCHEDULE: ScheduleItem[] = [
-  { time: "08:00 AM", event: "Breakfast" },
-  { time: "09:00 AM", event: "Start team submission" },
+const DAY2_SCHEDULE: (ScheduleItem & { date: string })[] = [
+  { time: "08:00 AM", event: "Breakfast", date: "2025-02-16" },
+  { time: "09:00 AM", event: "Start team submission", date: "2025-02-16" },
 ];
 
 export default function Timeline() {
@@ -107,10 +161,14 @@ export default function Timeline() {
             transition={{ duration: 0.5 }}
             className="flex flex-col gap-4"
           >
-            <h3 className="text-2xl font-bold md:self-end lg:text-4xl">PREHACK</h3>
+            <h3
+              className={`text-2xl font-bold md:self-end lg:text-4xl ${isCurrentDay("2025-02-07") ? "underline decoration-2 underline-offset-4" : ""}`}
+            >
+              PREHACK
+            </h3>
             <div className="flex flex-col gap-3">
               {PREHACK_SCHEDULE.map((item, index) => (
-                <TimelineItem key={index} time={item.time} event={item.event} />
+                <TimelineItem key={index} time={item.time} event={item.event} date={item.date} />
               ))}
             </div>
           </motion.div>
@@ -123,10 +181,14 @@ export default function Timeline() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col gap-4"
           >
-            <h3 className="text-2xl font-bold md:self-end lg:text-4xl">DAY 1</h3>
+            <h3
+              className={`text-2xl font-bold md:self-end lg:text-4xl ${isCurrentDay("2025-02-15") ? "underline decoration-2 underline-offset-4" : ""}`}
+            >
+              DAY 1
+            </h3>
             <div className="flex flex-col gap-3">
               {DAY1_SCHEDULE.map((item, index) => (
-                <TimelineItem key={index} time={item.time} event={item.event} />
+                <TimelineItem key={index} time={item.time} event={item.event} date={item.date} />
               ))}
             </div>
           </motion.div>
@@ -139,10 +201,14 @@ export default function Timeline() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="flex flex-col gap-4"
           >
-            <h3 className="text-2xl font-bold md:self-end lg:text-4xl">DAY 2</h3>
+            <h3
+              className={`text-2xl font-bold md:self-end lg:text-4xl ${isCurrentDay("2025-02-16") ? "underline decoration-2 underline-offset-4" : ""}`}
+            >
+              DAY 2
+            </h3>
             <div className="flex flex-col gap-3">
               {DAY2_SCHEDULE.map((item, index) => (
-                <TimelineItem key={index} time={item.time} event={item.event} />
+                <TimelineItem key={index} time={item.time} event={item.event} date={item.date} />
               ))}
             </div>
           </motion.div>
