@@ -7,7 +7,7 @@ export const goldenRules: IRules[] = [
   {
     title: "TEAM FORMATION",
     description:
-      "Participants must form teams of 3 to 5 members. Each team must have at least one representative present throughout the event.",
+      "Participants must form teams of 3 to 5 members. Each team must have at least one representative present throughout the event for 24 hours.",
   },
   {
     title: "OWNERSHIP OF WORK",
