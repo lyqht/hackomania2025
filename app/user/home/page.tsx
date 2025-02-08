@@ -1,4 +1,4 @@
-import { checkMainEventRegistration, checkPreEventRegistration } from "@/app/services/eventbrite";
+import { checkRegistrationStatus } from "@/app/services/eventbrite";
 import { getTeamById, Team } from "@/app/services/team";
 import { getUserById, UserInfo } from "@/app/services/user";
 import EventbriteCheckoutWidgetButton from "@/components/custom/EventbriteCheckoutWidgetButton";
@@ -11,10 +11,7 @@ import { createClient } from "@/utils/supabase/server";
 import { Suspense } from "react";
 
 async function EventRegistrationStatus({ user }: { user: UserInfo }) {
-  const [preEventData, mainEventData] = await Promise.all([
-    checkPreEventRegistration(user.email),
-    checkMainEventRegistration(user.email),
-  ]);
+  const registrationStatus = await checkRegistrationStatus(user.email);
 
   return (
     <div className="grid grow grid-cols-2 items-start justify-center p-8 text-center">
@@ -22,11 +19,11 @@ async function EventRegistrationStatus({ user }: { user: UserInfo }) {
         <p className="text-xl font-medium">Pre-event</p>
         <p className="mb-8 italic">8 February 2025, Saturday</p>
         <Suspense fallback={<p className="text-neutral-600">Checking registration...</p>}>
-          <p className={preEventData.registered ? "text-green-600" : "text-red-600"}>
-            {preEventData.registered ? "Registered ✓" : "Not registered"}
+          <p className={registrationStatus.preEventRegistered ? "text-green-600" : "text-red-600"}>
+            {registrationStatus.preEventRegistered ? "Registered ✓" : "Not registered"}
           </p>
-          {!preEventData.registered && <EventbriteCheckoutWidgetButton />}
-          {!preEventData.registered && (
+          {!registrationStatus.preEventRegistered && <EventbriteCheckoutWidgetButton />}
+          {!registrationStatus.preEventRegistered && (
             <p className="text-sm">
               ⚠️ You will not be allowed to join the event without registration.
             </p>
@@ -38,10 +35,10 @@ async function EventRegistrationStatus({ user }: { user: UserInfo }) {
         <p className="text-xl font-medium">Main Event</p>
         <p className="mb-8 italic">15-16 February 2025, Saturday-Sunday</p>
         <Suspense fallback={<p className="text-neutral-600">Checking registration...</p>}>
-          <p className={mainEventData.registered ? "text-green-600" : "text-red-600"}>
-            {mainEventData.registered ? "Approved ✓" : "You're not registered yet."}
+          <p className={registrationStatus.mainEventRegistered ? "text-green-600" : "text-red-600"}>
+            {registrationStatus.mainEventRegistered ? "Approved ✓" : "You're not registered yet."}
           </p>
-          {!mainEventData.registered && (
+          {!registrationStatus.mainEventRegistered && (
             <p className="text-sm">
               ⚠️ You will not be allowed to join the event without registration.
             </p>
