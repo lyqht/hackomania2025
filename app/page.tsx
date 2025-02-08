@@ -1,7 +1,6 @@
-import EventbriteCheckoutWidgetButton from "@/components/custom/EventbriteCheckoutWidgetButton";
 import GitHubSignInButton from "@/components/custom/GitHubSignInButton";
 import GoldenRules from "@/components/custom/GoldenRules";
-import ImageCarousel from "@/components/custom/ImageCarousel";
+import ImageCarousel from "@/components/custom/ImageCarousel/ImageCarousel";
 import NavigationBar from "@/components/custom/NavigationBar";
 import Organizers from "@/components/custom/Organizers";
 import Prizes from "@/components/custom/Prizes";
@@ -77,15 +76,6 @@ export default async function Index() {
             <div className="flex w-full max-w-2xl flex-col items-center gap-8 pt-0 md:pt-8">
               {/* Event Cards */}
               <div className="flex w-full flex-col gap-4">
-                {/* Pre-Event registration */}
-                <div className="flex flex-row items-center justify-between gap-1 bg-hackomania-red p-4 text-white">
-                  <div className="flex flex-col text-start">
-                    <p className="text-nowrap text-xl font-bold md:text-3xl">PRE EVENT</p>
-                    <p className="text-sm md:text-base">8 February, Saturday</p>
-                  </div>
-                  <EventbriteCheckoutWidgetButton />
-                </div>
-
                 {/* Main Event registration */}
                 <div className="flex flex-row items-center justify-between gap-3 bg-hackomania-red p-4 text-white">
                   <div className="flex grow flex-col text-start">
@@ -93,12 +83,12 @@ export default async function Index() {
                     <p className="text-sm md:text-base">15-16 February, Saturday-Sunday</p>
                   </div>
                   <a
-                    href="https://forms.gle/py3AQyYHfjWmPtEM7"
+                    href="https://www.eventbrite.com/e/hackomania-2025-healthy-living-for-a-connected-world-tickets-1147838859929"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="border-hackomania-white text-hackomania-white shrink border-4 p-1.5 text-base font-bold transition-all hover:bg-white hover:text-hackomania-red md:p-3 md:px-5 md:text-2xl"
                   >
-                    PRE-REGISTER
+                    REGISTER NOW
                   </a>
                 </div>
               </div>
@@ -116,11 +106,11 @@ export default async function Index() {
             </div>
           </div>
 
-          <div className="flex flex-col items-start gap-10 md:flex-row md:py-8">
+          <div className="flex flex-col items-stretch gap-10 md:flex-row md:py-8">
             <div className="w-full md:w-1/2">
               <ImageCarousel />
             </div>
-            <div className="flex flex-col gap-3 md:gap-8">
+            <div className="flex flex-1 flex-col gap-3 md:gap-8">
               <div className="flex flex-col gap-4 text-balance text-left text-base md:text-xl">
                 <p>
                   HackOMania is GeeksHacking&apos;s annual hackathon. We bring together students,
