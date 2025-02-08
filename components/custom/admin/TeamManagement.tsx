@@ -160,44 +160,46 @@ export default function TeamManagement({
 
   // Filter and search teams
   const filteredTeams = useMemo(() => {
-    return teams.filter((team) => {
-      // Apply search filter
-      const matchesSearch = team.name.toLowerCase().includes(searchQuery.toLowerCase());
-      if (!matchesSearch) return false;
+    return teams
+      .filter((team) => {
+        // Apply search filter
+        const matchesSearch = team.name.toLowerCase().includes(searchQuery.toLowerCase());
+        if (!matchesSearch) return false;
 
-      // Apply team size filter
-      const matchesTeamSize = (() => {
-        switch (teamFilter) {
-          case "full":
-            return team.users.length >= MAX_TEAM_SIZE;
-          case "not-full":
-            return team.users.length < MAX_TEAM_SIZE;
-          default:
-            return true;
+        // Apply team size filter
+        const matchesTeamSize = (() => {
+          switch (teamFilter) {
+            case "full":
+              return team.users.length >= MAX_TEAM_SIZE;
+            case "not-full":
+              return team.users.length < MAX_TEAM_SIZE;
+            default:
+              return true;
+          }
+        })();
+        if (!matchesTeamSize) return false;
+
+        // Apply challenge filter
+        const matchesChallenge =
+          selectedChallengeId === "all" ||
+          (selectedChallengeId === "none"
+            ? !team.challengeId
+            : team.challengeId === selectedChallengeId);
+        if (!matchesChallenge) return false;
+
+        // Apply main event registration filter
+        if (hideUnregisteredTeams && team.users.some((user) => !user.mainEventRegistered)) {
+          return false;
         }
-      })();
-      if (!matchesTeamSize) return false;
 
-      // Apply challenge filter
-      const matchesChallenge =
-        selectedChallengeId === "all" ||
-        (selectedChallengeId === "none"
-          ? !team.challengeId
-          : team.challengeId === selectedChallengeId);
-      if (!matchesChallenge) return false;
+        // Apply submission filter
+        if (showSubmittedTeamsOnly && !team.submission) {
+          return false;
+        }
 
-      // Apply main event registration filter
-      if (hideUnregisteredTeams && team.users.some((user) => !user.mainEventRegistered)) {
-        return false;
-      }
-
-      // Apply submission filter
-      if (showSubmittedTeamsOnly && !team.submission) {
-        return false;
-      }
-
-      return true;
-    });
+        return true;
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, [
     teams,
     searchQuery,
