@@ -85,18 +85,18 @@ interface ScheduleItem {
 
 // Configure schedules here
 const PREHACK_SCHEDULE: (ScheduleItem & { date: string })[] = [
-  { time: "09:30 AM", event: "Registration", date: "2025-02-07" },
-  { time: "10:00 AM", event: "Welcome and introduction", date: "2025-02-07" },
-  { time: "10:15 AM", event: "Ice breaker", date: "2025-02-07" },
-  { time: "10:30 AM", event: "Briefing", date: "2025-02-07" },
-  { time: "11:15 AM", event: "Q&A", date: "2025-02-07" },
-  { time: "11:30 AM", event: "Main Hall Workshop 1", date: "2025-02-07" },
-  { time: "12:30 PM", event: "Lunch", date: "2025-02-07" },
-  { time: "01:00 PM", event: "Main Hall Workshop 2", date: "2025-02-07" },
-  { time: "02:00 PM", event: "Break", date: "2025-02-07" },
-  { time: "02:15 PM", event: "Main Hall Workshop 3", date: "2025-02-07" },
-  { time: "03:15 PM", event: "Closing", date: "2025-02-07" },
-  { time: "03:45 PM", event: "Networking", date: "2025-02-07" },
+  { time: "09:30 AM", event: "Registration", date: "2025-02-08" },
+  { time: "10:00 AM", event: "Welcome and introduction", date: "2025-02-08" },
+  { time: "10:15 AM", event: "Ice breaker", date: "2025-02-08" },
+  { time: "10:30 AM", event: "Briefing", date: "2025-02-08" },
+  { time: "11:15 AM", event: "Q&A", date: "2025-02-08" },
+  { time: "11:30 AM", event: "Main Hall Workshop 1", date: "2025-02-08" },
+  { time: "12:30 PM", event: "Lunch", date: "2025-02-08" },
+  { time: "01:00 PM", event: "Main Hall Workshop 2", date: "2025-02-08" },
+  { time: "02:00 PM", event: "Break", date: "2025-02-08" },
+  { time: "02:15 PM", event: "Main Hall Workshop 3", date: "2025-02-08" },
+  { time: "03:15 PM", event: "Closing", date: "2025-02-08" },
+  { time: "03:45 PM", event: "Networking", date: "2025-02-08" },
 ];
 
 const DAY1_SCHEDULE: (ScheduleItem & { date: string })[] = [
@@ -162,7 +162,7 @@ export default function Timeline() {
             className="flex flex-col gap-4"
           >
             <h3
-              className={`text-2xl font-bold md:self-end lg:text-4xl ${isCurrentDay("2025-02-07") ? "underline decoration-2 underline-offset-4" : ""}`}
+              className={`text-2xl font-bold md:self-end lg:text-4xl ${isCurrentDay("2025-02-08") ? "underline decoration-2 underline-offset-4" : ""}`}
             >
               PREHACK
             </h3>
