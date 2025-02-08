@@ -29,7 +29,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Challenge } from "@/types/challenge";
-import { Search, X } from "lucide-react";
+import { Search, X, AlertTriangle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -143,46 +143,63 @@ export default function TeamManagement({
     }
   };
 
+  const handleRemoveAllChallenges = async () => {
+    try {
+      const response = await fetch("/api/challenges/remove-all", {
+        method: "POST",
+      });
+
+      if (!response.ok) throw new Error("Failed to remove challenges from teams");
+      toast.success("Successfully removed challenges from all teams");
+      fetchTeams();
+    } catch (error) {
+      console.error("Error removing challenges:", error);
+      toast.error("Failed to remove challenges from teams");
+    }
+  };
+
   // Filter and search teams
   const filteredTeams = useMemo(() => {
-    return teams.filter((team) => {
-      // Apply search filter
-      const matchesSearch = team.name.toLowerCase().includes(searchQuery.toLowerCase());
-      if (!matchesSearch) return false;
+    return teams
+      .filter((team) => {
+        // Apply search filter
+        const matchesSearch = team.name.toLowerCase().includes(searchQuery.toLowerCase());
+        if (!matchesSearch) return false;
 
-      // Apply team size filter
-      const matchesTeamSize = (() => {
-        switch (teamFilter) {
-          case "full":
-            return team.users.length >= MAX_TEAM_SIZE;
-          case "not-full":
-            return team.users.length < MAX_TEAM_SIZE;
-          default:
-            return true;
+        // Apply team size filter
+        const matchesTeamSize = (() => {
+          switch (teamFilter) {
+            case "full":
+              return team.users.length >= MAX_TEAM_SIZE;
+            case "not-full":
+              return team.users.length < MAX_TEAM_SIZE;
+            default:
+              return true;
+          }
+        })();
+        if (!matchesTeamSize) return false;
+
+        // Apply challenge filter
+        const matchesChallenge =
+          selectedChallengeId === "all" ||
+          (selectedChallengeId === "none"
+            ? !team.challengeId
+            : team.challengeId === selectedChallengeId);
+        if (!matchesChallenge) return false;
+
+        // Apply main event registration filter
+        if (hideUnregisteredTeams && team.users.some((user) => !user.mainEventRegistered)) {
+          return false;
         }
-      })();
-      if (!matchesTeamSize) return false;
 
-      // Apply challenge filter
-      const matchesChallenge =
-        selectedChallengeId === "all" ||
-        (selectedChallengeId === "none"
-          ? !team.challengeId
-          : team.challengeId === selectedChallengeId);
-      if (!matchesChallenge) return false;
+        // Apply submission filter
+        if (showSubmittedTeamsOnly && !team.submission) {
+          return false;
+        }
 
-      // Apply main event registration filter
-      if (hideUnregisteredTeams && team.users.some((user) => !user.mainEventRegistered)) {
-        return false;
-      }
-
-      // Apply submission filter
-      if (showSubmittedTeamsOnly && !team.submission) {
-        return false;
-      }
-
-      return true;
-    });
+        return true;
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, [
     teams,
     searchQuery,
@@ -202,7 +219,37 @@ export default function TeamManagement({
               <span className="text-sm text-neutral-500">({filteredTeams.length})</span>
             )}
           </h2>
-          <ExportTeamsAsExcelButton teams={filteredTeams} />
+          <div className="flex items-center gap-2">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="destructive" size="sm" className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4" />
+                  Unassign challenges from all teams
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Unassign challenges from all teams</DialogTitle>
+                  <DialogDescription className="space-y-2">
+                    <span className="block font-medium text-red-600">
+                      ⚠️ Warning: This action cannot be undone!
+                    </span>
+                    This will remove the challenge that ALL teams have selected. Teams will need to
+                    select their challenges again. Are you sure you want to proceed?
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="flex justify-end gap-2">
+                  <DialogTrigger asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DialogTrigger>
+                  <Button variant="destructive" onClick={handleRemoveAllChallenges}>
+                    Remove All Challenges
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <ExportTeamsAsExcelButton teams={filteredTeams} />
+          </div>
         </div>
 
         <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -342,8 +389,13 @@ export default function TeamManagement({
                         handleAssignChallenge(team.id, value === "none" ? null : value)
                       }
                     >
-                      <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="Select a challenge" />
+                      <SelectTrigger className="w-[250px] truncate">
+                        <SelectValue>
+                          {team.challengeId
+                            ? challenges.find((c) => c.id === team.challengeId)?.name ||
+                              "No Challenge"
+                            : "No Challenge"}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="none">No Challenge</SelectItem>

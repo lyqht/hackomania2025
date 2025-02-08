@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { InsertTeam } from "@/utils/db/schema/team";
 import { useRouter } from "next/navigation";
 import ButtonLoadingSpinner from "../ButtonLoadingSpinner";
+import { toast } from "sonner";
 
 export default function NoTeamManagement() {
   const router = useRouter();
@@ -21,8 +22,33 @@ export default function NoTeamManagement() {
   const joinExistingTeam = async () => {
     if (isJoinPending) return;
 
+    if (!joinTeamID) {
+      setError("Team ID cannot be empty");
+      return;
+    }
+
     startJoinTransition(async () => {
-      // TODO: Implement join team logic
+      try {
+        const res = await fetch(`/api/register/team/join`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ teamId: joinTeamID }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          setJoinTeamPopup(false);
+          setError(null);
+          toast.success("Successfully joined team");
+          router.refresh();
+        } else {
+          setError(data.error || "Failed to join team");
+        }
+      } catch (error) {
+        setError("An unexpected error occurred");
+        console.error(error);
+      }
     });
   };
 
@@ -44,12 +70,15 @@ export default function NoTeamManagement() {
           }),
         });
 
+        const data = await res.json();
+
         if (res.ok) {
           setCreateTeamPopup(false);
           setError(null);
+          toast.success("Successfully created team");
           router.refresh();
         } else {
-          setError("Failed to create team");
+          setError(data.error || "Failed to create team");
         }
       } catch (error) {
         setError("An unexpected error occurred");
@@ -66,14 +95,28 @@ export default function NoTeamManagement() {
           onClick={() => setJoinTeamPopup(true)}
           disabled={isJoinPending || isCreatePending}
         >
-          Join Existing Team
+          {isJoinPending ? (
+            <div className="flex items-center gap-2">
+              <ButtonLoadingSpinner color="hackomania-red" />
+              <span>Joining Team...</span>
+            </div>
+          ) : (
+            "Join Existing Team"
+          )}
         </button>
         <button
           className="rounded-lg bg-hackomania-red p-3 py-2 text-center text-white disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => setCreateTeamPopup(true)}
           disabled={isJoinPending || isCreatePending}
         >
-          Create Team
+          {isCreatePending ? (
+            <div className="flex items-center gap-2">
+              <ButtonLoadingSpinner color="white" />
+              <span>Creating Team...</span>
+            </div>
+          ) : (
+            "Create Team"
+          )}
         </button>
       </div>
 
@@ -81,7 +124,7 @@ export default function NoTeamManagement() {
       {joinTeamPopup && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={() => setJoinTeamPopup(false)}
+          onClick={() => !isJoinPending && setJoinTeamPopup(false)}
         >
           <motion.div
             initial={{ opacity: 0 }}
@@ -107,7 +150,7 @@ export default function NoTeamManagement() {
               disabled={isJoinPending}
             >
               {isJoinPending ? (
-                <div className="flex flex-row items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <ButtonLoadingSpinner color="white" />
                   <span>Joining Team...</span>
                 </div>
@@ -124,7 +167,7 @@ export default function NoTeamManagement() {
       {createTeamPopup && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={() => setCreateTeamPopup(false)}
+          onClick={() => !isCreatePending && setCreateTeamPopup(false)}
         >
           <motion.div
             initial={{ opacity: 0 }}
@@ -149,16 +192,14 @@ export default function NoTeamManagement() {
               onClick={createTeam}
               disabled={isCreatePending}
             >
-              <div className="flex flex-row items-center justify-center gap-2">
-                {isCreatePending ? (
-                  <>
-                    <ButtonLoadingSpinner color="white" />
-                    <span>Creating Team...</span>
-                  </>
-                ) : (
-                  <p>Create Team</p>
-                )}
-              </div>
+              {isCreatePending ? (
+                <div className="flex items-center justify-center gap-2">
+                  <ButtonLoadingSpinner color="white" />
+                  <span>Creating Team...</span>
+                </div>
+              ) : (
+                "Create Team"
+              )}
             </button>
             {error && <p className="mt-3 text-red-800">{error}</p>}
           </motion.div>

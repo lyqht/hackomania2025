@@ -43,8 +43,9 @@ export default async function Index() {
         </div>
       </div>
       <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
-        <header className="flex min-h-[calc(100vh-120px)] w-full flex-col items-center justify-center md:min-h-[calc(100vh-180px)]">
+        <div className="relative flex min-h-[calc(100vh-120px)] w-full flex-col items-center justify-center md:min-h-[calc(100vh-180px)]">
           <h1 className="sr-only">HackOMania 2025</h1>
+          <div className={`grid-bg pointer-events-none absolute top-0 h-96 w-full md:h-60`}></div>
           <div className="flex w-full max-w-[90vw] flex-col items-center justify-center gap-8 md:max-w-[80vw]">
             {/* HackOMania Logo */}
             <Image
@@ -95,7 +96,7 @@ export default async function Index() {
               <GitHubSignInButton />
             </div>
           </div>
-        </header>
+        </div>
 
         <section className="group py-10 intersect:animate-slide-in-from-left" id="about">
           <div className="mb-7 flex flex-row items-center gap-5 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
