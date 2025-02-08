@@ -1,56 +1,33 @@
 import type { Database } from "@/types/database.types";
-import type { AttendeeMainInfo } from "@/types/eventbrite";
-import { createClient } from "@/utils/supabase/server";
+import { db } from "@/utils/db";
+import { preEventRegistrations } from "@/utils/db/schema/eventbrite";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { sql } from "drizzle-orm";
 
-export async function checkPreEventRegistration(email: string) {
-  if (!email) {
-    return { registered: false };
-  }
-
-  try {
-    const supabase = await createClient();
-
-    const { data, error } = await supabase.functions.invoke<AttendeeMainInfo>(
-      "fetch-eventbrite-attendees",
-      {
-        body: { email },
-      },
-    );
-
-    if (error || !data) {
-      console.error("Supabase Function error:", error);
-      return { registered: false };
-    }
-
-    return { registered: true, data };
-  } catch (error) {
-    console.error("Error checking registration:", error);
-    return { registered: false };
-  }
+export interface RegistrationStatus {
+  preEventRegistered: boolean;
+  mainEventRegistered: boolean;
 }
 
-export async function checkMainEventRegistration(email: string) {
-  if (!email) {
-    return { registered: false };
-  }
-
+export async function checkRegistrationStatus(email: string): Promise<RegistrationStatus> {
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("main_event_registrations")
-      .select("*")
-      .eq("email", email)
-      .single();
+    const result = await db
+      .select({
+        preEventRegistered: sql<boolean>`EXISTS (
+          SELECT 1 FROM ${preEventRegistrations}
+          WHERE ${preEventRegistrations.email} = ${email}
+        )`,
+        mainEventRegistered: sql<boolean>`EXISTS (
+          SELECT 1 FROM main_event_registrations
+          WHERE main_event_registrations.email = ${email}
+        )`,
+      })
+      .from(sql`(SELECT 1) as dummy`);
 
-    if (error) {
-      return { registered: false };
-    }
-
-    return { registered: true, data };
+    return result[0] || { preEventRegistered: false, mainEventRegistered: false };
   } catch (error) {
-    console.error("Error checking main event registration:", error);
-    return { registered: false };
+    console.error("Error checking registration status:", error);
+    return { preEventRegistered: false, mainEventRegistered: false };
   }
 }
 
@@ -62,18 +39,12 @@ export async function syncPreEventRegistrations() {
     throw new Error("Missing Supabase environment variables");
   }
 
-  const supabase = createSupabaseClient<Database>(
-    supabaseUrl,
-    supabaseServiceKey,
-  );
+  const supabase = createSupabaseClient<Database>(supabaseUrl, supabaseServiceKey);
 
   // Call the Edge Function to sync pre-event registrations
-  const { data, error } = await supabase.functions.invoke(
-    "fetch-eventbrite-attendees",
-    {
-      body: { latest: true },
-    },
-  );
+  const { data, error } = await supabase.functions.invoke("fetch-eventbrite-attendees", {
+    body: { latest: true },
+  });
 
   if (error) {
     throw error;
@@ -90,10 +61,7 @@ export async function uploadMainEventRegistrations(file: File) {
     throw new Error("Missing Supabase environment variables");
   }
 
-  const supabase = createSupabaseClient<Database>(
-    supabaseUrl,
-    supabaseServiceKey,
-  );
+  const supabase = createSupabaseClient<Database>(supabaseUrl, supabaseServiceKey);
 
   const formData = new FormData();
   formData.append("file", file);

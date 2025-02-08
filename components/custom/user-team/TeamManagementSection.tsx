@@ -21,21 +21,25 @@ export default async function TeamManagementSection({
 
   return userTeam ? (
     <div id="team-details" className="flex flex-col justify-center gap-2">
-      <div>
-        {userTeam.leaderId === user.id && <EditTeamButtons teamID={userTeam.id} />}
+      <div className="space-y-4">
         <p className="text-neutral-500">
           <span className="font-medium">Team ID: </span>
           {userTeam.id}
         </p>
         <p className="text-neutral-500">
+          <span className="font-medium">Team Name: </span>
+          {userTeam.name}
+        </p>
+        <p className="text-neutral-500">
           <span className="font-medium">Number of Members: </span>
           {userTeam.users.length}/5
         </p>
+        {userTeam.leaderId === user.id && <EditTeamButtons teamID={userTeam.id} />}
       </div>
 
       <div className="mt-2">
         <Suspense key={`management-${teamKey}`} fallback={<SuspenseLoadingSpinner />}>
-          <TeamManagement users={userTeam.users} teamId={userTeam.id} />
+          <TeamManagement currentUser={user} users={userTeam.users} teamId={userTeam.id} />
         </Suspense>
       </div>
 
