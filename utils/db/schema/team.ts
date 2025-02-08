@@ -25,10 +25,10 @@ export const teamMembers = pgTable(
   "team_members",
   {
     teamId: uuid()
-      .references(() => team.id, { onDelete: "cascade" })
+      .references(() => team.id, { onDelete: "cascade", onUpdate: "cascade" })
       .notNull(),
     userId: uuid()
-      .references(() => user.id, { onDelete: "cascade" })
+      .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" })
       .notNull(),
     role: text().notNull(),
   },
