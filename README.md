@@ -98,6 +98,10 @@ EVENTBRITE_PRIVATE_TOKEN=                  # Eventbrite API token
 # Testing environment
 NEXT_PUBLIC_TEST_DATETIME=   # Override current datetime for testing (format: YYYY-MM-DDTHH:mm:ss)
                             # Example: 2025-02-15T11:20:00
+
+# Feature flags
+NEXT_PUBLIC_CHALLENGE_SELECTION_ENABLED=true # Enable challenge selection
+NEXT_PUBLIC_PROJECT_SUBMISSION_ENABLED=true # Enable project submission
 ```
 
 ### Admin Access
