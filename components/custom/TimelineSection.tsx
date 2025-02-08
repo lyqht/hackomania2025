@@ -108,12 +108,16 @@ const DAY1_SCHEDULE: (ScheduleItem & { date: string })[] = [
   { time: "12:15 PM", event: "Hackathon briefing", date: "2025-02-15" },
   { time: "12:30 PM", event: "Lunch", date: "2025-02-15" },
   { time: "01:00 PM", event: "Hackathon kick off & team registration start", date: "2025-02-15" },
-  { time: "03:30 PM", event: "Team registration end", date: "2025-02-15" },
+  { time: "03:30 PM", event: "End of Team Registration", date: "2025-02-15" },
+  { time: "03:30 PM - 11:59PM", event: "Continue Hacking!", date: "2025-02-15" },
 ];
 
 const DAY2_SCHEDULE: (ScheduleItem & { date: string })[] = [
   { time: "08:00 AM", event: "Breakfast", date: "2025-02-16" },
-  { time: "09:00 AM", event: "Start team submission", date: "2025-02-16" },
+  { time: "09:00 AM", event: "Start Team Submission", date: "2025-02-16" },
+  { time: "12:30 PM", event: "End of Team Submission", date: "2025-02-16" },
+  { time: "01:30 PM", event: "Judging", date: "2025-02-16" },
+  { time: "05:30 PM", event: "End of HackOMania 2025", date: "2025-02-16" },
 ];
 
 export default function Timeline() {

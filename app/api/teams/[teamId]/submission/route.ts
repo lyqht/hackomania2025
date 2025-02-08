@@ -60,8 +60,11 @@ export async function POST(
     });
   } catch (error) {
     console.error("Error updating team submission:", error);
-    return NextResponse.json({ error: "Failed to update team submission" }, {
-      status: 500,
-    });
+    return NextResponse.json(
+      { error: "Failed to update team submission" },
+      {
+        status: 500,
+      },
+    );
   }
 }

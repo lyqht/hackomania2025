@@ -154,14 +154,9 @@ export async function getUserById(userId: string): Promise<UserInfo | null> {
   }
 }
 
-export async function getAllUsers(
-  page = 1,
-  pageSize = 10,
-): Promise<PaginatedUsers> {
+export async function getAllUsers(page = 1, pageSize = 10): Promise<PaginatedUsers> {
   // First get total count
-  const countResult = await db.select({ count: sql<number>`count(*)` }).from(
-    user,
-  );
+  const countResult = await db.select({ count: sql<number>`count(*)` }).from(user);
 
   const totalCount = Number(countResult[0].count);
 
