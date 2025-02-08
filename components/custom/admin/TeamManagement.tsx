@@ -387,8 +387,13 @@ export default function TeamManagement({
                         handleAssignChallenge(team.id, value === "none" ? null : value)
                       }
                     >
-                      <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="Select a challenge" />
+                      <SelectTrigger className="w-[250px] truncate">
+                        <SelectValue>
+                          {team.challengeId
+                            ? challenges.find((c) => c.id === team.challengeId)?.name ||
+                              "No Challenge"
+                            : "No Challenge"}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="none">No Challenge</SelectItem>
