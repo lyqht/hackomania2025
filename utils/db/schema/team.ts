@@ -16,7 +16,7 @@ export const team = pgTable("team", {
   name: text().notNull().unique(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
-  leaderId: uuid().references(() => user.id),
+  leaderId: uuid().references(() => user.id, { onUpdate: "cascade", onDelete: "cascade" }),
   challengeId: uuid().references(() => challenges.id),
   submission: json("submission").$type<TeamSubmission>(),
 });

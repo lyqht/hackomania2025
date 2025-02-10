@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { toast } from "sonner";
+import { Toaster, toast } from "sonner";
 import { UserInfo } from "@/app/services/user";
 
 export default function TeamManagement({
@@ -54,6 +54,7 @@ export default function TeamManagement({
 
       if (!response.ok) {
         const data = await response.json();
+        console.log(data);
         throw new Error(data.error || "Failed to leave team");
       }
 
@@ -97,35 +98,39 @@ export default function TeamManagement({
         ))}
       </div>
 
-      <div className="mt-6">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="destructive" disabled={loading}>
-              Leave Team
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Leave Team</DialogTitle>
-              <DialogDescription className="space-y-2">
-                <span className="block">Are you sure you want to leave this team?</span>
-                <span className="font-medium text-red-600">
-                  ⚠️ Warning: This action cannot be undone. You will need to join or create a new
-                  team.
-                </span>
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex justify-end gap-2">
-              <DialogTrigger asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogTrigger>
-              <Button variant="destructive" onClick={handleLeaveTeam} disabled={loading}>
+      {currentUser.teamRole !== "leader" && (
+        <div className="mt-6">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="destructive" disabled={loading}>
                 Leave Team
               </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Leave Team</DialogTitle>
+                <DialogDescription className="space-y-2">
+                  <span className="block">Are you sure you want to leave this team?</span>
+                  <span className="font-medium text-red-600">
+                    ⚠️ Warning: This action cannot be undone. You will need to join or create a new
+                    team.
+                  </span>
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex justify-end gap-2">
+                <DialogTrigger asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogTrigger>
+                <Button variant="destructive" onClick={handleLeaveTeam} disabled={loading}>
+                  Leave Team
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      )}
+
+      <Toaster />
     </div>
   );
 }
