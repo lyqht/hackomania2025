@@ -64,10 +64,19 @@ async function createMainEventRegistrations(
   supabaseClient: SupabaseClient<Database>,
   rows: CSVRow[],
 ) {
+  // Deduplicate rows based on email and github profile URL
+  const uniqueRows = rows.reduce((acc, row) => {
+    const key = `${row["Email Address"]}_${row["Your Github Profile Link"]}`;
+    if (!acc.has(key)) {
+      acc.set(key, row);
+    }
+    return acc;
+  }, new Map<string, CSVRow>());
+
   const { data, error: regError } = await supabaseClient
     .from("main_event_registrations")
     .upsert(
-      rows.map((row) => ({
+      Array.from(uniqueRows.values()).map((row) => ({
         first_name: row["First Name"],
         last_name: row["Last Name"],
         email: row["Email Address"],
@@ -91,13 +100,12 @@ async function createMainEventRegistrations(
         ticket_email: row["Your Eventbrite Email"],
         approved_by: row["Approved By"],
       })),
-      { onConflict: "email" },
+      { onConflict: "email,github_profile_url" },
     )
     .select();
 
   if (regError) {
     console.error("Error creating registrations:", regError);
-    return 0;
   }
   return data?.length ?? 0;
 }
@@ -109,7 +117,7 @@ async function createOrGetUsers(supabaseClient: SupabaseClient<Database>, rows: 
     const githubUsername = extractGithubUsername(row["Your Github Profile Link"]);
     if (githubUsername) {
       uniqueUsers.set(githubUsername, {
-        email: row["Email Address"].trim() || row["Email to send ticket to"].trim(),
+        email: row["Email Address"].trim() || row["Your Eventbrite Email"].trim(),
         githubUsername,
         firstName: row["First Name"].trim(),
         lastName: row["Last Name"].trim(),
@@ -117,17 +125,42 @@ async function createOrGetUsers(supabaseClient: SupabaseClient<Database>, rows: 
     }
   });
 
-  // First, upsert unique users
+  // First, check which users already exist
+  const { data: existingUsers, error: fetchError } = await supabaseClient
+    .from("user")
+    .select("id, email, githubUsername, firstName, lastName, role, createdAt")
+    .in(
+      "email",
+      Array.from(uniqueUsers.values()).map((u) => u.email),
+    );
+
+  if (fetchError) {
+    console.error("Error fetching existing users:", fetchError);
+    return [];
+  }
+
+  // Filter out users that already exist
+  const existingEmails = new Set(existingUsers?.map((u) => u.email) || []);
+  const newUsers = Array.from(uniqueUsers.values()).filter(
+    (user) => !existingEmails.has(user.email),
+  );
+
+  if (newUsers.length === 0) {
+    // If no new users to create, return existing users
+    return existingUsers || [];
+  }
+
+  // Create only new users
   const { data: userData, error: userError } = await supabaseClient
     .from("user")
-    .upsert(Array.from(uniqueUsers.values()), {
+    .upsert(newUsers, {
       onConflict: "githubUsername",
     })
     .select();
 
-  if (userError || !userData) {
+  if (userError) {
     console.error("Error creating users:", userError);
-    return [];
+    return existingUsers || [];
   }
 
   // Then, update first and last names for existing users where these fields are null
@@ -147,7 +180,7 @@ async function createOrGetUsers(supabaseClient: SupabaseClient<Database>, rows: 
   });
 
   await Promise.all(updatePromises);
-  return userData;
+  return [...(existingUsers || []), ...(userData || [])];
 }
 
 async function createOrGetTeams(supabaseClient: SupabaseClient<Database>, rows: CSVRow[]) {
@@ -218,7 +251,7 @@ async function createTeamMembers(
   const teamMemberships = rowsWithTeams
     .map((row) => {
       const user = users.find(
-        (u) => u.email === (row["Email Address"] || row["Email to send ticket to"]).trim(),
+        (u) => u.email === (row["Email Address"] || row["Your Eventb"]).trim(),
       );
 
       const teamName =
@@ -329,32 +362,47 @@ serve(async (req) => {
       teamMembers: 0,
     };
 
-    // Bulk create registrations
+    // Process registrations first
     stats.registrations = await createMainEventRegistrations(supabaseClient, approvedRows);
 
-    // Process all approved users first
-    const users = await createOrGetUsers(supabaseClient, approvedRows);
-    stats.users = users.length;
+    // Process users independently - errors here won't affect registration creation
+    try {
+      const users = await createOrGetUsers(supabaseClient, approvedRows);
+      stats.users = users.length;
 
-    // Get rows with teams
-    const rowsWithTeams = approvedRows.filter(
-      (row) =>
-        row["Do you already have a team?"].toLowerCase() === "yes" &&
-        row["What is your team name? (Also ask your team members to put the same name)"],
-    );
+      // Only process teams if user creation/fetching was successful
+      const rowsWithTeams = approvedRows.filter(
+        (row) =>
+          row["Do you already have a team?"].toLowerCase() === "yes" &&
+          row["What is your team name? (Also ask your team members to put the same name)"],
+      );
 
-    if (rowsWithTeams.length > 0) {
-      // Bulk create/get teams
-      const teams = await createOrGetTeams(supabaseClient, rowsWithTeams);
-      stats.teams = teams.length;
+      if (rowsWithTeams.length > 0) {
+        try {
+          const teams = await createOrGetTeams(supabaseClient, rowsWithTeams);
+          stats.teams = teams.length;
 
-      // Create team memberships with the updated function signature
-      stats.teamMembers = await createTeamMembers(supabaseClient, rowsWithTeams, users, teams);
+          try {
+            stats.teamMembers = await createTeamMembers(
+              supabaseClient,
+              rowsWithTeams,
+              users,
+              teams,
+            );
+          } catch (error) {
+            console.error("Error creating team members:", error);
+          }
+        } catch (error) {
+          console.error("Error processing teams:", error);
+        }
+      }
+    } catch (error) {
+      console.error("Error processing users:", error);
     }
 
     return new Response(
       JSON.stringify({
-        message: "Successfully processed registrations",
+        message: `Successfully read ${rows.length} rows and processed ${stats.registrations} registrations`,
         stats: {
           registrationsCreated: stats.registrations,
           usersCreated: stats.users,

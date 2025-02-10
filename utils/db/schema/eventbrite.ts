@@ -41,7 +41,7 @@ export const mainEventRegistrations = pgTable(
     firstName: text("first_name").notNull(),
     lastName: text("last_name").notNull(),
     email: text("email").notNull().unique(),
-    githubProfileUrl: text("github_profile_url"),
+    githubProfileUrl: text("github_profile_url").unique(),
     linkedinProfileUrl: text("linkedin_profile_url"),
     hasTeam: boolean("has_team").notNull(),
     teamName: text("team_name"),
@@ -52,6 +52,9 @@ export const mainEventRegistrations = pgTable(
   },
   (table) => ({
     emailIdx: uniqueIndex("main_event_email_idx").on(table.email),
+    githubProfileUrlIdx: uniqueIndex("main_event_github_profile_url_idx").on(
+      table.githubProfileUrl,
+    ),
     teamNameIdx: index("team_name_idx").on(table.teamName),
   }),
 );
