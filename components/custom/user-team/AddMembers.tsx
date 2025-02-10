@@ -11,7 +11,8 @@ export default function AddMembers({ teamId, numMembers }: { teamId: string; num
   const [isPending, startTransition] = useTransition();
   const [lastFocusedIndex, setLastFocusedIndex] = useState<number | null>(null);
 
-  const totalPotentialMembers = numMembers + memberUsernames.length;
+  const totalPotentialMembers =
+    numMembers + memberUsernames.filter((username) => username !== "").length;
   const remainingSlots = Math.max(0, 5 - totalPotentialMembers);
   const canAddMoreMembers = numMembers < 5;
 

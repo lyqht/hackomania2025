@@ -1,7 +1,7 @@
 import { checkRegistrationStatus } from "@/app/services/eventbrite";
 import { getTeamById, Team } from "@/app/services/team";
 import { getUserById, UserInfo } from "@/app/services/user";
-import EventbriteCheckoutWidgetButton from "@/components/custom/EventbriteCheckoutWidgetButton";
+// import EventbriteCheckoutWidgetButton from "@/components/custom/EventbriteCheckoutWidgetButton";
 import SignOutButton from "@/components/custom/SignOutButton";
 import SuspenseLoadingSpinner from "@/components/custom/SuspenseLoadingSpinner";
 import ChallengeSelection from "@/components/custom/user-team/ChallengeSelection";
@@ -22,12 +22,12 @@ async function EventRegistrationStatus({ user }: { user: UserInfo }) {
           <p className={registrationStatus.preEventRegistered ? "text-green-600" : "text-red-600"}>
             {registrationStatus.preEventRegistered ? "Registered ✓" : "Not registered"}
           </p>
-          {!registrationStatus.preEventRegistered && <EventbriteCheckoutWidgetButton />}
+          {/* {!registrationStatus.preEventRegistered && <EventbriteCheckoutWidgetButton />}
           {!registrationStatus.preEventRegistered && (
             <p className="text-sm">
               ⚠️ You will not be allowed to join the event without registration.
             </p>
-          )}
+          )} */}
         </Suspense>
       </div>
 

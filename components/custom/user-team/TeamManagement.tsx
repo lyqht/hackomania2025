@@ -83,15 +83,16 @@ export default function TeamManagement({
             <div className="flex flex-row items-center gap-2">
               <p>{member.githubUsername}</p>
               {member.teamRole === "leader" && <FaCrown />}
-              {currentUser.teamRole === "leader" && (
-                <button
-                  className={`ml-auto text-xl ${loading && "cursor-not-allowed"} ${member.role === "leader" && "hidden"}`}
-                  onClick={() => handleRemoveUser(member.id)}
-                  disabled={loading}
-                >
-                  <LuUserMinus />
-                </button>
-              )}
+              {currentUser.teamRole === "leader" &&
+                member.githubUsername != currentUser.githubUsername && (
+                  <button
+                    className={`ml-auto text-xl ${loading && "cursor-not-allowed"} ${member.role === "leader" && "hidden"}`}
+                    onClick={() => handleRemoveUser(member.id)}
+                    disabled={loading}
+                  >
+                    <LuUserMinus />
+                  </button>
+                )}
             </div>
             <hr className="mt-2" />
           </div>
