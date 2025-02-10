@@ -16,7 +16,7 @@ export const team = pgTable("team", {
   name: text().notNull().unique(),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
-  leaderId: uuid().references(() => user.id),
+  leaderId: uuid().references(() => user.id, { onUpdate: "cascade", onDelete: "cascade" }),
   challengeId: uuid().references(() => challenges.id),
   submission: json("submission").$type<TeamSubmission>(),
 });
@@ -25,10 +25,10 @@ export const teamMembers = pgTable(
   "team_members",
   {
     teamId: uuid()
-      .references(() => team.id, { onDelete: "cascade" })
+      .references(() => team.id, { onDelete: "cascade", onUpdate: "cascade" })
       .notNull(),
     userId: uuid()
-      .references(() => user.id, { onDelete: "cascade" })
+      .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" })
       .notNull(),
     role: text().notNull(),
   },

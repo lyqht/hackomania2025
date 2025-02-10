@@ -164,13 +164,13 @@ export default function UserManagement({
   users,
   isLoading,
   isUploading,
-  isSyncing,
+  // isSyncing,
   searchType,
   searchQuery,
   onSearchTypeChange,
   onSearchQueryChange,
   onUploadFile,
-  onSyncEventbrite,
+  // onSyncEventbrite,
   onSetTeamLeader,
   onRemoveUser,
   onEditUser,
@@ -284,7 +284,7 @@ export default function UserManagement({
             </div>
           </form>
 
-          <form
+          {/* <form
             onSubmit={async (e) => {
               e.preventDefault();
               await onSyncEventbrite();
@@ -303,7 +303,7 @@ export default function UserManagement({
                 )}
               </Button>
             </div>
-          </form>
+          </form> */}
           <hr className="w-full" />
         </div>
 
