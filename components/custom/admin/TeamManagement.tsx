@@ -378,6 +378,11 @@ export default function TeamManagement({
                           <span className="ml-1 text-sm text-neutral-500">
                             • {user.teamRole === "leader" ? "Leader" : "Member"}
                           </span>
+                          {!user.mainEventRegistered && (
+                            <span className="ml-1 text-sm font-medium text-red-600">
+                              • Not Registered
+                            </span>
+                          )}
                         </li>
                       ))}
                     </ul>
