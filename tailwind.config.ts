@@ -90,6 +90,10 @@ const config = {
           "0%": { transform: "translateX(20px)", opacity: "0" },
           "100%": { transform: "translateX(0)", opacity: "1" },
         },
+        wobble: {
+          "0%, 100%": { transform: "rotate(-6deg)" },
+          "50%": { transform: "rotate(6deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -98,6 +102,7 @@ const config = {
         "fade-in": "fadeIn 0.5s ease-in",
         "slide-in-from-left": "slideInFromLeft 0.5s ease-out",
         "slide-in-from-right": "slideInFromRight 0.5s ease-out",
+        wobble: "wobble 1s ease-in-out infinite",
       },
       fontFamily: {
         nexa: ["Nexa Rust"],
