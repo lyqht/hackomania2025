@@ -54,7 +54,7 @@ export default function TeamManagement({
   const [internalSearchQuery, setInternalSearchQuery] = useState("");
   const [teamFilter, setTeamFilter] = useState<TeamFilter>("all");
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>("all");
-  const [hideUnregisteredTeams, setHideUnregisteredTeams] = useState(true);
+  const [hideUnregisteredTeams, setHideUnregisteredTeams] = useState(false);
   const [showSubmittedTeamsOnly, setShowSubmittedTeamsOnly] = useState(false);
 
   // Use external search query if provided, otherwise use internal state
@@ -378,6 +378,11 @@ export default function TeamManagement({
                           <span className="ml-1 text-sm text-neutral-500">
                             • {user.teamRole === "leader" ? "Leader" : "Member"}
                           </span>
+                          {!user.mainEventRegistered && (
+                            <span className="ml-1 text-sm font-medium text-red-600">
+                              • Not Registered
+                            </span>
+                          )}
                         </li>
                       ))}
                     </ul>
