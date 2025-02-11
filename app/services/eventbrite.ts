@@ -3,23 +3,24 @@ import { db } from "@/utils/db";
 import { preEventRegistrations } from "@/utils/db/schema/eventbrite";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { sql } from "drizzle-orm";
+import { UserInfo } from "./user";
 
 export interface RegistrationStatus {
   preEventRegistered: boolean;
   mainEventRegistered: boolean;
 }
 
-export async function checkRegistrationStatus(email: string): Promise<RegistrationStatus> {
+export async function checkRegistrationStatus(user: UserInfo): Promise<RegistrationStatus> {
   try {
     const result = await db
       .select({
         preEventRegistered: sql<boolean>`EXISTS (
           SELECT 1 FROM ${preEventRegistrations}
-          WHERE ${preEventRegistrations.email} = ${email}
+          WHERE ${preEventRegistrations.email} = ${user.email}
         )`,
         mainEventRegistered: sql<boolean>`EXISTS (
           SELECT 1 FROM main_event_registrations
-          WHERE main_event_registrations.email = ${email}
+          WHERE SUBSTRING(main_event_registrations.github_profile_url FROM 'github.com/([^/]+)') = ${user.githubUsername}
         )`,
       })
       .from(sql`(SELECT 1) as dummy`);

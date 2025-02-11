@@ -11,7 +11,7 @@ import { createClient } from "@/utils/supabase/server";
 import { Suspense } from "react";
 
 async function EventRegistrationStatus({ user }: { user: UserInfo }) {
-  const registrationStatus = await checkRegistrationStatus(user.email);
+  const registrationStatus = await checkRegistrationStatus(user);
 
   return (
     <div className="grid grow grid-cols-2 items-start justify-center p-8 text-center">

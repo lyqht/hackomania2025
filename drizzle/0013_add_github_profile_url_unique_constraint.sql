@@ -1,0 +1,2 @@
+ALTER TABLE "main_event_registrations" ADD CONSTRAINT "main_event_registrations_github_profile_url_unique" UNIQUE ("github_profile_url");
+CREATE UNIQUE INDEX IF NOT EXISTS "main_event_github_profile_url_idx" ON "main_event_registrations" ("github_profile_url"); 

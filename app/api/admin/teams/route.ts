@@ -17,12 +17,16 @@ export async function GET() {
       },
     });
 
-    // Get all registered emails in one query
-    const registeredEmails = await db
-      .select({ email: sql<string>`email` })
+    // Get all registered github usernames in one query
+    const registeredGithubUsernames = await db
+      .select({
+        githubUsername: sql<string>`SUBSTRING(github_profile_url FROM 'github.com/([^/]+)')`,
+      })
       .from(sql`main_event_registrations`);
 
-    const registeredEmailSet = new Set(registeredEmails.map((r) => r.email));
+    const registeredGithubUsernameSet = new Set(
+      registeredGithubUsernames.map((r) => r.githubUsername),
+    );
 
     // Transform the response to match the expected format
     const transformedTeams = teams.map((team) => ({
@@ -30,7 +34,7 @@ export async function GET() {
       users: team.teamMembers.map((member) => ({
         ...member.user,
         teamRole: member.role,
-        mainEventRegistered: registeredEmailSet.has(member.user.email),
+        mainEventRegistered: registeredGithubUsernameSet.has(member.user.githubUsername),
       })),
     }));
 
