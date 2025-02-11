@@ -3,6 +3,7 @@ import GoldenRules from "@/components/custom/GoldenRules";
 import ImageCarousel from "@/components/custom/ImageCarousel/ImageCarousel";
 import NavigationBar from "@/components/custom/NavigationBar";
 import Organizers from "@/components/custom/Organizers";
+import Challenges from "@/components/custom/Challenges";
 import Prizes from "@/components/custom/Prizes";
 import Sponsors from "@/components/custom/Sponsors";
 import TimelineSection from "@/components/custom/TimelineSection";
@@ -178,6 +179,20 @@ export default async function Index() {
               </div>
             </div>
           </div>
+        </section>
+
+        <section className="group py-10 intersect:animate-slide-in-from-right" id="challenges">
+          <div className="mb-7 flex flex-row items-center gap-3 fill-hackomania-green text-3xl font-bold text-hackomania-blue md:mb-14 md:text-6xl">
+            <Image
+              src="/stickers/muscle.png"
+              alt=""
+              width={80}
+              height={80}
+              className="rotate-[-6deg] hover:animate-wobble"
+            />
+            <h2>CHALLENGES</h2>
+          </div>
+          <Challenges />
         </section>
 
         <section className="group py-10 intersect:animate-slide-in-from-right" id="prizes">
