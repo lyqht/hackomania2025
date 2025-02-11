@@ -47,7 +47,7 @@ export async function getAllUsersWithoutPagination(): Promise<UserInfo[]> {
                 )`,
         mainEventRegistered: sql<boolean>`EXISTS (
                     SELECT 1 FROM main_event_registrations
-                    WHERE main_event_registrations.email = ${user.email}
+                    WHERE SUBSTRING(main_event_registrations.github_profile_url FROM 'github.com/([^/]+)') = ${user.githubUsername}
                 )`,
       })
       .from(user)
@@ -110,7 +110,7 @@ export async function getUserById(userId: string): Promise<UserInfo | null> {
                 )`,
         mainEventRegistered: sql<boolean>`EXISTS (
                     SELECT 1 FROM main_event_registrations
-                    WHERE main_event_registrations.email = ${user.email}
+                    WHERE SUBSTRING(main_event_registrations.github_profile_url FROM 'github.com/([^/]+)') = ${user.githubUsername}
                 )`,
       })
       .from(user)
@@ -180,7 +180,7 @@ export async function getAllUsers(page = 1, pageSize = 10): Promise<PaginatedUse
             )`,
       mainEventRegistered: sql<boolean>`EXISTS (
                 SELECT 1 FROM main_event_registrations
-                WHERE main_event_registrations.email = ${user.email}
+                WHERE SUBSTRING(main_event_registrations.github_profile_url FROM 'github.com/([^/]+)') = ${user.githubUsername}
             )`,
     })
     .from(user)

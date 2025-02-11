@@ -23,19 +23,30 @@ interface CSVRow extends Record<string, string> {
   Remarks: string;
 }
 
-function extractGithubUsername(githubUrl: string): string {
-  if (!githubUrl || ["NA", "Nil", "N/A", "-", ""].includes(githubUrl.trim())) {
+function normalizeGithubUrl(url: string): string {
+  if (!url || ["NA", "Nil", "N/A", "-", ""].includes(url.trim())) {
     return "";
   }
 
-  // If it's already just a username without URL
-  if (!githubUrl.includes("github.com")) {
-    return githubUrl.trim();
+  const trimmedUrl = url.trim();
+
+  // Extract username from URL, handling various formats
+  const githubRegex =
+    /^(?:https?:\/\/)?(?:www\.)?github\.com\/([a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38})(?:\/.*)?$/i;
+  const match = trimmedUrl.match(githubRegex);
+  if (match) {
+    return `https://github.com/${match[1]}`;
   }
 
-  // Extract from full URL
-  const usernameMatch = githubUrl.match(/github.com[/]([^/\s]+)/);
-  return usernameMatch ? usernameMatch[1] : "";
+  // If it's just a username, construct the URL
+  if (!trimmedUrl.includes("github.com")) {
+    const usernameRegex = /^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/;
+    if (usernameRegex.test(trimmedUrl)) {
+      return `https://github.com/${trimmedUrl}`;
+    }
+  }
+
+  return "";
 }
 
 interface ProcessingStats {
@@ -64,90 +75,189 @@ async function createMainEventRegistrations(
   supabaseClient: SupabaseClient<Database>,
   rows: CSVRow[],
 ) {
-  const { data, error: regError } = await supabaseClient
-    .from("main_event_registrations")
-    .upsert(
-      rows.map((row) => ({
-        first_name: row["First Name"],
-        last_name: row["Last Name"],
-        email: row["Email Address"],
-        github_profile_url: (() => {
-          const url = row["Your Github Profile Link"];
-          if (!url || ["NA", "Nil", "N/A", "-", ""].includes(url.trim())) {
-            return "";
-          }
-          // If it's already a valid GitHub URL, use it as is
-          const githubRegex =
-            /^https?:\/\/(?:www\.)?github\.com\/[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/;
-          if (githubRegex.test(url)) {
-            return url;
-          }
-          // If it's just a username, construct the URL
-          return `https://github.com/${url.trim()}`;
-        })(),
-        linkedin_profile_url: row["Your LinkedIn Profile Link"],
-        has_team: row["Do you already have a team?"].toLowerCase() === "yes",
-        team_name: row["What is your team name? (Also ask your team members to put the same name)"],
-        ticket_email: row["Your Eventbrite Email"],
-        approved_by: row["Approved By"],
-      })),
-      { onConflict: "email" },
-    )
-    .select();
+  // First, filter out rows with missing data
+  const validRows = rows.filter((row) => {
+    const email = row["Email Address"];
+    const githubUrl = normalizeGithubUrl(row["Your Github Profile Link"]);
 
-  if (regError) {
-    console.error("Error creating registrations:", regError);
+    if (email == "" || githubUrl == "") {
+      return false;
+    }
+    return true;
+  });
+
+  if (validRows.length === 0) {
+    console.log("No rows to process for adding main event registrations");
     return 0;
   }
-  return data?.length ?? 0;
+
+  console.log("Processing main event registrations for valid rows:", validRows.length);
+
+  // Get all existing records at once
+  const { data: allExistingRecords, error: fetchError } = await supabaseClient
+    .from("main_event_registrations")
+    .select("email, github_profile_url");
+
+  if (fetchError) {
+    console.error("Error fetching existing records:", fetchError);
+    return 0;
+  }
+
+  // Create sets for quick lookup, normalizing GitHub URLs
+  const existingEmails = new Set(allExistingRecords?.map((r) => r.email) || []);
+  const existingGithubUrls = new Set(
+    (allExistingRecords || [])
+      .map((r) => normalizeGithubUrl(r.github_profile_url || ""))
+      .filter((url) => url !== ""), // Remove empty URLs
+  );
+
+  // Filter out rows that already exist
+  const newRows = validRows.filter((row) => {
+    const email = row["Email Address"].trim().toLowerCase();
+    const githubUrl = normalizeGithubUrl(row["Your Github Profile Link"]);
+    if (existingEmails.has(email) || (githubUrl && existingGithubUrls.has(githubUrl))) {
+      return false;
+    }
+    return true;
+  });
+
+  if (newRows.length === 0) {
+    console.log("No new rows to insert for main event registrations");
+    return 0;
+  }
+
+  const rowsToInsert = newRows.map((row) => {
+    const normalizedUrl = normalizeGithubUrl(row["Your Github Profile Link"]);
+    return {
+      first_name: row["First Name"],
+      last_name: row["Last Name"],
+      email: row["Email Address"],
+      github_profile_url: normalizedUrl,
+      linkedin_profile_url: row["Your LinkedIn Profile Link"],
+      has_team: row["Do you already have a team?"].toLowerCase() === "yes",
+      team_name: row["What is your team name? (Also ask your team members to put the same name)"],
+      ticket_email: row["Your Eventbrite Email"],
+      approved_by: row["Approved By"],
+    };
+  });
+
+  console.log("Main event registrations to insert:", rowsToInsert.length);
+
+  const { data: insertedData, error: insertError } = await supabaseClient
+    .from("main_event_registrations")
+    .insert(rowsToInsert)
+    .select();
+
+  if (insertError) {
+    console.error("Error during batch insert:", insertError);
+    console.error("Attempted to insert:", rowsToInsert);
+    return 0;
+  }
+
+  return insertedData?.length || 0;
 }
 
 async function createOrGetUsers(supabaseClient: SupabaseClient<Database>, rows: CSVRow[]) {
-  // Create a map of unique users by GitHub username
+  // Create a map of unique users by email AND GitHub URL
   const uniqueUsers = new Map();
   rows.forEach((row) => {
-    const githubUsername = extractGithubUsername(row["Your Github Profile Link"]);
-    if (githubUsername) {
-      uniqueUsers.set(githubUsername, {
-        email: row["Email Address"].trim() || row["Email to send ticket to"].trim(),
-        githubUsername,
-        firstName: row["First Name"].trim(),
-        lastName: row["Last Name"].trim(),
-      });
+    const githubUrl = normalizeGithubUrl(row["Your Github Profile Link"]);
+    const email = (row["Email Address"] || row["Your Eventbrite Email"]).trim();
+    if (githubUrl != "") {
+      const githubUsername = (
+        githubUrl.replace(/^https?:\/\/(www\.)?github\.com\//, "") || ""
+      ).toLowerCase();
+      if (githubUsername != "") {
+        uniqueUsers.set(githubUsername, {
+          email,
+          githubUsername,
+          firstName: row["First Name"].trim(),
+          lastName: row["Last Name"].trim(),
+        });
+      }
     }
   });
 
-  // First, upsert unique users
-  const { data: userData, error: userError } = await supabaseClient
+  // Get all existing users
+  const { data: allExistingUsers, error: fetchError } = await supabaseClient
     .from("user")
-    .upsert(Array.from(uniqueUsers.values()), {
-      onConflict: "githubUsername",
-    })
-    .select();
+    .select("id, email, githubUsername, firstName, lastName, role, createdAt");
 
-  if (userError || !userData) {
-    console.error("Error creating users:", userError);
+  if (fetchError) {
+    console.error("Error fetching existing users:", fetchError);
     return [];
   }
 
-  // Then, update first and last names for existing users where these fields are null
-  const updatePromises = Array.from(uniqueUsers.values()).map(async (user) => {
-    const { error: updateError } = await supabaseClient
-      .from("user")
-      .update({
-        firstName: user.firstName,
-        lastName: user.lastName,
-      })
-      .eq("githubUsername", user.githubUsername)
-      .is("firstName", null);
+  console.log("Existing users count:", allExistingUsers?.length);
 
-    if (updateError) {
-      console.error(`Error updating user ${user.githubUsername}:`, updateError);
+  // Create sets for quick lookup
+  const existingEmails = new Set(allExistingUsers?.map((u) => u.email.toLowerCase()) || []);
+  const existingGithubUsernames = new Set(
+    (allExistingUsers || [])
+      .map((u) => u.githubUsername.toLowerCase())
+      .filter((username) => username !== ""),
+  );
+
+  // Create a map of existing users by GitHub username for easy lookup
+  const existingUsersByUsername = new Map(
+    (allExistingUsers || []).map((user) => [user.githubUsername.toLowerCase(), user]),
+  );
+
+  console.log("Existing emails:", Array.from(existingEmails));
+  console.log("Existing GitHub usernames:", Array.from(existingGithubUsernames));
+
+  // Filter out users that already exist by either email or GitHub username
+  const newUsers = Array.from(uniqueUsers.values()).filter((user) => {
+    const emailExists = existingEmails.has(user.email);
+    const usernameExists = existingGithubUsernames.has(user.githubUsername);
+
+    if (emailExists || usernameExists) {
+      return false;
     }
+    return true;
   });
 
+  console.log("New users to create:", newUsers.length);
+
+  // Create new users
+  let userData: User[] = [];
+  if (newUsers.length > 0) {
+    const { data, error: userError } = await supabaseClient.from("user").insert(newUsers).select();
+
+    if (userError) {
+      console.error("Error creating users:", userError);
+      console.error("Attempted to insert:", newUsers);
+      return allExistingUsers || [];
+    }
+    userData = data || [];
+  }
+
+  // Update existing users
+  const updatePromises = Array.from(uniqueUsers.values())
+    .filter((user) => {
+      const existingUser = existingUsersByUsername.get(user.githubUsername);
+      return existingUser && (!existingUser.firstName || !existingUser.lastName);
+    })
+    .map(async (user) => {
+      console.log(`Updating user ${user.githubUsername} with names:`, {
+        firstName: user.firstName,
+        lastName: user.lastName,
+      });
+      const { error: updateError } = await supabaseClient
+        .from("user")
+        .update({
+          firstName: user.firstName,
+          lastName: user.lastName,
+        })
+        .eq("githubUsername", user.githubUsername);
+
+      if (updateError) {
+        console.error(`Github user ${user.githubUsername} did not update:`, updateError);
+      }
+    });
+
   await Promise.all(updatePromises);
-  return userData;
+  return [...(allExistingUsers || []), ...userData];
 }
 
 async function createOrGetTeams(supabaseClient: SupabaseClient<Database>, rows: CSVRow[]) {
@@ -218,7 +328,7 @@ async function createTeamMembers(
   const teamMemberships = rowsWithTeams
     .map((row) => {
       const user = users.find(
-        (u) => u.email === (row["Email Address"] || row["Email to send ticket to"]).trim(),
+        (u) => u.email === (row["Email Address"] || row["Your Eventb"]).trim(),
       );
 
       const teamName =
@@ -254,6 +364,19 @@ async function createTeamMembers(
   }
   return data.length;
 }
+
+const deduplicateRows = (rows: CSVRow[]) => {
+  const uniqueRows = rows.reduce((acc, row) => {
+    const email = row["Email Address"];
+    const githubUrl = normalizeGithubUrl(row["Your Github Profile Link"]);
+    const key = `${email}_${githubUrl}`;
+    if (!acc.has(key)) {
+      acc.set(key, row);
+    }
+    return acc;
+  }, new Map<string, CSVRow>());
+  return Array.from(uniqueRows.values());
+};
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -301,7 +424,7 @@ serve(async (req) => {
     }
 
     const csvText = await file.text();
-    const rows = parse(csvText, {
+    let rows = parse(csvText, {
       skipFirstRow: true,
       columns: [
         "Timestamp",
@@ -319,6 +442,8 @@ serve(async (req) => {
       ],
     }) as CSVRow[];
 
+    rows = deduplicateRows(rows);
+
     const nonApprovedValues = ["Need help considering", "Reject", ""];
     const approvedRows = rows.filter((row) => !nonApprovedValues.includes(row["Approved By"]));
 
@@ -329,32 +454,47 @@ serve(async (req) => {
       teamMembers: 0,
     };
 
-    // Bulk create registrations
+    // Process registrations first
     stats.registrations = await createMainEventRegistrations(supabaseClient, approvedRows);
 
-    // Process all approved users first
-    const users = await createOrGetUsers(supabaseClient, approvedRows);
-    stats.users = users.length;
+    // Process users independently - errors here won't affect registration creation
+    try {
+      const users = await createOrGetUsers(supabaseClient, approvedRows);
+      stats.users = users.length;
 
-    // Get rows with teams
-    const rowsWithTeams = approvedRows.filter(
-      (row) =>
-        row["Do you already have a team?"].toLowerCase() === "yes" &&
-        row["What is your team name? (Also ask your team members to put the same name)"],
-    );
+      // Only process teams if user creation/fetching was successful
+      const rowsWithTeams = approvedRows.filter(
+        (row) =>
+          row["Do you already have a team?"].toLowerCase() === "yes" &&
+          row["What is your team name? (Also ask your team members to put the same name)"],
+      );
 
-    if (rowsWithTeams.length > 0) {
-      // Bulk create/get teams
-      const teams = await createOrGetTeams(supabaseClient, rowsWithTeams);
-      stats.teams = teams.length;
+      if (rowsWithTeams.length > 0) {
+        try {
+          const teams = await createOrGetTeams(supabaseClient, rowsWithTeams);
+          stats.teams = teams.length;
 
-      // Create team memberships with the updated function signature
-      stats.teamMembers = await createTeamMembers(supabaseClient, rowsWithTeams, users, teams);
+          try {
+            stats.teamMembers = await createTeamMembers(
+              supabaseClient,
+              rowsWithTeams,
+              users,
+              teams,
+            );
+          } catch (error) {
+            console.error("Error creating team members:", error);
+          }
+        } catch (error) {
+          console.error("Error processing teams:", error);
+        }
+      }
+    } catch (error) {
+      console.error("Error processing users:", error);
     }
 
     return new Response(
       JSON.stringify({
-        message: "Successfully processed registrations",
+        message: `Successfully read ${rows.length} rows and processed ${stats.registrations} registrations`,
         stats: {
           registrationsCreated: stats.registrations,
           usersCreated: stats.users,

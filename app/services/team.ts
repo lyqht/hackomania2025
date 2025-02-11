@@ -31,7 +31,7 @@ export async function getTeamById(teamId: string): Promise<Team | null> {
           )`,
           mainEventRegistered: sql<boolean>`EXISTS (
             SELECT 1 FROM main_event_registrations
-            WHERE main_event_registrations.email = ${user.email}
+            WHERE SUBSTRING(main_event_registrations.github_profile_url FROM 'github.com/([^/]+)') = ${user.githubUsername}
           )`,
         },
       })

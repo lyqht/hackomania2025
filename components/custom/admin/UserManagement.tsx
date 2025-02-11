@@ -178,7 +178,7 @@ export default function UserManagement({
 }: UserManagementProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [hideUnregisteredUsers, setHideUnregisteredUsers] = useState(true);
+  const [hideUnregisteredUsers, setHideUnregisteredUsers] = useState(false);
   const [hideUsersWithTeams, setHideUsersWithTeams] = useState(false);
 
   // Filter users based on search
