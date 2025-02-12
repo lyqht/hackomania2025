@@ -68,12 +68,43 @@ const SEARCH_TYPE_LABELS: Record<SearchType, string> = {
   name: "Name",
 };
 
+export interface MergeUserData {
+  existingUser: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    githubProfileUrl: string;
+    hasTeam: boolean;
+  };
+  newUser: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    githubProfileUrl: string;
+    hasTeam: boolean;
+  };
+}
+
 interface UserTableProps {
   users: UserInfo[];
   onSetTeamLeader: (userId: string) => Promise<void>;
   onRemoveUser: (userId: string) => Promise<void>;
   onEditUser: (userId: string, data: Partial<UserInfo>) => Promise<void>;
   onNavigateToTeam: (teamName: string) => void;
+  onMarkAsRegistered: (userId: string) => Promise<{
+    error?: string;
+    duplicateData?: MergeUserData;
+    success?: boolean;
+  }>;
+  onMergeUser: (
+    userId: string,
+    data: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      githubProfileUrl: string;
+    },
+  ) => Promise<{ error?: string; success?: boolean }>;
 }
 
 function UserTable({
@@ -82,6 +113,8 @@ function UserTable({
   onRemoveUser,
   onEditUser,
   onNavigateToTeam,
+  onMarkAsRegistered,
+  onMergeUser,
 }: UserTableProps) {
   return (
     <Table>
@@ -130,6 +163,8 @@ function UserTable({
                 onSetTeamLeader={onSetTeamLeader}
                 onRemoveUser={onRemoveUser}
                 onEditUser={onEditUser}
+                onMarkAsRegistered={onMarkAsRegistered}
+                onMergeUser={onMergeUser}
               />
             </TableCell>
           </TableRow>
@@ -323,6 +358,20 @@ interface UserManagementProps {
   onEditUser: (userId: string, data: Partial<UserInfo>) => Promise<void>;
   onNavigateToTeam: (teamName: string) => void;
   onCreateUser: (data: z.infer<typeof createUserSchema>) => Promise<void>;
+  onMarkAsRegistered: (userId: string) => Promise<{
+    error?: string;
+    duplicateData?: MergeUserData;
+    success?: boolean;
+  }>;
+  onMergeUser: (
+    userId: string,
+    data: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      githubProfileUrl: string;
+    },
+  ) => Promise<{ error?: string; success?: boolean }>;
 }
 
 export default function UserManagement({
@@ -341,6 +390,8 @@ export default function UserManagement({
   onEditUser,
   onNavigateToTeam,
   onCreateUser,
+  onMarkAsRegistered,
+  onMergeUser,
 }: UserManagementProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -676,6 +727,8 @@ export default function UserManagement({
             onRemoveUser={onRemoveUser}
             onEditUser={onEditUser}
             onNavigateToTeam={onNavigateToTeam}
+            onMarkAsRegistered={onMarkAsRegistered}
+            onMergeUser={onMergeUser}
           />
           <div className="mt-4">
             <Pagination

@@ -7,6 +7,8 @@ import {
   syncEventbrite,
   uploadFile,
   createUser,
+  markUserAsMainEventRegistered,
+  mergeAndRegisterUser,
 } from "@/app/services/admin";
 import { getAllUsersWithoutPagination, UserInfo, CreateUserData } from "@/app/services/user";
 import { toast, Toaster } from "sonner";
@@ -207,6 +209,56 @@ export default function AdminClient() {
     }
   };
 
+  const handleMarkAsRegistered = async (userId: string): Promise<{
+    error?: string;
+    duplicateData?: MergeUserData;
+    success?: boolean;
+  }> => {
+    try {
+      const result = await markUserAsMainEventRegistered(userId);
+      if (result.error && !result.duplicateData) {
+        toast.error(result.error);
+        return result;
+      }
+      if (result.success) {
+        toast.success("User marked as registered successfully");
+        await fetchUsers(); // Refresh the user list
+      }
+      return result as {
+        error?: string;
+        duplicateData?: MergeUserData;
+        success?: boolean;
+      };
+    } catch (error) {
+      toast.error("Failed to mark user as registered", { description: error as string });
+      return { error: "Failed to mark user as registered" };
+    }
+  };
+
+  const handleMergeUser = async (
+    userId: string,
+    data: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      githubProfileUrl: string;
+    },
+  ) => {
+    try {
+      const result = await mergeAndRegisterUser(userId, data);
+      if (result.error) {
+        toast.error(result.error);
+        return result;
+      }
+      toast.success("User registered successfully");
+      await fetchUsers(); // Refresh the user list
+      return result;
+    } catch (error) {
+      toast.error("Failed to merge user", { description: error as string });
+      return { error: "Failed to merge user" };
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8 p-5 md:p-20">
       <Toaster />
@@ -259,6 +311,8 @@ export default function AdminClient() {
             onEditUser={handleEditUser}
             onNavigateToTeam={navigateToTeam}
             onCreateUser={handleCreateUser}
+            onMarkAsRegistered={handleMarkAsRegistered}
+            onMergeUser={handleMergeUser}
           />
         </TabsContent>
       </Tabs>

@@ -42,19 +42,272 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface UserActionsProps {
   user: UserInfo;
   onSetTeamLeader: (userId: string) => Promise<void>;
   onRemoveUser: (userId: string) => Promise<void>;
   onEditUser: (userId: string, data: UserUpdateData) => Promise<void>;
+  onMarkAsRegistered: (userId: string) => Promise<{
+    error?: string;
+    duplicateData?: MergeUserData;
+    success?: boolean;
+  }>;
+  onMergeUser: (
+    userId: string,
+    data: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      githubProfileUrl: string;
+    },
+  ) => Promise<{ error?: string; success?: boolean }>;
 }
 
-export function UserActions({ user, onSetTeamLeader, onRemoveUser, onEditUser }: UserActionsProps) {
+interface MergeUserData {
+  existingUser: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    githubProfileUrl: string;
+    hasTeam: boolean;
+  };
+  newUser: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    githubProfileUrl: string;
+    hasTeam: boolean;
+  };
+}
+
+interface MergeUserDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  duplicateData: MergeUserData;
+  onMerge: (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    githubProfileUrl: string;
+  }) => Promise<void>;
+  isLoading: boolean;
+}
+
+const mergeUserSchema = z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.string().email(),
+  githubProfileUrl: z.string().url(),
+});
+
+function MergeUserDialog({
+  open,
+  onOpenChange,
+  duplicateData,
+  onMerge,
+  isLoading,
+}: MergeUserDialogProps) {
+  const form = useForm<z.infer<typeof mergeUserSchema>>({
+    resolver: zodResolver(mergeUserSchema),
+    defaultValues: {
+      firstName: duplicateData.newUser.firstName,
+      lastName: duplicateData.newUser.lastName,
+      email: duplicateData.newUser.email,
+      githubProfileUrl: duplicateData.newUser.githubProfileUrl,
+    },
+  });
+
+  const useExistingData = () => {
+    form.reset({
+      firstName: duplicateData.existingUser.firstName,
+      lastName: duplicateData.existingUser.lastName,
+      email: duplicateData.existingUser.email,
+      githubProfileUrl: duplicateData.existingUser.githubProfileUrl,
+    });
+  };
+
+  const useNewData = () => {
+    form.reset({
+      firstName: duplicateData.newUser.firstName,
+      lastName: duplicateData.newUser.lastName,
+      email: duplicateData.newUser.email,
+      githubProfileUrl: duplicateData.newUser.githubProfileUrl,
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Duplicate User Found</DialogTitle>
+          <DialogDescription>
+            A user with this email already exists in the main event registrations. Please review
+            both records and choose which data to use, or modify the data as needed.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid gap-6">
+          <div className="grid gap-4">
+            <div className="flex justify-between gap-4">
+              <div className="flex-1 space-y-2">
+                <h3 className="font-semibold">Existing Registration</h3>
+                <div className="rounded-lg border p-3">
+                  <dl className="space-y-1 text-sm">
+                    <div>
+                      <dt className="inline font-medium">Name: </dt>
+                      <dd className="inline">
+                        {duplicateData.existingUser.firstName} {duplicateData.existingUser.lastName}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="inline font-medium">Email: </dt>
+                      <dd className="inline">{duplicateData.existingUser.email}</dd>
+                    </div>
+                    <div>
+                      <dt className="inline font-medium">GitHub: </dt>
+                      <dd className="inline break-all">
+                        {duplicateData.existingUser.githubProfileUrl}
+                      </dd>
+                    </div>
+                  </dl>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-2 w-full"
+                    onClick={useExistingData}
+                  >
+                    Use this data
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex-1 space-y-2">
+                <h3 className="font-semibold">New User Data</h3>
+                <div className="rounded-lg border p-3">
+                  <dl className="space-y-1 text-sm">
+                    <div>
+                      <dt className="inline font-medium">Name: </dt>
+                      <dd className="inline">
+                        {duplicateData.newUser.firstName} {duplicateData.newUser.lastName}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="inline font-medium">Email: </dt>
+                      <dd className="inline">{duplicateData.newUser.email}</dd>
+                    </div>
+                    <div>
+                      <dt className="inline font-medium">GitHub: </dt>
+                      <dd className="inline break-all">{duplicateData.newUser.githubProfileUrl}</dd>
+                    </div>
+                  </dl>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-2 w-full"
+                    onClick={useNewData}
+                  >
+                    Use this data
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onMerge)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="email" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="githubProfileUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>GitHub Profile URL</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <DialogFooter>
+                  <Button type="submit" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      "Save and Register"
+                    )}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export function UserActions({
+  user,
+  onSetTeamLeader,
+  onRemoveUser,
+  onEditUser,
+  onMarkAsRegistered,
+  onMergeUser,
+}: UserActionsProps) {
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isRemoveDialogOpen, setIsRemoveDialogOpen] = useState(false);
   const [isLeaderDialogOpen, setIsLeaderDialogOpen] = useState(false);
+  const [isRegisterDialogOpen, setIsRegisterDialogOpen] = useState(false);
+  const [isMergeDialogOpen, setIsMergeDialogOpen] = useState(false);
+  const [duplicateData, setDuplicateData] = useState<MergeUserData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSetTeamLeader = async () => {
@@ -87,6 +340,40 @@ export function UserActions({ user, onSetTeamLeader, onRemoveUser, onEditUser }:
     }
   };
 
+  const handleMarkAsRegistered = async () => {
+    setIsLoading(true);
+    try {
+      const result = await onMarkAsRegistered(user.id);
+      if (result.error === "Duplicate email found" && result.duplicateData) {
+        setDuplicateData(result.duplicateData);
+        setIsMergeDialogOpen(true);
+        setIsRegisterDialogOpen(false);
+      } else if (result.error) {
+        toast.error(result.error);
+      }
+    } finally {
+      setIsLoading(false);
+      if (!duplicateData) {
+        setIsRegisterDialogOpen(false);
+      }
+    }
+  };
+
+  const handleMergeUser = async (data: z.infer<typeof mergeUserSchema>) => {
+    setIsLoading(true);
+    try {
+      const result = await onMergeUser(user.id, data);
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      setIsMergeDialogOpen(false);
+      toast.success("User registered successfully");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <Popover open={isActionsOpen} onOpenChange={setIsActionsOpen}>
@@ -102,6 +389,19 @@ export function UserActions({ user, onSetTeamLeader, onRemoveUser, onEditUser }:
         </PopoverTrigger>
         <PopoverContent align="end">
           <div className="grid gap-1">
+            {!user.mainEventRegistered && (
+              <Button
+                variant="ghost"
+                className="justify-start"
+                onClick={() => {
+                  setIsActionsOpen(false);
+                  setIsRegisterDialogOpen(true);
+                }}
+                disabled={isLoading}
+              >
+                Mark as registered
+              </Button>
+            )}
             {user.teamRole !== "leader" && (
               <Button
                 variant="ghost"
@@ -164,6 +464,41 @@ export function UserActions({ user, onSetTeamLeader, onRemoveUser, onEditUser }:
         onConfirm={handleSetTeamLeader}
         isLoading={isLoading}
       />
+
+      <AlertDialog open={isRegisterDialogOpen} onOpenChange={setIsRegisterDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Mark User as Registered</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to mark {user.firstName} {user.lastName} as registered for the
+              main event? This will add them to the main event registrations.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleMarkAsRegistered} disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Registering...
+                </>
+              ) : (
+                "Confirm"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {duplicateData && (
+        <MergeUserDialog
+          open={isMergeDialogOpen}
+          onOpenChange={setIsMergeDialogOpen}
+          duplicateData={duplicateData}
+          onMerge={handleMergeUser}
+          isLoading={isLoading}
+        />
+      )}
     </>
   );
 }
