@@ -90,7 +90,11 @@ export default function NavigtionBar() {
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: -20, opacity: 0 }}
                   >
-                    <Link href={link.href} className="text-white">
+                    <Link
+                      href={link.href}
+                      className="text-white"
+                      onClick={() => setExpandMobileNav(false)}
+                    >
                       {link.title}
                     </Link>
                   </motion.div>
