@@ -288,3 +288,81 @@ export async function mergeAndRegisterUser(
     return { error: "Failed to merge user" };
   }
 }
+
+export async function findDuplicateRegistrations() {
+  try {
+    // Find all users that are not registered for the main event
+    const users = await db
+      .select({
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        githubUsername: user.githubUsername,
+        mainEventRegistered: sql<boolean>`EXISTS (
+          SELECT 1 FROM main_event_registrations
+          WHERE SUBSTRING(main_event_registrations.github_profile_url FROM 'github.com/([^/]+)') = ${user.githubUsername}
+        )`,
+      })
+      .from(user);
+
+    // Get all main event registrations
+    const registrations = await db
+      .select({
+        id: mainEventRegistrations.id,
+        firstName: mainEventRegistrations.firstName,
+        lastName: mainEventRegistrations.lastName,
+        email: mainEventRegistrations.email,
+        githubProfileUrl: mainEventRegistrations.githubProfileUrl,
+        hasTeam: mainEventRegistrations.hasTeam,
+      })
+      .from(mainEventRegistrations);
+
+    // Find duplicates by email, but only for unregistered users
+    const duplicates: Array<{
+      existingUser: (typeof registrations)[0];
+      newUser: {
+        firstName: string;
+        lastName: string;
+        email: string;
+        githubProfileUrl: string;
+        hasTeam: boolean;
+      };
+    }> = [];
+
+    for (const userInfo of users) {
+      // Skip if user is already registered for main event
+      if (userInfo.mainEventRegistered) continue;
+
+      const matchingRegistration = registrations.find(
+        (reg) => reg.email.toLowerCase() === userInfo.email.toLowerCase(),
+      );
+
+      if (matchingRegistration) {
+        // Check if there are differences in the data
+        const userGithubUrl = `https://github.com/${userInfo.githubUsername}`;
+        if (
+          matchingRegistration.firstName !== userInfo.firstName ||
+          matchingRegistration.lastName !== userInfo.lastName ||
+          matchingRegistration.githubProfileUrl !== userGithubUrl
+        ) {
+          duplicates.push({
+            existingUser: matchingRegistration,
+            newUser: {
+              firstName: userInfo.firstName || "",
+              lastName: userInfo.lastName || "",
+              email: userInfo.email,
+              githubProfileUrl: userGithubUrl,
+              hasTeam: false,
+            },
+          });
+        }
+      }
+    }
+
+    return { duplicates };
+  } catch (error) {
+    console.error("Error finding duplicate registrations:", error);
+    return { error: "Failed to find duplicate registrations" };
+  }
+}

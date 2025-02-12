@@ -9,6 +9,7 @@ import {
   createUser,
   markUserAsMainEventRegistered,
   mergeAndRegisterUser,
+  findDuplicateRegistrations,
 } from "@/app/services/admin";
 import { getAllUsersWithoutPagination, UserInfo, CreateUserData } from "@/app/services/user";
 import { toast, Toaster } from "sonner";
@@ -18,7 +19,7 @@ import UserManagement from "./UserManagement";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { SearchType } from "./UserManagement";
+import type { MergeUserData, SearchType } from "./UserManagement";
 import SignOutButton from "@/components/custom/SignOutButton";
 import { Button } from "@/components/ui/button";
 import { Presentation } from "lucide-react";
@@ -259,6 +260,25 @@ export default function AdminClient() {
     }
   };
 
+  const handleFindDuplicates = async (): Promise<{
+    error?: string;
+    duplicates?: MergeUserData[];
+  }> => {
+    try {
+      const result = await findDuplicateRegistrations();
+      if (result.error) {
+        toast.error(result.error);
+      }
+      return result as {
+        error?: string;
+        duplicates?: MergeUserData[];
+      };
+    } catch (error) {
+      toast.error("Failed to find duplicates", { description: error as string });
+      return { error: "Failed to find duplicates" };
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8 p-5 md:p-20">
       <Toaster />
@@ -313,6 +333,7 @@ export default function AdminClient() {
             onCreateUser={handleCreateUser}
             onMarkAsRegistered={handleMarkAsRegistered}
             onMergeUser={handleMergeUser}
+            onFindDuplicates={handleFindDuplicates}
           />
         </TabsContent>
       </Tabs>

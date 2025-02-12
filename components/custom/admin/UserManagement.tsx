@@ -51,12 +51,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown, Loader2, Search, UserPlus, X } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2, Search, UserPlus, X, AlertCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { ExportUsersAsExcelButton } from "./ExportUsersAsExcelButton";
 import { UserActions } from "./UserActions";
+import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -372,6 +373,10 @@ interface UserManagementProps {
       githubProfileUrl: string;
     },
   ) => Promise<{ error?: string; success?: boolean }>;
+  onFindDuplicates: () => Promise<{
+    error?: string;
+    duplicates?: MergeUserData[];
+  }>;
 }
 
 export default function UserManagement({
@@ -392,11 +397,32 @@ export default function UserManagement({
   onCreateUser,
   onMarkAsRegistered,
   onMergeUser,
+  onFindDuplicates,
 }: UserManagementProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchOpen, setSearchOpen] = useState(false);
   const [hideUnregisteredUsers, setHideUnregisteredUsers] = useState(false);
   const [hideUsersWithTeams, setHideUsersWithTeams] = useState(false);
+  const [duplicatesDialogOpen, setDuplicatesDialogOpen] = useState(false);
+  const [duplicates, setDuplicates] = useState<MergeUserData[]>([]);
+  const [isLoadingDuplicates, setIsLoadingDuplicates] = useState(false);
+
+  const handleFindDuplicates = async () => {
+    setIsLoadingDuplicates(true);
+    try {
+      const result = await onFindDuplicates();
+      if (result.error) {
+        toast.error(result.error);
+      } else if (result.duplicates) {
+        setDuplicates(result.duplicates);
+        setDuplicatesDialogOpen(true);
+      }
+    } catch (error) {
+      toast.error("Failed to find duplicates", { description: error as string });
+    } finally {
+      setIsLoadingDuplicates(false);
+    }
+  };
 
   // Filter users based on search
   const filteredUsers = useMemo(() => {
@@ -469,9 +495,103 @@ export default function UserManagement({
               )}
             </h2>
             <CreateUserDialog users={users} onCreateUser={onCreateUser} />
+            <Button variant="outline" onClick={handleFindDuplicates} disabled={isLoadingDuplicates}>
+              {isLoadingDuplicates ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <AlertCircle className="mr-2 h-4 w-4" />
+              )}
+              Resolve registration conflicts
+            </Button>
           </div>
           <ExportUsersAsExcelButton users={filteredUsers} />
         </div>
+
+        {/* Duplicates Dialog */}
+        <Dialog open={duplicatesDialogOpen} onOpenChange={setDuplicatesDialogOpen}>
+          <DialogContent className="max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Duplicate Registrations</DialogTitle>
+              <DialogDescription>
+                <span className="block">
+                  Users may not see that they are registered for the event because they signed up
+                  through Eventbrite/Google sheets multiple times, resulting in a conflict of
+                  information.
+                </span>
+                <span className="mt-4 block">
+                  There are {duplicates.length} users with duplicate or mismatched registration
+                  information.
+                </span>
+              </DialogDescription>
+            </DialogHeader>
+            {duplicates.length === 0 ? (
+              <div className="py-4 text-center text-neutral-500">No duplicates found.</div>
+            ) : (
+              <div className="space-y-6">
+                <div className="space-y-6">
+                  <Button
+                    variant="default"
+                    className="w-full"
+                    onClick={async () => {
+                      const promises = duplicates
+                        .map((duplicate) => {
+                          const userId = users.find((u) => u.email === duplicate.newUser.email)?.id;
+                          if (!userId) return null;
+                          return onMergeUser(userId, duplicate.newUser);
+                        })
+                        .filter(Boolean);
+
+                      try {
+                        await Promise.all(promises);
+                        toast.success("All conflicts resolved successfully");
+                        setDuplicatesDialogOpen(false);
+                      } catch (error) {
+                        toast.error("Failed to resolve some conflicts", {
+                          description: error as string,
+                        });
+                      }
+                    }}
+                  >
+                    Resolve all conflicts
+                  </Button>
+                  {duplicates.map((duplicate, index) => {
+                    // Find the user ID from the users array based on email
+                    const userId = users.find((u) => u.email === duplicate.newUser.email)?.id;
+                    if (!userId) return null;
+
+                    return (
+                      <div key={index} className="rounded-lg border p-4">
+                        <div className="mb-4 grid grid-cols-2 gap-4">
+                          <div>
+                            <h3 className="mb-2 font-semibold">Existing Registration</h3>
+                            <div className="space-y-1 text-sm">
+                              <p>
+                                Name: {duplicate.existingUser.firstName}{" "}
+                                {duplicate.existingUser.lastName}
+                              </p>
+                              <p>Email: {duplicate.existingUser.email}</p>
+                              <p>GitHub: {duplicate.existingUser.githubProfileUrl}</p>
+                            </div>
+                          </div>
+                          <div>
+                            <h3 className="mb-2 font-semibold">User Info</h3>
+                            <div className="space-y-1 text-sm">
+                              <p>
+                                Name: {duplicate.newUser.firstName} {duplicate.newUser.lastName}
+                              </p>
+                              <p>Email: {duplicate.newUser.email}</p>
+                              <p>GitHub: {duplicate.newUser.githubProfileUrl}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
         <div className="mb-6 space-y-4">
           <form
