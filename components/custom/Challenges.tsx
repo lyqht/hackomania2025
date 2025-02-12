@@ -55,8 +55,8 @@ export default function Challenges() {
 
           {/* Challenge Statement */}
           <div className="flex flex-1 flex-col items-center gap-4 md:items-start">
-            <p className="text-xl font-bold">{challenge.statement}</p>
-            <p className="text-xl font-medium">{challenge.description}</p>
+            <p className="text-balance text-base font-bold md:text-xl">{challenge.statement}</p>
+            <p className="text-balance text-base font-medium md:text-xl">{challenge.description}</p>
             <a
               href={challenge.pdf}
               target="_blank"
