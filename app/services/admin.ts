@@ -6,7 +6,7 @@ import { team, teamMembers } from "@/utils/db/schema/team";
 import { user } from "@/utils/db/schema/user";
 import { and, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { type UserUpdateData } from "./user";
+import { createUser as createUserInDb, CreateUserData, type UserUpdateData } from "./user";
 
 export async function uploadFile(formData: FormData) {
   try {
@@ -169,5 +169,18 @@ export async function editUser(userId: string, data: UserUpdateData) {
   } catch (error) {
     console.error("Error updating user:", error);
     return { error: "Failed to update user" };
+  }
+}
+
+export async function createUser(data: CreateUserData) {
+  try {
+    const newUser = await createUserInDb(data);
+    if (!newUser) {
+      return { error: "Failed to create user" };
+    }
+    return { data: newUser };
+  } catch (error) {
+    console.error("Error creating user:", error);
+    return { error: "An error occurred while creating the user" };
   }
 }

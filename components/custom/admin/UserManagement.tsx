@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { UserInfo } from "@/app/services/user";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -12,13 +12,36 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -27,10 +50,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Check, ChevronsUpDown, Search, Loader2, X } from "lucide-react";
-import { UserActions } from "./UserActions";
-import { Checkbox } from "@/components/ui/checkbox";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, ChevronsUpDown, Loader2, Search, UserPlus, X } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { ExportUsersAsExcelButton } from "./ExportUsersAsExcelButton";
+import { UserActions } from "./UserActions";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -143,6 +169,144 @@ function Pagination({ totalPages, currentPage, onPageChange }: PaginationProps) 
   );
 }
 
+const createUserSchema = z.object({
+  email: z.string().email(),
+  githubUsername: z.string().min(1),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  role: z.enum(["participant", "admin"]).default("participant"),
+});
+
+interface CreateUserDialogProps {
+  users: UserInfo[];
+  onCreateUser: (data: z.infer<typeof createUserSchema>) => Promise<void>;
+}
+
+function CreateUserDialog({ users, onCreateUser }: CreateUserDialogProps) {
+  const [open, setOpen] = useState(false);
+  const form = useForm<z.infer<typeof createUserSchema>>({
+    resolver: zodResolver(createUserSchema),
+    defaultValues: {
+      role: "participant",
+    },
+  });
+
+  const onSubmit = async (data: z.infer<typeof createUserSchema>) => {
+    const existingUser = users.find(
+      (user) => user.githubUsername.toLowerCase() === data.githubUsername.toLowerCase(),
+    );
+
+    if (existingUser) {
+      form.setError("githubUsername", {
+        type: "manual",
+        message: "This GitHub username already exists",
+      });
+      return;
+    }
+
+    await onCreateUser(data);
+    setOpen(false);
+    form.reset();
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>
+          <UserPlus className="mr-2 h-4 w-4" />
+          Add User
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Add New User</DialogTitle>
+          <DialogDescription>
+            Participants will be automatically registered for the main event.
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="email" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="githubUsername"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>GitHub Username</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="participant">Participant</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Create User</Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 interface UserManagementProps {
   users: UserInfo[];
   isLoading: boolean;
@@ -158,6 +322,7 @@ interface UserManagementProps {
   onRemoveUser: (userId: string) => Promise<void>;
   onEditUser: (userId: string, data: Partial<UserInfo>) => Promise<void>;
   onNavigateToTeam: (teamName: string) => void;
+  onCreateUser: (data: z.infer<typeof createUserSchema>) => Promise<void>;
 }
 
 export default function UserManagement({
@@ -175,6 +340,7 @@ export default function UserManagement({
   onRemoveUser,
   onEditUser,
   onNavigateToTeam,
+  onCreateUser,
 }: UserManagementProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -244,12 +410,15 @@ export default function UserManagement({
     <div className="rounded-lg border border-neutral-400 p-4">
       <div className="mb-4">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">
-            Users{" "}
-            {filteredUsers.length > 0 && (
-              <span className="text-sm text-neutral-500">({filteredUsers.length})</span>
-            )}
-          </h2>
+          <div className="flex items-center gap-4">
+            <h2 className="text-xl font-semibold">
+              Users{" "}
+              {filteredUsers.length > 0 && (
+                <span className="text-sm text-neutral-500">({filteredUsers.length})</span>
+              )}
+            </h2>
+            <CreateUserDialog users={users} onCreateUser={onCreateUser} />
+          </div>
           <ExportUsersAsExcelButton users={filteredUsers} />
         </div>
 

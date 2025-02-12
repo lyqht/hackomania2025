@@ -1,7 +1,10 @@
 "use server";
 
 import { db } from "@/utils/db";
-import { preEventRegistrations } from "@/utils/db/schema/eventbrite";
+import {
+  mainEventRegistrations,
+  preEventRegistrations,
+} from "@/utils/db/schema/eventbrite";
 import { team, teamMembers } from "@/utils/db/schema/team";
 import { user } from "@/utils/db/schema/user";
 import { desc, eq, sql } from "drizzle-orm";
@@ -25,6 +28,14 @@ export type UserInfo = {
 
 export type UserUpdateData = Partial<UserInfo> & {
   newTeamName?: string;
+};
+
+export type CreateUserData = {
+  email: string;
+  githubUsername: string;
+  firstName: string;
+  lastName: string;
+  role: "participant" | "admin";
 };
 
 export async function getAllUsersWithoutPagination(): Promise<UserInfo[]> {
@@ -218,6 +229,55 @@ export async function changePage(formData: FormData) {
 
   const pageNumber = parseInt(page, 10);
   redirect(`/admin?page=${pageNumber}`);
+}
+
+export async function createUser(
+  data: CreateUserData,
+): Promise<UserInfo | null> {
+  try {
+    // Create user
+    const [newUser] = await db
+      .insert(user)
+      .values({
+        email: data.email,
+        githubUsername: data.githubUsername,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        role: data.role,
+      })
+      .returning();
+
+    // Add to main event registrations only if the user is a participant
+    if (data.role === "participant") {
+      await db.insert(mainEventRegistrations).values({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        githubProfileUrl: `https://github.com/${data.githubUsername}`,
+        hasTeam: false,
+      });
+    }
+
+    // Return the created user with all the fields
+    return {
+      id: newUser.id,
+      email: newUser.email,
+      githubUsername: newUser.githubUsername,
+      firstName: newUser.firstName || null,
+      lastName: newUser.lastName || null,
+      teamId: null,
+      teamName: null,
+      teamRole: null,
+      role: newUser.role || "participant",
+      createdAt: newUser.createdAt.toISOString(),
+      updatedAt: newUser.createdAt.toISOString(),
+      preEventRegistered: false,
+      mainEventRegistered: true,
+    };
+  } catch (error) {
+    console.error("Error creating user:", error);
+    return null;
+  }
 }
 
 // #endregion

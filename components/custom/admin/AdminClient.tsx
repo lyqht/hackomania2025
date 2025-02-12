@@ -6,8 +6,9 @@ import {
   setTeamLeader,
   syncEventbrite,
   uploadFile,
+  createUser,
 } from "@/app/services/admin";
-import { getAllUsersWithoutPagination, UserInfo } from "@/app/services/user";
+import { getAllUsersWithoutPagination, UserInfo, CreateUserData } from "@/app/services/user";
 import { toast, Toaster } from "sonner";
 import ChallengeManagement from "./ChallengeManagement";
 import TeamManagement from "./TeamManagement";
@@ -192,6 +193,20 @@ export default function AdminClient() {
     setSearchType(type);
   };
 
+  const handleCreateUser = async (data: CreateUserData) => {
+    try {
+      const result = await createUser(data);
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      toast.success("User created successfully");
+      await fetchUsers(); // Refresh the user list after creation
+    } catch (error) {
+      toast.error("Failed to create user", { description: error as string });
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8 p-5 md:p-20">
       <Toaster />
@@ -243,6 +258,7 @@ export default function AdminClient() {
             onRemoveUser={handleRemoveUser}
             onEditUser={handleEditUser}
             onNavigateToTeam={navigateToTeam}
+            onCreateUser={handleCreateUser}
           />
         </TabsContent>
       </Tabs>
