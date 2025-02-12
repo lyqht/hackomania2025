@@ -6,8 +6,12 @@ import {
   setTeamLeader,
   syncEventbrite,
   uploadFile,
+  createUser,
+  markUserAsMainEventRegistered,
+  mergeAndRegisterUser,
+  findDuplicateRegistrations,
 } from "@/app/services/admin";
-import { getAllUsersWithoutPagination, UserInfo } from "@/app/services/user";
+import { getAllUsersWithoutPagination, UserInfo, CreateUserData } from "@/app/services/user";
 import { toast, Toaster } from "sonner";
 import ChallengeManagement from "./ChallengeManagement";
 import TeamManagement from "./TeamManagement";
@@ -15,7 +19,7 @@ import UserManagement from "./UserManagement";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { SearchType } from "./UserManagement";
+import type { MergeUserData, SearchType } from "./UserManagement";
 import SignOutButton from "@/components/custom/SignOutButton";
 import { Button } from "@/components/ui/button";
 import { Presentation } from "lucide-react";
@@ -192,6 +196,89 @@ export default function AdminClient() {
     setSearchType(type);
   };
 
+  const handleCreateUser = async (data: CreateUserData) => {
+    try {
+      const result = await createUser(data);
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      toast.success("User created successfully");
+      await fetchUsers(); // Refresh the user list after creation
+    } catch (error) {
+      toast.error("Failed to create user", { description: error as string });
+    }
+  };
+
+  const handleMarkAsRegistered = async (userId: string): Promise<{
+    error?: string;
+    duplicateData?: MergeUserData;
+    success?: boolean;
+  }> => {
+    try {
+      const result = await markUserAsMainEventRegistered(userId);
+      if (result.error && !result.duplicateData) {
+        toast.error(result.error);
+        return result;
+      }
+      if (result.success) {
+        toast.success("User marked as registered successfully");
+        await fetchUsers(); // Refresh the user list
+      }
+      return result as {
+        error?: string;
+        duplicateData?: MergeUserData;
+        success?: boolean;
+      };
+    } catch (error) {
+      toast.error("Failed to mark user as registered", { description: error as string });
+      return { error: "Failed to mark user as registered" };
+    }
+  };
+
+  const handleMergeUser = async (
+    userId: string,
+    data: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      githubProfileUrl: string;
+    },
+  ) => {
+    try {
+      const result = await mergeAndRegisterUser(userId, data);
+      if (result.error) {
+        toast.error(result.error);
+        return result;
+      }
+      toast.success("User registered successfully");
+      await fetchUsers(); // Refresh the user list
+      return result;
+    } catch (error) {
+      toast.error("Failed to merge user", { description: error as string });
+      return { error: "Failed to merge user" };
+    }
+  };
+
+  const handleFindDuplicates = async (): Promise<{
+    error?: string;
+    duplicates?: MergeUserData[];
+  }> => {
+    try {
+      const result = await findDuplicateRegistrations();
+      if (result.error) {
+        toast.error(result.error);
+      }
+      return result as {
+        error?: string;
+        duplicates?: MergeUserData[];
+      };
+    } catch (error) {
+      toast.error("Failed to find duplicates", { description: error as string });
+      return { error: "Failed to find duplicates" };
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8 p-5 md:p-20">
       <Toaster />
@@ -243,6 +330,10 @@ export default function AdminClient() {
             onRemoveUser={handleRemoveUser}
             onEditUser={handleEditUser}
             onNavigateToTeam={navigateToTeam}
+            onCreateUser={handleCreateUser}
+            onMarkAsRegistered={handleMarkAsRegistered}
+            onMergeUser={handleMergeUser}
+            onFindDuplicates={handleFindDuplicates}
           />
         </TabsContent>
       </Tabs>

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import { UserInfo } from "@/app/services/user";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -12,13 +12,36 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -27,10 +50,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Check, ChevronsUpDown, Search, Loader2, X } from "lucide-react";
-import { UserActions } from "./UserActions";
-import { Checkbox } from "@/components/ui/checkbox";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, ChevronsUpDown, Loader2, Search, UserPlus, X, AlertCircle } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { ExportUsersAsExcelButton } from "./ExportUsersAsExcelButton";
+import { UserActions } from "./UserActions";
+import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -42,12 +69,43 @@ const SEARCH_TYPE_LABELS: Record<SearchType, string> = {
   name: "Name",
 };
 
+export interface MergeUserData {
+  existingUser: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    githubProfileUrl: string;
+    hasTeam: boolean;
+  };
+  newUser: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    githubProfileUrl: string;
+    hasTeam: boolean;
+  };
+}
+
 interface UserTableProps {
   users: UserInfo[];
   onSetTeamLeader: (userId: string) => Promise<void>;
   onRemoveUser: (userId: string) => Promise<void>;
   onEditUser: (userId: string, data: Partial<UserInfo>) => Promise<void>;
   onNavigateToTeam: (teamName: string) => void;
+  onMarkAsRegistered: (userId: string) => Promise<{
+    error?: string;
+    duplicateData?: MergeUserData;
+    success?: boolean;
+  }>;
+  onMergeUser: (
+    userId: string,
+    data: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      githubProfileUrl: string;
+    },
+  ) => Promise<{ error?: string; success?: boolean }>;
 }
 
 function UserTable({
@@ -56,6 +114,8 @@ function UserTable({
   onRemoveUser,
   onEditUser,
   onNavigateToTeam,
+  onMarkAsRegistered,
+  onMergeUser,
 }: UserTableProps) {
   return (
     <Table>
@@ -104,6 +164,8 @@ function UserTable({
                 onSetTeamLeader={onSetTeamLeader}
                 onRemoveUser={onRemoveUser}
                 onEditUser={onEditUser}
+                onMarkAsRegistered={onMarkAsRegistered}
+                onMergeUser={onMergeUser}
               />
             </TableCell>
           </TableRow>
@@ -143,6 +205,144 @@ function Pagination({ totalPages, currentPage, onPageChange }: PaginationProps) 
   );
 }
 
+const createUserSchema = z.object({
+  email: z.string().email(),
+  githubUsername: z.string().min(1),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  role: z.enum(["participant", "admin"]).default("participant"),
+});
+
+interface CreateUserDialogProps {
+  users: UserInfo[];
+  onCreateUser: (data: z.infer<typeof createUserSchema>) => Promise<void>;
+}
+
+function CreateUserDialog({ users, onCreateUser }: CreateUserDialogProps) {
+  const [open, setOpen] = useState(false);
+  const form = useForm<z.infer<typeof createUserSchema>>({
+    resolver: zodResolver(createUserSchema),
+    defaultValues: {
+      role: "participant",
+    },
+  });
+
+  const onSubmit = async (data: z.infer<typeof createUserSchema>) => {
+    const existingUser = users.find(
+      (user) => user.githubUsername.toLowerCase() === data.githubUsername.toLowerCase(),
+    );
+
+    if (existingUser) {
+      form.setError("githubUsername", {
+        type: "manual",
+        message: "This GitHub username already exists",
+      });
+      return;
+    }
+
+    await onCreateUser(data);
+    setOpen(false);
+    form.reset();
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>
+          <UserPlus className="mr-2 h-4 w-4" />
+          Add User
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Add New User</DialogTitle>
+          <DialogDescription>
+            Participants will be automatically registered for the main event.
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="email" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="githubUsername"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>GitHub Username</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="participant">Participant</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Create User</Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 interface UserManagementProps {
   users: UserInfo[];
   isLoading: boolean;
@@ -158,6 +358,25 @@ interface UserManagementProps {
   onRemoveUser: (userId: string) => Promise<void>;
   onEditUser: (userId: string, data: Partial<UserInfo>) => Promise<void>;
   onNavigateToTeam: (teamName: string) => void;
+  onCreateUser: (data: z.infer<typeof createUserSchema>) => Promise<void>;
+  onMarkAsRegistered: (userId: string) => Promise<{
+    error?: string;
+    duplicateData?: MergeUserData;
+    success?: boolean;
+  }>;
+  onMergeUser: (
+    userId: string,
+    data: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      githubProfileUrl: string;
+    },
+  ) => Promise<{ error?: string; success?: boolean }>;
+  onFindDuplicates: () => Promise<{
+    error?: string;
+    duplicates?: MergeUserData[];
+  }>;
 }
 
 export default function UserManagement({
@@ -175,11 +394,35 @@ export default function UserManagement({
   onRemoveUser,
   onEditUser,
   onNavigateToTeam,
+  onCreateUser,
+  onMarkAsRegistered,
+  onMergeUser,
+  onFindDuplicates,
 }: UserManagementProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchOpen, setSearchOpen] = useState(false);
   const [hideUnregisteredUsers, setHideUnregisteredUsers] = useState(false);
   const [hideUsersWithTeams, setHideUsersWithTeams] = useState(false);
+  const [duplicatesDialogOpen, setDuplicatesDialogOpen] = useState(false);
+  const [duplicates, setDuplicates] = useState<MergeUserData[]>([]);
+  const [isLoadingDuplicates, setIsLoadingDuplicates] = useState(false);
+
+  const handleFindDuplicates = async () => {
+    setIsLoadingDuplicates(true);
+    try {
+      const result = await onFindDuplicates();
+      if (result.error) {
+        toast.error(result.error);
+      } else if (result.duplicates) {
+        setDuplicates(result.duplicates);
+        setDuplicatesDialogOpen(true);
+      }
+    } catch (error) {
+      toast.error("Failed to find duplicates", { description: error as string });
+    } finally {
+      setIsLoadingDuplicates(false);
+    }
+  };
 
   // Filter users based on search
   const filteredUsers = useMemo(() => {
@@ -244,14 +487,111 @@ export default function UserManagement({
     <div className="rounded-lg border border-neutral-400 p-4">
       <div className="mb-4">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">
-            Users{" "}
-            {filteredUsers.length > 0 && (
-              <span className="text-sm text-neutral-500">({filteredUsers.length})</span>
-            )}
-          </h2>
+          <div className="flex items-center gap-4">
+            <h2 className="text-xl font-semibold">
+              Users{" "}
+              {filteredUsers.length > 0 && (
+                <span className="text-sm text-neutral-500">({filteredUsers.length})</span>
+              )}
+            </h2>
+            <CreateUserDialog users={users} onCreateUser={onCreateUser} />
+            <Button variant="outline" onClick={handleFindDuplicates} disabled={isLoadingDuplicates}>
+              {isLoadingDuplicates ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <AlertCircle className="mr-2 h-4 w-4" />
+              )}
+              Resolve registration conflicts
+            </Button>
+          </div>
           <ExportUsersAsExcelButton users={filteredUsers} />
         </div>
+
+        {/* Duplicates Dialog */}
+        <Dialog open={duplicatesDialogOpen} onOpenChange={setDuplicatesDialogOpen}>
+          <DialogContent className="max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Duplicate Registrations</DialogTitle>
+              <DialogDescription>
+                <span className="block">
+                  Users may not see that they are registered for the event because they signed up
+                  through Eventbrite/Google sheets multiple times, resulting in a conflict of
+                  information.
+                </span>
+                <span className="mt-4 block">
+                  There are {duplicates.length} users with duplicate or mismatched registration
+                  information.
+                </span>
+              </DialogDescription>
+            </DialogHeader>
+            {duplicates.length === 0 ? (
+              <div className="py-4 text-center text-neutral-500">No duplicates found.</div>
+            ) : (
+              <div className="space-y-6">
+                <div className="space-y-6">
+                  <Button
+                    variant="default"
+                    className="w-full"
+                    onClick={async () => {
+                      const promises = duplicates
+                        .map((duplicate) => {
+                          const userId = users.find((u) => u.email === duplicate.newUser.email)?.id;
+                          if (!userId) return null;
+                          return onMergeUser(userId, duplicate.newUser);
+                        })
+                        .filter(Boolean);
+
+                      try {
+                        await Promise.all(promises);
+                        toast.success("All conflicts resolved successfully");
+                        setDuplicatesDialogOpen(false);
+                      } catch (error) {
+                        toast.error("Failed to resolve some conflicts", {
+                          description: error as string,
+                        });
+                      }
+                    }}
+                  >
+                    Resolve all conflicts
+                  </Button>
+                  {duplicates.map((duplicate, index) => {
+                    // Find the user ID from the users array based on email
+                    const userId = users.find((u) => u.email === duplicate.newUser.email)?.id;
+                    if (!userId) return null;
+
+                    return (
+                      <div key={index} className="rounded-lg border p-4">
+                        <div className="mb-4 grid grid-cols-2 gap-4">
+                          <div>
+                            <h3 className="mb-2 font-semibold">Existing Registration</h3>
+                            <div className="space-y-1 text-sm">
+                              <p>
+                                Name: {duplicate.existingUser.firstName}{" "}
+                                {duplicate.existingUser.lastName}
+                              </p>
+                              <p>Email: {duplicate.existingUser.email}</p>
+                              <p>GitHub: {duplicate.existingUser.githubProfileUrl}</p>
+                            </div>
+                          </div>
+                          <div>
+                            <h3 className="mb-2 font-semibold">User Info</h3>
+                            <div className="space-y-1 text-sm">
+                              <p>
+                                Name: {duplicate.newUser.firstName} {duplicate.newUser.lastName}
+                              </p>
+                              <p>Email: {duplicate.newUser.email}</p>
+                              <p>GitHub: {duplicate.newUser.githubProfileUrl}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
         <div className="mb-6 space-y-4">
           <form
@@ -507,6 +847,8 @@ export default function UserManagement({
             onRemoveUser={onRemoveUser}
             onEditUser={onEditUser}
             onNavigateToTeam={onNavigateToTeam}
+            onMarkAsRegistered={onMarkAsRegistered}
+            onMergeUser={onMergeUser}
           />
           <div className="mt-4">
             <Pagination
