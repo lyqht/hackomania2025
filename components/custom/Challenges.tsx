@@ -20,7 +20,7 @@ export const challengeStatements: Ichallenges[] = [
     statement: "Kitchen Copilot: Let's reinvent the way food delights us to promote healthy living",
     description:
       "We are looking for a group of enthusiasts to work with us to reinvent the way food delights us to promote healthy living. We have developed an application called Kitchen Copilot to help individuals prepare meals and recipes. We want to explore how we can use Kitchen Copilot more easily and be part of an individual's daily use.",
-    pdf: "/challengeStatements/HackOMania Challenge Statement 2.pdf",
+    pdf: "/challengeStatements/Kitchen Copilot Challenge Statement.pdf",
   },
   {
     owner: "/geekshacking.png",
