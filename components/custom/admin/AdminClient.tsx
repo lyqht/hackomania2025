@@ -36,7 +36,7 @@ export default function AdminClient() {
     (searchParams.get("searchType") as SearchType) || "username",
   );
   const [searchQuery, setSearchQuery] = useState(searchParams.get("searchQuery") || "");
-  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "challenges");
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "users");
 
   // Update URL when tab changes
   const handleTabChange = (value: string) => {
@@ -210,7 +210,9 @@ export default function AdminClient() {
     }
   };
 
-  const handleMarkAsRegistered = async (userId: string): Promise<{
+  const handleMarkAsRegistered = async (
+    userId: string,
+  ): Promise<{
     error?: string;
     duplicateData?: MergeUserData;
     success?: boolean;
