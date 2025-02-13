@@ -61,20 +61,12 @@ const JudgeCategories: Record<string, JudgeCategory> = {
         url: "https://www.linkedin.com/in/caitlincai/",
       },
       {
-        name: "Puspak Patro",
-        image: "/judge-mentors/puspak-patro.jpg",
-        description: "CEO, Kitchen Copilot",
+        name: "Hui Jing Chen",
+        image: "/judge-mentors/hui-jing-chen.jpg",
+        description: "COO, Interledger Foundation",
         width: 400,
         height: 0,
-        url: "https://www.linkedin.com/in/puspakpatro/",
-      },
-      {
-        name: "Munteanu Benianin",
-        image: "/judge-mentors/Munteanu-Benianin.jpg",
-        description: "Software Engineer, open payments, Interledger Foundation",
-        width: 400,
-        height: 0,
-        url: "https://www.linkedin.com/in/b-munteanu/",
+        url: "https://www.linkedin.com/in/huijingchen/",
       },
       {
         name: "Ioana Chiorean",
@@ -85,20 +77,12 @@ const JudgeCategories: Record<string, JudgeCategory> = {
         url: "https://www.linkedin.com/in/ioanachiorean/",
       },
       {
-        name: "Hui Jing Chen",
-        image: "/judge-mentors/hui-jing-chen.jpg",
-        description: "COO, Interledger Foundation",
+        name: "Munteanu Benianin",
+        image: "/judge-mentors/Munteanu-Benianin.jpg",
+        description: "Software Engineer, open payments, Interledger Foundation",
         width: 400,
         height: 0,
-        url: "https://www.linkedin.com/in/huijingchen/",
-      },
-      {
-        name: "Stella Sofia Isidro Sabate",
-        image: "/judge-mentors/stella-sis.jpg",
-        description: "Senior Frontend Developer, SP Group",
-        width: 400,
-        height: 0,
-        url: "https://www.linkedin.com/in/stellasis/",
+        url: "https://www.linkedin.com/in/b-munteanu/",
       },
       {
         name: "Perwyl Liu Jinyu",
@@ -107,6 +91,22 @@ const JudgeCategories: Record<string, JudgeCategory> = {
         width: 400,
         height: 0,
         url: "https://www.linkedin.com/in/perwyl-liu-b1283274/",
+      },
+      {
+        name: "Puspak Patro",
+        image: "/judge-mentors/puspak-patro.jpg",
+        description: "CEO, Kitchen Copilot",
+        width: 400,
+        height: 0,
+        url: "https://www.linkedin.com/in/puspakpatro/",
+      },
+      {
+        name: "Stella Sofia Isidro Sabate",
+        image: "/judge-mentors/stella-sis.jpg",
+        description: "Senior Frontend Developer, SP Group",
+        width: 400,
+        height: 0,
+        url: "https://www.linkedin.com/in/stellasis/",
       },
       {
         name: " Baji Babu Yerraguntla",
@@ -132,11 +132,11 @@ const JudgeCategories: Record<string, JudgeCategory> = {
         height: 0,
         url: "",
       },
-    ].sort((a, b) => {
-      if (!a.image && b.image) return 1;
-      if (a.image && !b.image) return -1;
-      return a.name.localeCompare(b.name);
-    }), // Sort the mentors by name, but keep those without images at the end
+    ] /* .sort((a, b) => {
+      if (!a.image && b.image) return 1; // if mentora does not have image, but mentor b does, move mentor a down
+      if (a.image && !b.image) return -1; // if mentor a has image, but mentor b does not, move mentor a up
+      return a.name.localeCompare(b.name); // if both mentors have images, then sort by alphabetical order. -1 means that a should come before b
+    } */, // Sort the mentors by name, but keep those without images at the end
     class: "gap-8 xl:gap-24 mx-12",
   },
 };
