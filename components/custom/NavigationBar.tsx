@@ -52,7 +52,7 @@ export default function NavigtionBar() {
         animate={{ y: isVisible ? 0 : -100 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="bg-hackomania-red p-5 lg:mx-20 lg:mt-10">
+        <div className="bg-hackomania-red p-5 shadow-lg lg:mx-20 lg:mt-10">
           <nav className="hidden flex-row justify-end gap-3 text-white md:flex" id="full-nav">
             {navigationLinks.map((link) => (
               <motion.div key={link.title} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
