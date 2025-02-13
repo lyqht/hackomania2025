@@ -4,7 +4,7 @@ import ImageCarousel from "@/components/custom/ImageCarousel/ImageCarousel";
 import NavigationBar from "@/components/custom/NavigationBar";
 import Organizers from "@/components/custom/Organizers";
 import ChallengesSection from "@/components/custom/landing/ChallengesSection";
-import Prizes from "@/components/custom/Prizes";
+import PrizesSection from "@/components/custom/landing/PrizesSection";
 import Sponsors from "@/components/custom/Sponsors";
 import JudgesMentors from "@/components/custom/JudgesMentors";
 import TimelineSection from "@/components/custom/TimelineSection";
@@ -209,7 +209,7 @@ export default async function Index() {
             <Image src="/GreenStar.svg" alt="" width={60} height={60} />
             <h2>PRIZES</h2>
           </div>
-          <Prizes />
+          <PrizesSection />
         </section>
 
         <TimelineSection />
