@@ -1,5 +1,5 @@
 import GitHubSignInButton from "@/components/custom/GitHubSignInButton";
-import GoldenRules from "@/components/custom/GoldenRules";
+import GoldenRulesSection from "@/components/custom/landing/GoldenRulesSection";
 import ImageCarousel from "@/components/custom/ImageCarousel/ImageCarousel";
 import NavigationBar from "@/components/custom/NavigationBar";
 import OrganizersSection from "@/components/custom/landing/OrganizersSection";
@@ -235,7 +235,7 @@ export default async function Index() {
             <Image src="/BlueIcon.svg" alt="" width={60} height={60} />
             <h2 className="text-balance text-center md:text-start">7 GOLDEN RULES</h2>
           </div>
-          <GoldenRules />
+          <GoldenRulesSection />
           <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 

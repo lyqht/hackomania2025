@@ -52,10 +52,10 @@ function GoldenRule({ rule, title, index }: { rule: string; title: string; index
   );
 }
 
-export default function GoldenRules() {
+export default function GoldenRulesSection() {
   return (
     <ol
-      className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2 md:grid-rows-4 lg:grid-cols-3"
+      className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
       id="golden-rules-grid"
     >
       {goldenRules.map((rule, index) => (
