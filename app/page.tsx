@@ -6,6 +6,7 @@ import Organizers from "@/components/custom/Organizers";
 import Challenges from "@/components/custom/Challenges";
 import Prizes from "@/components/custom/Prizes";
 import Sponsors from "@/components/custom/Sponsors";
+import JudgesMentors from "@/components/custom/JudgesMentors";
 import TimelineSection from "@/components/custom/TimelineSection";
 import Image from "next/image";
 import Link from "next/link";
@@ -213,7 +214,7 @@ export default async function Index() {
           <GoldenRules />
         </section>
 
-        <section className="group py-10 intersect:animate-slide-in-from-right" id="venue">
+        <section className="group py-10 intersect:animate-slide-in-from-right" id=" ">
           <div className="mb-5 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-green md:mb-10 md:text-6xl">
             <Image src="/GreenStar.svg" alt="" width={60} height={60} />
             <h2>VENUE</h2>
@@ -307,7 +308,15 @@ export default async function Index() {
           <Sponsors />
         </section>
 
-        <section className="group py-8 intersect:animate-slide-in-from-right" id="organizers">
+        <section className="group py-10 intersect:animate-slide-in-from-left" id="judges">
+          <div className="mb-5 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-green md:mb-10 md:text-6xl">
+            <Image src="/GreenStar.svg" alt="" width={60} height={60} />
+            <h2>JUDGES AND MENTORS</h2>
+          </div>
+          <JudgesMentors />
+        </section>
+
+        <section className="group py-8 intersect:animate-slide-in-from-right" id="team">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
             <Image
               src="/MeetTheTeam.svg"

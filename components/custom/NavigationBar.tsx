@@ -14,6 +14,7 @@ const navigationLinks = [
   { title: "TIMELINE", href: "#timeline" },
   { title: "VENUE", href: "#venue" },
   { title: "SPONSORS", href: "#sponsors" },
+  { title: "JUDGES", href: "#judges" },
   { title: "ORGANIZERS", href: "#organizers" },
   { title: "CONTACT", href: "#contact" },
 ];
