@@ -23,14 +23,6 @@ const JudgeCategories: Record<string, JudgeCategory> = {
     title: "JUDGES",
     Judges: [
       {
-        name: "Scott Forsyth",
-        image: "/judge-mentors/scott-forsyth.jpg",
-        description: "CTO, Kitchen Copilot",
-        width: 400,
-        height: 0,
-        url: "https://www.linkedin.com/in/scottjforsyth/",
-      },
-      {
         name: "Alex Lakatos",
         image: "/judge-mentors/alex-lakatos.jpg",
         description: "CTO, Interledger Foundation",
@@ -39,12 +31,20 @@ const JudgeCategories: Record<string, JudgeCategory> = {
         url: "https://www.linkedin.com/in/alexlakatos/",
       },
       {
-        name: "Mr Koh Choong Yong",
+        name: "Koh Choong Yong",
         image: "/judge-mentors/koh-choong-yong.jpg",
         description: "Head of Product Engineering, SP Digital",
         width: 400,
         height: 0,
         url: "https://www.linkedin.com/in/kohcy/",
+      },
+      {
+        name: "Scott Forsyth",
+        image: "/judge-mentors/scott-forsyth.jpg",
+        description: "CTO, Kitchen Copilot",
+        width: 400,
+        height: 0,
+        url: "https://www.linkedin.com/in/scottjforsyth/",
       },
     ],
     class: "mx-12",
@@ -55,7 +55,7 @@ const JudgeCategories: Record<string, JudgeCategory> = {
       {
         name: "Caitlin Cai",
         image: "/judge-mentors/caitlin-cai.jpg",
-        description: "Experience: Product Manager",
+        description: "Product Manager, Rakuten",
         width: 400,
         height: 0,
         url: "https://www.linkedin.com/in/caitlincai/",
@@ -63,7 +63,7 @@ const JudgeCategories: Record<string, JudgeCategory> = {
       {
         name: "Puspak Patro",
         image: "/judge-mentors/puspak-patro.jpg",
-        description: "Experience: CEO",
+        description: "CEO, Kitchen Copilot",
         width: 400,
         height: 0,
         url: "https://www.linkedin.com/in/puspakpatro/",
@@ -71,15 +71,23 @@ const JudgeCategories: Record<string, JudgeCategory> = {
       {
         name: "Munteanu Benianin",
         image: "/judge-mentors/Munteanu-Benianin.jpg",
-        description: "Experience: Software Engineer, open payments",
+        description: "Software Engineer, open payments, Interledger Foundation",
         width: 400,
         height: 0,
         url: "https://www.linkedin.com/in/b-munteanu/",
       },
       {
+        name: "Ioana Chiorean",
+        image: "/judge-mentors/ioana-chiorean.jpg",
+        description: "Engineering Manager, Interledger Foundation",
+        width: 400,
+        height: 0,
+        url: "https://www.linkedin.com/in/ioanachiorean/",
+      },
+      {
         name: "Hui Jing Chen",
         image: "/judge-mentors/hui-jing-chen.jpg",
-        description: "Experience: COO",
+        description: "COO, Interledger Foundation",
         width: 400,
         height: 0,
         url: "https://www.linkedin.com/in/huijingchen/",
@@ -87,8 +95,7 @@ const JudgeCategories: Record<string, JudgeCategory> = {
       {
         name: "Stella Sofia Isidro Sabate",
         image: "/judge-mentors/stella-sis.jpg",
-        description:
-          "Experience: Senior Frontend Developer, winner of global hackathon (such as angelhack, datastax)",
+        description: "Senior Frontend Developer, SP Group",
         width: 400,
         height: 0,
         url: "https://www.linkedin.com/in/stellasis/",
@@ -96,12 +103,40 @@ const JudgeCategories: Record<string, JudgeCategory> = {
       {
         name: "Perwyl Liu Jinyu",
         image: "/judge-mentors/perwyl-liu.jpg",
-        description: "Experience: Android, iOS, iOS Conf organiser",
+        description: "Android, iOS, SP Group",
         width: 400,
         height: 0,
         url: "https://www.linkedin.com/in/perwyl-liu-b1283274/",
       },
-    ],
+      {
+        name: " Baji Babu Yerraguntla",
+        image: "",
+        description: "Microservice, Cloud, DevOps, SP Group",
+        width: 400,
+        height: 0,
+        url: "https://www.linkedin.com/in/bajibabuyerraguntla/",
+      },
+      {
+        name: "Dragos Palade",
+        image: "",
+        description: "Software Engineer, open payments, Interledger Foundation",
+        width: 400,
+        height: 0,
+        url: "",
+      },
+      {
+        name: "Bogdan Sandu",
+        image: "",
+        description: "Software Engineer, open payments, Interledger Foundation",
+        width: 400,
+        height: 0,
+        url: "",
+      },
+    ].sort((a, b) => {
+      if (!a.image && b.image) return 1;
+      if (a.image && !b.image) return -1;
+      return a.name.localeCompare(b.name);
+    }), // Sort the mentors by name, but keep those without images at the end
     class: "gap-8 xl:gap-24 mx-12",
   },
 };
@@ -125,30 +160,40 @@ export default function Judges() {
                 index % 2 === 0 ? "" : "md:flex-row-reverse"
               } my-6 items-center`}
             >
-              <div className="flex w-full justify-center md:w-1/2">
-                <Image
-                  src={Judge.image}
-                  alt={Judge.name}
-                  width={Judge.width}
-                  height={0}
-                  className="h-auto w-3/4 rounded-2xl object-contain md:h-80 md:w-auto"
-                  aria-label={`Portrait of ${Judge.name}`}
-                />
+              <div
+                className={`flex w-full justify-center md:w-1/2 ${
+                  index % 2 === 0 ? "md:justify-end" : "md:justify-start"
+                }`}
+              >
+                {/* Don't render image if not present */}
+                {Judge.image && (
+                  <Image
+                    src={Judge.image}
+                    alt={Judge.name}
+                    width={Judge.width}
+                    height={0}
+                    className="h-auto w-3/4 rounded-2xl object-contain md:ml-12 md:mr-12 md:h-80 md:w-auto"
+                    aria-label={`Portrait of ${Judge.name}`}
+                  />
+                )}
               </div>
               <div className={`w-3/4 ${index % 2 === 0 ? "" : "md:text-right"} p-4 md:w-1/2`}>
                 <h4 className="text-2xl font-bold md:text-3xl">{Judge.name}</h4>
                 <p>{Judge.description}</p>
-                <Link
-                  href={Judge.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center text-hackomania-green hover:underline"
-                >
-                  <FaLinkedin
-                    className="text-2xl md:text-3xl"
-                    aria-label={`LinkedIn of ${Judge.name}`}
-                  />
-                </Link>
+                {/* Don't render link if not present */}
+                {Judge.url && (
+                  <Link
+                    href={Judge.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex items-center text-hackomania-green hover:underline"
+                  >
+                    <FaLinkedin
+                      className="text-2xl md:text-3xl"
+                      aria-label={`LinkedIn of ${Judge.name}`}
+                    />
+                  </Link>
+                )}
               </div>
             </div>
           ))}
