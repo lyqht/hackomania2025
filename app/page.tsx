@@ -3,7 +3,7 @@ import GoldenRules from "@/components/custom/GoldenRules";
 import ImageCarousel from "@/components/custom/ImageCarousel/ImageCarousel";
 import NavigationBar from "@/components/custom/NavigationBar";
 import Organizers from "@/components/custom/Organizers";
-import Challenges from "@/components/custom/Challenges";
+import ChallengesSection from "@/components/custom/landing/ChallengesSection";
 import Prizes from "@/components/custom/Prizes";
 import Sponsors from "@/components/custom/Sponsors";
 import JudgesMentors from "@/components/custom/JudgesMentors";
@@ -193,7 +193,7 @@ export default async function Index() {
             />
             <h2>CHALLENGES</h2>
           </div>
-          <Challenges />
+          <ChallengesSection />
         </section>
 
         <section className="group py-10 intersect:animate-slide-in-from-left" id="judges">
