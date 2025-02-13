@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="flex min-h-screen flex-col items-center">
             <div className="flex w-full flex-1 flex-col items-center">
               <div className="flex w-full flex-col">{children}</div>
-              <footer className="mx-auto flex w-full flex-col items-center justify-center gap-8 border-t bg-hackomania-red py-16 text-center text-xs text-white">
+              <footer className="mx-auto flex w-full flex-col items-center justify-center gap-8 border-t bg-hackomania-red py-4 text-center text-xs text-white md:py-8 lg:py-12">
                 <ContactSection />
                 {/* Hide theme switcher for now until we support dark mode design */}
                 {/* <ThemeSwitcher /> */}
