@@ -10,7 +10,7 @@ const navigationLinks = [
   { title: "REGISTRATION", href: "#registration" },
   { title: "ABOUT", href: "#about" },
   { title: "CHALLENGES", href: "#challenges" },
-  { title: "JUDGES AND MENTORS", href: "#judges" },
+  { title: "JUDGES & MENTORS", href: "#judges" },
   { title: "PRIZES", href: "#prizes" },
   { title: "TIMELINE", href: "#timeline" },
   { title: "VENUE", href: "#venue" },
