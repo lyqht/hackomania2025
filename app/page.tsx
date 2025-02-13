@@ -2,7 +2,7 @@ import GitHubSignInButton from "@/components/custom/GitHubSignInButton";
 import GoldenRules from "@/components/custom/GoldenRules";
 import ImageCarousel from "@/components/custom/ImageCarousel/ImageCarousel";
 import NavigationBar from "@/components/custom/NavigationBar";
-import Organizers from "@/components/custom/Organizers";
+import OrganizersSection from "@/components/custom/landing/OrganizersSection";
 import ChallengesSection from "@/components/custom/landing/ChallengesSection";
 import PrizesSection from "@/components/custom/landing/PrizesSection";
 import Sponsors from "@/components/custom/Sponsors";
@@ -327,7 +327,7 @@ export default async function Index() {
             />
             <h2>Meet the Organizers</h2>
           </div>
-          <Organizers />
+          <OrganizersSection />
         </section>
       </div>
     </>
