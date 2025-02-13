@@ -1,10 +1,10 @@
 import GitHubSignInButton from "@/components/custom/GitHubSignInButton";
-import GoldenRules from "@/components/custom/GoldenRules";
+import GoldenRulesSection from "@/components/custom/landing/GoldenRulesSection";
 import ImageCarousel from "@/components/custom/ImageCarousel/ImageCarousel";
 import NavigationBar from "@/components/custom/NavigationBar";
-import Organizers from "@/components/custom/Organizers";
-import Challenges from "@/components/custom/Challenges";
-import Prizes from "@/components/custom/Prizes";
+import OrganizersSection from "@/components/custom/landing/OrganizersSection";
+import ChallengesSection from "@/components/custom/landing/ChallengesSection";
+import PrizesSection from "@/components/custom/landing/PrizesSection";
 import Sponsors from "@/components/custom/Sponsors";
 import JudgesMentors from "@/components/custom/JudgesMentors";
 import TimelineSection from "@/components/custom/TimelineSection";
@@ -100,12 +100,18 @@ export default async function Index() {
           </div>
         </div>
 
-        <section className="group py-10 intersect:animate-slide-in-from-left" id="about">
-          <div className="mb-7 flex flex-row items-center gap-5 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
+        <section className="group relative py-10 intersect:animate-slide-in-from-left" id="about">
+          <div className="mb-7 flex flex-col items-center gap-5 text-3xl font-bold text-hackomania-red md:mb-14 md:flex-row md:text-6xl">
             <Image src="/RedStar.svg" alt="" width={60} height={60} />
             <div>
-              <h2>HackOMania 2025:</h2>
-              <h2 className="text-2xl md:text-5xl">Healthy Living for a Connected World</h2>
+              <h2 className="flex flex-col gap-0 text-balance text-center md:text-start">
+                <span>
+                  HackOMania 2025<span className="hidden md:inline">:</span>
+                </span>
+                <span className="text-base md:text-2xl lg:text-5xl">
+                  Healthy Living for a Connected World
+                </span>
+              </h2>
             </div>
           </div>
 
@@ -180,10 +186,14 @@ export default async function Index() {
               </div>
             </div>
           </div>
+          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
-        <section className="group py-10 intersect:animate-slide-in-from-right" id="challenges">
-          <div className="mb-7 flex flex-row items-center gap-3 fill-hackomania-green text-3xl font-bold text-hackomania-blue md:mb-14 md:text-6xl">
+        <section
+          className="group relative py-10 intersect:animate-slide-in-from-right"
+          id="challenges"
+        >
+          <div className="mb-7 flex flex-col items-center gap-5 text-3xl font-bold text-hackomania-blue md:mb-14 md:flex-row md:text-6xl">
             <Image
               src="/stickers/muscle.png"
               alt=""
@@ -191,41 +201,48 @@ export default async function Index() {
               height={80}
               className="rotate-[-6deg] hover:animate-wobble"
             />
-            <h2>CHALLENGES</h2>
+            <h2 className="text-balance text-center md:text-start">CHALLENGES</h2>
           </div>
-          <Challenges />
+          <ChallengesSection />
+          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
-        <section className="group py-10 intersect:animate-slide-in-from-left" id="judges">
-          <div className="mb-5 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-green md:mb-10 md:text-6xl">
+        <section className="group relative py-10 intersect:animate-slide-in-from-left" id="judges">
+          <div className="mb-7 flex flex-col items-center gap-5 text-3xl font-bold text-hackomania-green md:mb-14 md:flex-row md:text-6xl">
             <Image src="/GreenStar.svg" alt="" width={60} height={60} />
-            <h2>JUDGES AND MENTORS</h2>
+            <h2 className="text-balance text-center md:text-start">JUDGES AND MENTORS</h2>
           </div>
           <JudgesMentors />
+          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
-        <section className="group py-10 intersect:animate-slide-in-from-right" id="prizes">
-          <div className="mb-7 flex flex-row items-center gap-3 fill-hackomania-green text-3xl font-bold text-hackomania-green md:mb-14 md:text-6xl">
+        <section className="group relative py-10 intersect:animate-slide-in-from-right" id="prizes">
+          <div className="mb-7 flex flex-col items-center gap-5 text-3xl font-bold text-hackomania-green md:mb-14 md:flex-row md:text-6xl">
             <Image src="/GreenStar.svg" alt="" width={60} height={60} />
-            <h2>PRIZES</h2>
+            <h2 className="text-balance text-center md:text-start">PRIZES</h2>
           </div>
-          <Prizes />
+          <PrizesSection />
+          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
         <TimelineSection />
 
-        <section className="group py-10 intersect:animate-slide-in-from-left" id="golden-rules">
-          <div className="mb-5 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-blue md:mb-10 md:text-6xl">
+        <section
+          className="group relative py-10 intersect:animate-slide-in-from-left"
+          id="golden-rules"
+        >
+          <div className="lex flex-col items-center gap-5 text-3xl font-bold text-hackomania-blue md:flex-row md:text-6xl">
             <Image src="/BlueIcon.svg" alt="" width={60} height={60} />
-            <h2>7 GOLDEN RULES</h2>
+            <h2 className="text-balance text-center md:text-start">7 GOLDEN RULES</h2>
           </div>
-          <GoldenRules />
+          <GoldenRulesSection />
+          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
-        <section className="group py-10 intersect:animate-slide-in-from-right" id="venue">
-          <div className="mb-5 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-green md:mb-10 md:text-6xl">
+        <section className="group relative py-10 intersect:animate-slide-in-from-right" id="venue">
+          <div className="mb-7 flex flex-col items-center gap-5 text-3xl font-bold text-hackomania-green md:mb-14 md:flex-row md:text-6xl">
             <Image src="/GreenStar.svg" alt="" width={60} height={60} />
-            <h2>VENUE</h2>
+            <h2 className="text-balance text-center md:text-start">VENUE</h2>
           </div>
 
           <div>
@@ -306,18 +323,23 @@ export default async function Index() {
               </div>
             </div>
           </div>
+          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
-        <section className="group py-8 intersect:animate-slide-in-from-left" id="sponsors">
-          <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
+        <section className="group relative py-8 intersect:animate-slide-in-from-left" id="sponsors">
+          <div className="mb-7 flex flex-col items-center gap-5 text-3xl font-bold text-hackomania-red md:mb-14 md:flex-row md:text-6xl">
             <Image src="/RedStar.svg" alt="" width={60} height={60} />
-            <h2>SPONSORS</h2>
+            <h2 className="text-balance text-center md:text-start">SPONSORS</h2>
           </div>
           <Sponsors />
+          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
-        <section className="group py-8 intersect:animate-slide-in-from-right" id="organizers">
-          <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
+        <section
+          className="group relative py-8 intersect:animate-slide-in-from-right"
+          id="organizers"
+        >
+          <div className="mb-7 flex flex-col items-center gap-5 text-3xl font-bold text-hackomania-red md:mb-14 md:flex-row md:text-6xl">
             <Image
               src="/MeetTheTeam.svg"
               alt="Icon"
@@ -325,9 +347,10 @@ export default async function Index() {
               height={60}
               className="intersect:animate-spin-slow"
             />
-            <h2>Meet the Organizers</h2>
+            <h2 className="text-balance text-center md:text-start">Meet the Organizers</h2>
           </div>
-          <Organizers />
+          <OrganizersSection />
+          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
       </div>
     </>

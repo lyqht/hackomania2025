@@ -31,9 +31,9 @@ export const challengeStatements: Ichallenges[] = [
   },
 ];
 
-export default function Challenges() {
+export default function ChallengesSection() {
   return (
-    <div className="grid justify-center gap-2 md:gap-0">
+    <div className="grid justify-center gap-2 md:gap-16 lg:gap-24">
       {challengeStatements.map((challenge, index) => (
         <div
           key={index}
@@ -56,7 +56,7 @@ export default function Challenges() {
           {/* Challenge Statement */}
           <div className="flex flex-1 flex-col items-center gap-4 md:items-start">
             <p className="text-balance text-base font-bold md:text-xl">{challenge.statement}</p>
-            <p className="text-balance text-base font-medium md:text-xl">{challenge.description}</p>
+            <p className="text-balance text-base md:text-xl">{challenge.description}</p>
             <a
               href={challenge.pdf}
               target="_blank"
