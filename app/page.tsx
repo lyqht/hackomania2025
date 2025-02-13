@@ -231,7 +231,7 @@ export default async function Index() {
           className="group relative py-10 intersect:animate-slide-in-from-left"
           id="golden-rules"
         >
-          <div className="lex flex-col items-center gap-5 text-3xl font-bold text-hackomania-blue md:flex-row md:text-6xl">
+          <div className="flex flex-col items-center gap-5 text-3xl font-bold text-hackomania-blue md:flex-row md:text-6xl">
             <Image src="/BlueIcon.svg" alt="" width={60} height={60} />
             <h2 className="text-balance text-center md:text-start">7 GOLDEN RULES</h2>
           </div>
