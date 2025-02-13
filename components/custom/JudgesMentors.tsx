@@ -58,7 +58,7 @@ const JudgeCategories: Record<string, JudgeCategory> = {
         description: "Experience: Product Manager",
         width: 400,
         height: 0,
-        url: "https://ahrefs.com/",
+        url: "https://www.linkedin.com/in/caitlincai/",
       },
       {
         name: "Puspak Patro",
@@ -66,7 +66,7 @@ const JudgeCategories: Record<string, JudgeCategory> = {
         description: "Experience: CEO",
         width: 400,
         height: 0,
-        url: "",
+        url: "https://www.linkedin.com/in/puspakpatro/",
       },
       {
         name: "Munteanu Benianin",

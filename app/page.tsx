@@ -316,7 +316,7 @@ export default async function Index() {
           <JudgesMentors />
         </section>
 
-        <section className="group py-8 intersect:animate-slide-in-from-right" id="team">
+        <section className="group py-8 intersect:animate-slide-in-from-right" id="organizers">
           <div className="mb-7 flex flex-row items-center gap-3 text-3xl font-bold text-hackomania-red md:mb-14 md:text-6xl">
             <Image
               src="/MeetTheTeam.svg"
