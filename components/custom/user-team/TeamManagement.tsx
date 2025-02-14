@@ -14,23 +14,23 @@ import {
 } from "@/components/ui/dialog";
 import { Toaster, toast } from "sonner";
 import { UserInfo } from "@/app/services/user";
+import { Team } from "@/app/services/team";
 
 export default function TeamManagement({
   currentUser,
-  users,
-  teamId,
+  userTeam,
 }: {
   currentUser: UserInfo;
-  users: UserInfo[];
-  teamId: string;
+  userTeam: Team;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const teamHasLeader = userTeam?.leaderId !== null;
 
   const handleRemoveUser = async (userId: string) => {
     try {
       setLoading(true);
-      await fetch(`/api/register/team/member?id=${teamId}&userId=${userId}`, {
+      await fetch(`/api/register/team/member?id=${userTeam.id}&userId=${userId}`, {
         method: "DELETE",
       });
       setLoading(false);
@@ -49,7 +49,7 @@ export default function TeamManagement({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ teamId }),
+        body: JSON.stringify({ teamId: userTeam.id }),
       });
 
       if (!response.ok) {
@@ -73,26 +73,53 @@ export default function TeamManagement({
     }
   };
 
+  const handleAppointLeader = async () => {
+    if (teamHasLeader) {
+      return;
+    }
+    try {
+      setLoading(true);
+      await fetch(`/api/register/team/appointleader`, {
+        method: "PUT",
+        body: JSON.stringify({ teamId: userTeam.id }),
+      });
+      setLoading(false);
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div>
       <p className="mb-1 text-lg font-semibold">Team Members</p>
       <div className="flex flex-col gap-2">
         <hr />
-        {users.map((member: UserInfo) => (
+        {userTeam.users.map((member: UserInfo) => (
           <div key={member.id}>
             <div className="flex flex-row items-center gap-2">
               <p>{member.githubUsername}</p>
               {member.teamRole === "leader" && <FaCrown />}
-              {currentUser.teamRole === "leader" &&
-                member.githubUsername != currentUser.githubUsername && (
+              <div className="ml-auto">
+                {!teamHasLeader && (
                   <button
-                    className={`ml-auto text-xl ${loading && "cursor-not-allowed"} ${member.role === "leader" && "hidden"}`}
-                    onClick={() => handleRemoveUser(member.id)}
-                    disabled={loading}
+                    className="rounded-md bg-hackomania-red px-2 py-1 text-white"
+                    onClick={handleAppointLeader}
                   >
-                    <LuUserMinus />
+                    Appoint Leader
                   </button>
                 )}
+                {currentUser.teamRole === "leader" &&
+                  member.githubUsername != currentUser.githubUsername && (
+                    <button
+                      className={`ml-4 text-xl ${loading && "cursor-not-allowed"} ${member.role === "leader" && "hidden"}`}
+                      onClick={() => handleRemoveUser(member.id)}
+                      disabled={loading}
+                    >
+                      <LuUserMinus />
+                    </button>
+                  )}
+              </div>
             </div>
             <hr className="mt-2" />
           </div>
