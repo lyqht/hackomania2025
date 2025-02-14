@@ -90,8 +90,8 @@ function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSe
           </p>
           <p>
             Otherwise, please contact us for help at{" "}
-            <a className="underline" href="mailto:contact@geekshacking.com">
-              contact@geekshacking.com
+            <a className="underline" href="https://t.me/+inH1EAO7kJZmNDI1">
+              our Hackomania 2025 Telegram Group
             </a>
             .
           </p>
