@@ -77,8 +77,8 @@ const JudgeCategories: Record<string, JudgeCategory> = {
         url: "https://www.linkedin.com/in/ioanachiorean/",
       },
       {
-        name: "Munteanu Benianin",
-        image: "/judge-mentors/Munteanu-Benianin.jpg",
+        name: "Munteanu Beniamin",
+        image: "/judge-mentors/Munteanu-Beniamin.jpg",
         description: "Software Engineer, open payments, Interledger Foundation",
         width: 400,
         height: 0,
