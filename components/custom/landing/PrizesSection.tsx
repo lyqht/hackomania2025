@@ -5,21 +5,21 @@ import Image from "next/image";
 
 const prizes = [
   {
-    title: "Challenge 1 Winner",
+    title: "Interledger Challenge Prize",
     amount: "$1,000",
     img: "/prizes/Champion.svg",
     width: 150,
     height: 150,
   },
   {
-    title: "Challenge 2 Winner",
+    title: "Kitchen Copilot Challenge Prize",
     amount: "$1,000",
     img: "/prizes/Champion.svg",
     width: 150,
     height: 150,
   },
   {
-    title: "Challenge 3 Winner",
+    title: "GeeksHacking Challenge Prize",
     amount: "$1,000",
     img: "/prizes/Champion.svg",
     width: 150,
