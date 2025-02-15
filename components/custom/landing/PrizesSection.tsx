@@ -21,8 +21,8 @@ const prizes = [
   {
     title: "GeeksHacking",
     amount: "$1,000",
-    img: "/sponsors/SP_Group.png",
-    width: 572 * 0.4,
+    img: "/geekshacking.png",
+    width: 420 * 0.4,
     height: 162 * 0.4,
   },
   {
