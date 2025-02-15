@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 import { db } from "@/utils/db";
 import { user } from "@/utils/db/schema/user";
+import { eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
   // The `/auth/callback` route is required for the server-side auth flow implemented
@@ -38,29 +39,38 @@ export async function GET(request: Request) {
         throw new Error("No GitHub username found in metadata");
       }
 
-      // Check if user should be admin
-      const adminUsers = process.env.ADMIN_USERS?.split(",") || [];
-      const isAdmin = adminUsers.includes(githubUsername);
+      // First check if user already exists
+      const existingUser = await db
+        .select()
+        .from(user)
+        .where(eq(user.githubUsername, githubUsername))
+        .limit(1);
 
-      // Create or update user in our database
-      const [userRecord] = await db
-        .insert(user)
-        .values({
-          id: session.user.id,
-          email: session.user.email!,
-          githubUsername,
-          role: isAdmin ? "admin" : "participant",
-          createdAt: new Date(),
-        })
-        .onConflictDoUpdate({
-          target: user.githubUsername,
-          set: {
+      let userRecord;
+
+      if (existingUser.length > 0 && existingUser[0].role === "admin") {
+        userRecord = existingUser[0];
+      } else {
+        const adminUsers = process.env.ADMIN_USERS?.split(",") || [];
+        const isAdmin = adminUsers.includes(githubUsername);
+        [userRecord] = await db
+          .insert(user)
+          .values({
             id: session.user.id,
             email: session.user.email!,
+            githubUsername,
             role: isAdmin ? "admin" : "participant",
-          },
-        })
-        .returning();
+          })
+          .onConflictDoUpdate({
+            target: user.githubUsername,
+            set: {
+              id: session.user.id,
+              email: session.user.email!,
+              role: isAdmin ? "admin" : "participant",
+            },
+          })
+          .returning();
+      }
 
       // Redirect admin users to admin page
       if (userRecord.role === "admin") {
@@ -69,7 +79,12 @@ export async function GET(request: Request) {
     } catch (error) {
       console.error("Error in callback route:", error);
       // Return error response instead of redirecting
-      return NextResponse.json({ error: "Failed to process authentication" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Failed to process authentication" },
+        {
+          status: 500,
+        },
+      );
     }
   }
 
