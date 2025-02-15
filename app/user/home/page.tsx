@@ -68,15 +68,15 @@ interface ChallengeAndTeamInfoSectionsProps {
 }
 
 function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSectionsProps) {
-  const currentUnixMs = Date.now();
+  const currentUnix = Date.now() / 1000;
 
   // Retrieve Challenge and Submission Cutoff times (add an offset of 2 minutes in MS)
   const challengeCutoff =
-    parseInt(process.env.NEXT_PUBLIC_CHALLENGE_SUBMISSION_CUTOFF_UNIX!) || currentUnixMs;
+    parseInt(process.env.NEXT_PUBLIC_CHALLENGE_SUBMISSION_CUTOFF_UNIX!) || currentUnix;
   const submissionCutoff =
-    parseInt(process.env.NEXT_PUBLIC_HACKATHON_SUBMISSION_CUTOFF_UNIX!) || currentUnixMs;
-  const pastChallengeSubmission = challengeCutoff + 120000 >= currentUnixMs;
-  const pastHackathonSubmission = submissionCutoff >= currentUnixMs;
+    parseInt(process.env.NEXT_PUBLIC_HACKATHON_SUBMISSION_CUTOFF_UNIX!) || currentUnix;
+  const pastChallengeSubmission = challengeCutoff + 120 <= currentUnix;
+  const pastHackathonSubmission = submissionCutoff <= currentUnix;
 
   if (!user.mainEventRegistered && user.role != "admin") {
     return (
