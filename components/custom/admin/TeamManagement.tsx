@@ -56,6 +56,7 @@ export default function TeamManagement({
   const [selectedChallengeId, setSelectedChallengeId] = useState<string>("all");
   const [hideUnregisteredTeams, setHideUnregisteredTeams] = useState(false);
   const [showSubmittedTeamsOnly, setShowSubmittedTeamsOnly] = useState(false);
+  const [showTeamDescription, setShowTeamDescription] = useState(false);
 
   // Use external search query if provided, otherwise use internal state
   const searchQuery = externalSearchQuery ?? internalSearchQuery;
@@ -418,25 +419,59 @@ export default function TeamManagement({
                         <div className="text-sm">
                           <p className="text-green-600">✓ Submitted</p>
                           <div className="mt-1 space-y-1">
-                            {team.submission.repoUrl && (
-                              <a
-                                href={team.submission.repoUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block text-blue-600 hover:underline"
+                            {team.submission.techStack && team.submission.projectDescription && (
+                              <Dialog
+                                open={showTeamDescription}
+                                onOpenChange={setShowTeamDescription}
                               >
-                                View Repository
-                              </a>
-                            )}
-                            {team.submission.slidesUrl && (
-                              <a
-                                href={team.submission.slidesUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block text-blue-600 hover:underline"
-                              >
-                                View Slides
-                              </a>
+                                <DialogTrigger asChild>
+                                  <p className="cursor-pointer text-blue-600 hover:underline">
+                                    View Submission Details
+                                  </p>
+                                </DialogTrigger>
+                                <DialogContent>
+                                  <DialogHeader>
+                                    <DialogTitle>Team Description</DialogTitle>
+                                  </DialogHeader>
+                                  <DialogContent>
+                                    <div className="space-y-4">
+                                      <p className="mb-3 border-b pb-3 text-2xl font-bold">
+                                        {team.name}
+                                      </p>
+                                      <div>
+                                        <p className="text-xl font-bold">Project Description</p>
+                                        <p>{team.submission.projectDescription}</p>
+                                      </div>
+                                      <div>
+                                        <p className="text-xl font-bold">Tech Stack</p>
+                                        <p>{team.submission.techStack}</p>
+                                      </div>
+                                      <div className="mt-7 flex flex-row gap-3">
+                                        {team.submission.repoUrl && (
+                                          <a
+                                            href={team.submission.repoUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block text-blue-600 hover:underline"
+                                          >
+                                            View Repository
+                                          </a>
+                                        )}
+                                        {team.submission.slidesUrl && (
+                                          <a
+                                            href={team.submission.slidesUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block text-blue-600 hover:underline"
+                                          >
+                                            View Slides
+                                          </a>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </DialogContent>
+                                </DialogContent>
+                              </Dialog>
                             )}
                           </div>
                         </div>
