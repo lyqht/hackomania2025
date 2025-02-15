@@ -22,19 +22,19 @@ interface ChallengeStats {
   teamQuota: number | null;
 }
 
-// Custom colors for each challenge
-const CHALLENGE_COLORS = {
-  "Health Education, Awareness & Healthy Habits": "#4CAF50", // Green
-  "Connecting to the Real World": "#2196F3", // Blue
-  "Quitting Addictions": "#9C27B0", // Purple
-} as const;
-
-type ChallengeName = keyof typeof CHALLENGE_COLORS;
+// Bar colors
+const GREEN = "#4CAF50";
+const BLUE = "#2196F3";
+const PURPLE = "#9C27B0";
 
 export default function ChallengeDashboard() {
   const [stats, setStats] = useState<ChallengeStats[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const supabase = createClient();
+
+  const CHALLENGE_COLORS = Object.fromEntries(
+    stats.map((challenge, index) => [challenge.name, [GREEN, BLUE, PURPLE][index % 3]]),
+  );
 
   const fetchStats = async () => {
     try {
@@ -82,15 +82,20 @@ export default function ChallengeDashboard() {
       <h1 className="mb-8 text-3xl font-bold">Challenge Statistics</h1>
 
       <div className="grid gap-4 md:grid-cols-3">
-        {stats.map((stat) => (
-          <Card key={stat.id}>
-            <CardHeader>
-              <CardTitle>{stat.name}</CardTitle>
+        {stats.map((challenge) => (
+          <Card key={challenge.id} className="flex flex-col">
+            <CardHeader className="grow">
+              <CardTitle>
+                <span className="block font-bold text-hackomania-red">
+                  {challenge.name.split(" - ")[0]}
+                </span>
+                <span className="font-sans text-sm font-bold italic">
+                  {challenge.name.split(" - ")[1]}
+                </span>
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {stat.teamCount} / {stat.teamQuota || "∞"}
-              </div>
+            <CardContent className="flex flex-col items-center justify-center">
+              <div className="text-2xl font-bold">{challenge.teamCount}</div>
               <p className="text-xs text-muted-foreground">Teams registered</p>
             </CardContent>
           </Card>
@@ -106,15 +111,18 @@ export default function ChallengeDashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stats}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                <XAxis
+                  dataKey="name"
+                  tickFormatter={(value) => value.split(" - ")[0]}
+                  angle={-45}
+                  textAnchor="end"
+                  height={100}
+                />
                 <YAxis />
                 <Tooltip />
                 <Bar dataKey="teamCount" name="Teams" radius={[4, 4, 0, 0]}>
                   {stats.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={CHALLENGE_COLORS[entry.name as ChallengeName] || "#3b82f6"}
-                    />
+                    <Cell key={`cell-${index}`} fill={CHALLENGE_COLORS[entry.name] || "#3b82f6"} />
                   ))}
                 </Bar>
               </BarChart>

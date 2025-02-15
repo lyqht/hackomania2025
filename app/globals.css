@@ -83,7 +83,7 @@
   }
 }
 
-h1, h2, h3, h2 > span {
+h1, h2, h3, h2 > span, h3 > span {
   font-family: var(--font-nexa);
 }
 
