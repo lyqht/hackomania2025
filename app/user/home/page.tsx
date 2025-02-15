@@ -75,10 +75,8 @@ function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSe
     parseInt(process.env.NEXT_PUBLIC_CHALLENGE_SUBMISSION_CUTOFF_UNIX!) || currentUnix;
   const submissionCutoff =
     parseInt(process.env.NEXT_PUBLIC_HACKATHON_SUBMISSION_CUTOFF_UNIX!) || currentUnix;
-  console.log(challengeCutoff, submissionCutoff);
   const pastChallengeSubmission = challengeCutoff + 120 <= currentUnix;
   const pastHackathonSubmission = submissionCutoff <= currentUnix;
-  console.log(pastChallengeSubmission, pastHackathonSubmission);
 
   if (!user.mainEventRegistered && user.role != "admin") {
     return (

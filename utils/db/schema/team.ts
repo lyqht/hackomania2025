@@ -6,6 +6,7 @@ import { relations } from "drizzle-orm";
 import { challenges } from "./challenge";
 
 export type TeamSubmission = {
+  techStack?: string;
   projectDescription?: string;
   slidesUrl?: string;
   repoUrl?: string;

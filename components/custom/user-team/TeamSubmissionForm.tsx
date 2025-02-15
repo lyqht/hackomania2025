@@ -17,6 +17,7 @@ export default function TeamSubmissionForm({ teamId, initialSubmission }: TeamSu
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submission, setSubmission] = useState<TeamSubmission>(
     initialSubmission || {
+      techStack: "",
       projectDescription: "",
       slidesUrl: "",
       repoUrl: "",
@@ -53,11 +54,22 @@ export default function TeamSubmissionForm({ teamId, initialSubmission }: TeamSu
         <Label htmlFor="projectDescription">Project Description</Label>
         <Textarea
           id="projectDescription"
-          placeholder="Describe your project..."
+          placeholder="Describe your project in one paragraph..."
           value={submission.projectDescription}
           onChange={(e) =>
             setSubmission((prev) => ({ ...prev, projectDescription: e.target.value }))
           }
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="techStack">Tech Stack</Label>
+        <Textarea
+          id="techStack"
+          placeholder="Describe how your project was created (e.g. Technologies, Frameworks, etc)..."
+          value={submission.techStack}
+          onChange={(e) => setSubmission((prev) => ({ ...prev, techStack: e.target.value }))}
           required
         />
       </div>
