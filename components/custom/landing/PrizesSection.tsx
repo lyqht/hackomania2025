@@ -5,47 +5,49 @@ import Image from "next/image";
 
 const prizes = [
   {
-    title: "Interledger Challenge Prize",
+    title: "Interledger",
     amount: "$1,000",
-    img: "/prizes/Champion.svg",
-    width: 150,
-    height: 150,
+    img: "/sponsors/InterledgerFoundation.png",
+    width: 572 * 0.4,
+    height: 162 * 0.4,
   },
   {
-    title: "Kitchen Copilot Challenge Prize",
+    title: "Kitchen Copilot",
     amount: "$1,000",
-    img: "/prizes/Champion.svg",
-    width: 150,
-    height: 150,
+    img: "/sponsors/Kitchen_Copilot.png",
+    width: 572 * 0.4,
+    height: 162 * 0.4,
   },
   {
-    title: "GeeksHacking Challenge Prize",
+    title: "GeeksHacking",
     amount: "$1,000",
-    img: "/prizes/Champion.svg",
-    width: 150,
-    height: 150,
+    img: "/sponsors/SP_Group.png",
+    width: 572 * 0.4,
+    height: 162 * 0.4,
   },
   {
     title: "People's Choice",
     amount: "$500",
     img: "/prizes/PeopleChoice.svg",
-    width: 150,
-    height: 150,
+    description: "",
+    width: 120,
+    height: 120,
   },
 ];
 
 interface PrizeProps {
   img: string;
   title: string;
+  description?: string;
   width: number;
   height: number;
   amount: string;
 }
 
-function Prize({ img, title, width, height, amount }: PrizeProps) {
+function Prize({ img, title, description = "challenge prize", width, height, amount }: PrizeProps) {
   return (
     <motion.div
-      className="flex flex-col items-center gap-3 p-4 font-bold text-hackomania-green"
+      className="flex flex-col items-center gap-3 p-4"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -62,7 +64,10 @@ function Prize({ img, title, width, height, amount }: PrizeProps) {
         }}
         priority
       />
-      <h3 className="text-center text-2xl md:text-3xl">{title}</h3>
+      <span className="flex flex-col items-center gap-2">
+        <span className="text-center text-2xl font-semibold md:text-3xl">{title}</span>
+        {description != "" && <span className="text-xl md:text-2xl">{description}</span>}
+      </span>
       <p className="text-xl md:text-2xl">{amount}</p>
     </motion.div>
   );
@@ -71,7 +76,7 @@ function Prize({ img, title, width, height, amount }: PrizeProps) {
 export default function PrizesSection() {
   return (
     <div className="flex flex-col gap-12 px-8 md:py-14">
-      <div className="flex w-full flex-col justify-center gap-10 md:flex-row md:gap-20">
+      <div className="flex w-full flex-col items-center justify-center gap-10 md:flex-row md:gap-20">
         {prizes.slice(0, 3).map((prize, index) => (
           <motion.div
             key={prize.title}
