@@ -76,7 +76,7 @@ function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSe
   const submissionCutoff =
     parseInt(process.env.NEXT_PUBLIC_HACKATHON_SUBMISSION_CUTOFF_UNIX!) || currentUnixMs;
   const pastChallengeSubmission = challengeCutoff + 120000 >= currentUnixMs;
-  const pastHackathonSubmission = submissionCutoff + 120000 >= currentUnixMs;
+  const pastHackathonSubmission = submissionCutoff >= currentUnixMs;
 
   if (!user.mainEventRegistered && user.role != "admin") {
     return (
@@ -106,29 +106,27 @@ function ChallengeAndTeamInfoSections({ user, userTeam }: ChallengeAndTeamInfoSe
         <>
           <div className="space-y-8">
             {/* Challenge Selection Section - Only visible if it is before the cutoff.*/}
-            {process.env.NEXT_PUBLIC_CHALLENGE_SELECTION_ENABLED === "true" &&
-              (pastChallengeSubmission ? (
-                <div>
-                  <div className="-mx-8 my-3 border border-neutral-400"></div>
-                  <h3 className="mb-4 text-xl font-semibold">Challenge Statement Selection</h3>
-                  <p>
-                    Challenge Statement Selection has closed! Please contact an Organiser if you
-                    have any questions.
-                  </p>
-                </div>
-              ) : (
-                <div>
-                  <div className="-mx-8 my-3 border border-neutral-400"></div>
-                  <ChallengeSelection
-                    teamId={userTeam.id}
-                    currentChallengeId={userTeam.challengeId}
-                  />
-                </div>
-              ))}
+            {pastChallengeSubmission ? (
+              <div>
+                <div className="-mx-8 my-3 border border-neutral-400"></div>
+                <h3 className="mb-4 text-xl font-semibold">Challenge Statement Selection</h3>
+                <p>
+                  Challenge Statement Selection has closed! Please contact an Organiser if you have
+                  any questions.
+                </p>
+              </div>
+            ) : (
+              <div>
+                <div className="-mx-8 my-3 border border-neutral-400"></div>
+                <ChallengeSelection
+                  teamId={userTeam.id}
+                  currentChallengeId={userTeam.challengeId}
+                />
+              </div>
+            )}
 
             {/* Project Submission Section - Only visible if team has a challenge, AND before the cutoff */}
-            {process.env.NEXT_PUBLIC_PROJECT_SUBMISSION_ENABLED === "true" &&
-              userTeam.challengeId &&
+            {userTeam.challengeId &&
               (pastHackathonSubmission ? (
                 <div>
                   <div className="-mx-8 my-3 border border-neutral-400"></div>
