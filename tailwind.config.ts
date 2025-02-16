@@ -99,6 +99,7 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "spin-slow": "spin 3s linear infinite",
+        "spin-slower": "spin 5s linear infinite",
         "fade-in": "fadeIn 0.5s ease-in",
         "slide-in-from-left": "slideInFromLeft 0.5s ease-out",
         "slide-in-from-right": "slideInFromRight 0.5s ease-out",
