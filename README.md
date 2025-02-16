@@ -99,9 +99,9 @@ EVENTBRITE_PRIVATE_TOKEN=                  # Eventbrite API token
 NEXT_PUBLIC_TEST_DATETIME=   # Override current datetime for testing (format: YYYY-MM-DDTHH:mm:ss)
                             # Example: 2025-02-15T11:20:00
 
-# Feature flags
-NEXT_PUBLIC_CHALLENGE_SELECTION_ENABLED=true # Enable challenge selection
-NEXT_PUBLIC_PROJECT_SUBMISSION_ENABLED=true # Enable project submission
+# Submission cutoff times (Unix timestamps)
+NEXT_PUBLIC_CHALLENGE_SUBMISSION_CUTOFF_UNIX= # Unix timestamp for challenge submission cutoff
+NEXT_PUBLIC_HACKATHON_SUBMISSION_CUTOFF_UNIX= # Unix timestamp for hackathon submission cutoff
 ```
 
 ### Admin Access
