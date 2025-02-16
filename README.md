@@ -51,10 +51,9 @@ The web development team behind this project consists of:
   - Authentication with GitHub OAuth
   - Edge Functions for serverless computing
   - Row Level Security (RLS) policies
-- [Drizzle ORM](https://orm.drizzle.team/) - TypeScript ORM
-  - Database schema management
-  - Type-safe SQL queries
-  - Automated migrations
+  - Automated user management and team assignments
+  - Challenge and submission tracking
+  - Event registration integration with Eventbrite
 
 ### Development & Deployment
 
@@ -62,6 +61,72 @@ The web development team behind this project consists of:
 - [ESLint](https://eslint.org/) - Code linting
 - [Prettier](https://prettier.io/) - Code formatting
 - [Vercel](https://vercel.com/) - Deployment platform
+
+## Features
+
+### Landing Page
+
+- Modern, responsive design with animated sections
+- Navigation bar with smooth scrolling
+- Sections for:
+  - Registration information
+  - Challenge statements from sponsors
+  - Prize details ($1,000 prizes from sponsors)
+  - Judges and mentors information
+  - Timeline of events
+  - 7 Golden Rules
+  - Venue details
+  - Sponsors showcase
+  - Organizers information
+  - Contact details
+
+### User Portal
+
+- Secure authentication with GitHub OAuth
+- Team management features:
+  - Team creation and joining
+  - Team member management
+  - Team leader assignment
+- Challenge participation:
+  - Challenge selection before cutoff time
+  - Project submission system
+  - Submission deadline management
+- Event registration status tracking
+- Profile management
+
+### Admin Portal
+
+- Comprehensive user management:
+  - View and edit user details
+  - Remove users
+  - Set team leaders
+  - Mark users as registered
+- Team management:
+  - Create and edit teams
+  - Manage team memberships
+  - Export team data to Excel
+- Challenge management:
+  - Create and edit challenges
+  - Track challenge selections
+  - Monitor submissions
+- Registration management:
+  - Eventbrite integration
+  - Bulk user import from Google Sheets
+  - Duplicate registration handling
+
+### UI Components
+
+- Built with [shadcn/ui](https://ui.shadcn.com/) and Radix UI primitives
+- Custom components:
+  - Responsive navigation bar
+  - Section layouts with dividers
+  - Image carousel
+  - User and team cards
+  - Form components
+  - Loading spinners
+  - Modal dialogs
+  - Data tables
+  - Theme switcher (dark mode support)
 
 ## Deployment
 
