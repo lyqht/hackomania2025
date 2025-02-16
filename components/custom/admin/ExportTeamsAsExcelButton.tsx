@@ -35,6 +35,7 @@ export function ExportTeamsAsExcelButton({ teams }: ExportTeamsAsExcelButtonProp
         "Project Description": team.submission?.projectDescription || "",
         "Slides URL": team.submission?.slidesUrl || "",
         "Repository URL": team.submission?.repoUrl || "",
+        "Tech Stack": team.submission?.techStack || "",
       }));
 
       // Create worksheet
