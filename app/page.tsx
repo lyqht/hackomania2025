@@ -186,7 +186,7 @@ export default async function Index() {
               </div>
             </div>
           </div>
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
+          <div className={`grid-bg absolute bottom-[-16px] z-[-1] h-96 w-full md:h-60`}></div>
         </section>
 
         <section
@@ -204,7 +204,6 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">CHALLENGES</h2>
           </div>
           <ChallengesSection />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
         <section className="group relative py-10 intersect:animate-slide-in-from-right" id="prizes">
@@ -213,7 +212,7 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">PRIZES</h2>
           </div>
           <PrizesSection />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
+          <div className={`grid-bg absolute bottom-[-16px] z-[-1] h-96 w-full md:h-60`}></div>
         </section>
 
         <section className="group relative py-10 intersect:animate-slide-in-from-left" id="judges">
@@ -222,7 +221,6 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">JUDGES AND MENTORS</h2>
           </div>
           <JudgesMentors />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
         <TimelineSection />
@@ -236,7 +234,7 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">7 GOLDEN RULES</h2>
           </div>
           <GoldenRulesSection />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
+          <div className={`grid-bg absolute bottom-[-16px] z-[-1] h-96 w-full md:h-60`}></div>
         </section>
 
         <section className="group relative py-10 intersect:animate-slide-in-from-right" id="venue">
@@ -323,7 +321,7 @@ export default async function Index() {
               </div>
             </div>
           </div>
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
+          <div className={`grid-bg absolute bottom-[-16px] z-[-1] h-96 w-full md:h-60`}></div>
         </section>
 
         <section className="group relative py-8 intersect:animate-slide-in-from-left" id="sponsors">
@@ -332,7 +330,6 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">SPONSORS</h2>
           </div>
           <Sponsors />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
         <section
@@ -350,7 +347,7 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">Meet the Organizers</h2>
           </div>
           <OrganizersSection />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
+          <div className={`grid-bg absolute bottom-[-16px] z-[-1] h-96 w-full md:h-60`}></div>
         </section>
       </div>
     </>
