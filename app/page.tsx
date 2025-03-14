@@ -37,13 +37,6 @@ export default async function Index() {
           LINKTREE
         </span>
       </Link>
-      <div className="w-full max-w-full">
-        <div className="z-30 m-2 rounded-lg border-2 border-hackomania-red p-4 text-lg font-medium text-hackomania-red md:mx-20">
-          <p>
-            We are still actively updating the website! Please check back for more information! :)
-          </p>
-        </div>
-      </div>
       <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
         <div className="relative flex min-h-[calc(100vh-120px)] w-full flex-col items-center justify-center md:min-h-[calc(100vh-180px)]">
           <h1 className="sr-only">HackOMania 2025</h1>
@@ -90,9 +83,7 @@ export default async function Index() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="border-hackomania-white text-hackomania-white shrink border-4 p-1.5 text-base font-bold transition-all hover:bg-white hover:text-hackomania-red md:p-3 md:px-5 md:text-2xl"
-                  >
-                    REGISTER NOW
-                  </a>
+                  ></a>
                 </div>
               </div>
               <GitHubSignInButton />
@@ -186,7 +177,7 @@ export default async function Index() {
               </div>
             </div>
           </div>
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
+          <div className={`grid-bg absolute bottom-[-16px] z-[-1] h-96 w-full md:h-60`}></div>
         </section>
 
         <section
@@ -204,7 +195,6 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">CHALLENGES</h2>
           </div>
           <ChallengesSection />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
         <section className="group relative py-10 intersect:animate-slide-in-from-right" id="prizes">
@@ -213,7 +203,7 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">PRIZES</h2>
           </div>
           <PrizesSection />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
+          <div className={`grid-bg absolute bottom-[-16px] z-[-1] h-96 w-full md:h-60`}></div>
         </section>
 
         <section className="group relative py-10 intersect:animate-slide-in-from-left" id="judges">
@@ -222,7 +212,6 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">JUDGES AND MENTORS</h2>
           </div>
           <JudgesMentors />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
         <TimelineSection />
@@ -236,7 +225,7 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">7 GOLDEN RULES</h2>
           </div>
           <GoldenRulesSection />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
+          <div className={`grid-bg absolute bottom-[-16px] z-[-1] h-96 w-full md:h-60`}></div>
         </section>
 
         <section className="group relative py-10 intersect:animate-slide-in-from-right" id="venue">
@@ -323,7 +312,7 @@ export default async function Index() {
               </div>
             </div>
           </div>
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
+          <div className={`grid-bg absolute bottom-[-16px] z-[-1] h-96 w-full md:h-60`}></div>
         </section>
 
         <section className="group relative py-8 intersect:animate-slide-in-from-left" id="sponsors">
@@ -332,7 +321,6 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">SPONSORS</h2>
           </div>
           <Sponsors />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
         </section>
 
         <section
@@ -350,7 +338,7 @@ export default async function Index() {
             <h2 className="text-balance text-center md:text-start">Meet the Organizers</h2>
           </div>
           <OrganizersSection />
-          <div className={`grid-bg absolute bottom-[-16px] h-96 w-full md:h-60`}></div>
+          <div className={`grid-bg absolute bottom-[-16px] z-[-1] h-96 w-full md:h-60`}></div>
         </section>
       </div>
     </>
