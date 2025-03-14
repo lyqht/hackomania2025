@@ -37,13 +37,15 @@ export default async function Index() {
           LINKTREE
         </span>
       </Link>
-      <div className="w-full max-w-full">
+
+      {/* Hide WIP info box */}
+      {/* <div className="w-full max-w-full">
         <div className="z-30 m-2 rounded-lg border-2 border-hackomania-red p-4 text-lg font-medium text-hackomania-red md:mx-20">
           <p>
             We are still actively updating the website! Please check back for more information! :)
           </p>
         </div>
-      </div>
+      </div> */}
       <div className="flex flex-1 flex-col overflow-hidden px-5 pt-0 md:px-20 lg:px-32">
         <div className="relative flex min-h-[calc(100vh-120px)] w-full flex-col items-center justify-center md:min-h-[calc(100vh-180px)]">
           <h1 className="sr-only">HackOMania 2025</h1>
@@ -90,9 +92,7 @@ export default async function Index() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="border-hackomania-white text-hackomania-white shrink border-4 p-1.5 text-base font-bold transition-all hover:bg-white hover:text-hackomania-red md:p-3 md:px-5 md:text-2xl"
-                  >
-                    REGISTER NOW
-                  </a>
+                  ></a>
                 </div>
               </div>
               <GitHubSignInButton />
