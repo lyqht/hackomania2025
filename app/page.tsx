@@ -1,4 +1,4 @@
-import GitHubSignInButton from "@/components/custom/GitHubSignInButton";
+// import GitHubSignInButton from "@/components/custom/GitHubSignInButton";
 import GoldenRulesSection from "@/components/custom/landing/GoldenRulesSection";
 import ImageCarousel from "@/components/custom/ImageCarousel/ImageCarousel";
 import NavigationBar from "@/components/custom/NavigationBar";
@@ -72,21 +72,19 @@ export default async function Index() {
             <div className="flex w-full max-w-2xl flex-col items-center gap-8 pt-0 md:pt-8">
               {/* Event Cards */}
               <div className="flex w-full flex-col gap-4">
+                {/* Pre-Event Card */}
+                <div className="flex flex-row items-center bg-hackomania-red p-4 text-white">
+                  <h3 className="text-xl font-bold md:text-3xl">PRE EVENT</h3>
+                  <p className="ml-auto text-sm md:text-base">8 February, Saturday</p>
+                </div>
                 {/* Main Event registration */}
-                <div className="flex flex-row items-center justify-between gap-3 bg-hackomania-red p-4 text-white">
-                  <div className="flex grow flex-col text-start">
-                    <p className="text-nowrap text-xl font-bold md:text-3xl">MAIN EVENT</p>
-                    <p className="text-sm md:text-base">15-16 February, Saturday-Sunday</p>
-                  </div>
-                  <a
-                    href="https://www.eventbrite.com/e/hackomania-2025-healthy-living-for-a-connected-world-tickets-1147838859929"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="border-hackomania-white text-hackomania-white shrink border-4 p-1.5 text-base font-bold transition-all hover:bg-white hover:text-hackomania-red md:p-3 md:px-5 md:text-2xl"
-                  ></a>
+                <div className="flex flex-row items-center bg-hackomania-red p-4 text-white">
+                  <h3 className="text-xl font-bold md:text-3xl">MAIN EVENT</h3>
+                  <p className="ml-auto text-sm md:text-base">15-16 February, Saturday-Sunday</p>
                 </div>
               </div>
-              <GitHubSignInButton />
+
+              {/* <GitHubSignInButton /> */}
             </div>
           </div>
         </div>
